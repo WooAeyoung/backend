@@ -29,7 +29,7 @@ export function AppShell() {
   return (
     <div className="appwin">
       <div className={"titlebar" + (pb?.platform === "darwin" ? " mac" : "")}>
-        <span className="tb-brand"><span className="tb-logo" aria-hidden><Icon name="paw" size={12} /></span>PetBalance AI</span>
+        <span className="tb-brand"><span className="tb-logo" aria-hidden><Icon name="paw" size={12} /></span>우애영</span>
         <span className="tb-spacer" />
         {pb?.isElectron && pb.platform !== "darwin" && <div className="win-btns no-print">
           <button aria-label="최소화" onClick={() => pb.win?.minimize()}>─</button>

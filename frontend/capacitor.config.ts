@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'ai.petbalance.app',
-  appName: 'PetBalance AI',
+  appName: '우애영',
   webDir: 'dist',
   server: {
     // 라이브 Vercel 배포를 그대로 감싸는 방식 — 별도 오프라인 번들이 아니라

@@ -1196,7 +1196,7 @@ function MyScreen({ onOrders }: { onOrders: () => void }) {
       </div>
 
       <div className="c-card" style={{ background: "linear-gradient(160deg, var(--brand-wash), var(--surface-1))" }}>
-        <div className="c-hd">PetBalance 프리미엄</div>
+        <div className="c-hd">우애영 프리미엄</div>
         <div className="c-sub">맞춤 급여 리포트, 무제한 영양 분석, 재구매 자동 배송 — 월 4,900원</div>
         <button className="bigbtn" style={{ marginTop: 12 }} disabled>
           구독 준비 중

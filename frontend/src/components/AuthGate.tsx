@@ -48,7 +48,7 @@ export function AuthGate() {
           >
             🐾
           </span>
-          <strong style={{ fontSize: 16, letterSpacing: "-0.02em" }}>PetBalance AI</strong>
+          <strong style={{ fontSize: 16, letterSpacing: "-0.02em" }}>우애영</strong>
         </div>
 
         <div className="chip-toggle" style={{ alignSelf: "flex-start" }}>

@@ -38,7 +38,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PRODUCTS_PATH = ROOT / "data" / "processed" / "products.csv"
 STANDARDS_PATH = ROOT / "data" / "processed" / "nutrient_standards.csv"
 
-st.set_page_config(page_title="PetBalance AI", page_icon="🐾", layout="wide")
+st.set_page_config(page_title="우애영", page_icon="🐾", layout="wide")
 
 st.markdown(
     """
@@ -71,7 +71,7 @@ st.markdown(
 )
 
 st.markdown(
-    '<div class="hero"><h1>🐾 PetBalance AI</h1>'
+    '<div class="hero"><h1>🐾 우애영</h1>'
     '<p>여러 제품을 하나의 식단으로 계산하는 영양 의사결정 보조 서비스</p></div>',
     unsafe_allow_html=True,
 )
@@ -784,7 +784,7 @@ else:
 # ---------------------------------------------------------------------------
 with st.expander("🖨️ 결과 리포트 (인쇄/공유용)", expanded=False):
     st.markdown('<div class="report-card">', unsafe_allow_html=True)
-    st.header("PetBalance AI 영양 분석 리포트")
+    st.header("우애영 영양 분석 리포트")
 
     # F-033: 의료 범위 고지 (리포트에도 표시)
     st.warning(

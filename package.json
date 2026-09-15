@@ -1,11 +1,11 @@
 {
   "name": "petbalance-ai",
-  "productName": "PetBalance AI",
+  "productName": "우애영",
   "version": "0.2.0",
   "private": true,
   "description": "여러 제품을 하나의 식단으로 계산하는 성견 영양 의사결정 보조 데스크톱 앱",
   "main": "desktop/main.js",
-  "author": "PetBalance AI",
+  "author": "우애영",
   "scripts": {
     "postinstall": "cd frontend && npm install",
     "setup": "npm install && node node_modules/electron/install.js",
@@ -27,7 +27,7 @@
   },
   "build": {
     "appId": "ai.petbalance.desktop",
-    "productName": "PetBalance AI",
+    "productName": "우애영",
     "directories": {
       "output": "release",
       "buildResources": "build"
@@ -45,7 +45,7 @@
     ],
     "win": {
       "target": ["nsis"],
-      "artifactName": "PetBalance-AI-Setup-${version}.${ext}"
+      "artifactName": "WooAeyoung-Setup-${version}.${ext}"
     },
     "nsis": {
       "oneClick": false,

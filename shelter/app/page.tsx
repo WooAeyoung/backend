@@ -33,7 +33,7 @@ export default function Home(){
  function openProduct(p?:Product){setProduct(p?structuredClone(p):{id:crypto.randomUUID(),name:'',brand:'',category:'주식',basis:100,price:0,nutrients:{},stock:0,expiry:'',donor:''})}
  function go(id:string){setView(id);setQuery('')}
  return <div className="app">
-  <aside><div className="brand"><span><PawPrint size={21}/></span>PetBalance Shelter</div><nav aria-label="주 메뉴">{menus.map(([id,label,Icon],i)=><div key={id}>{[0,3,5].includes(i)&&<div className="group">{i===0?'운영':i===3?'자원':'설정'}</div>}<button className={view===id?'active':''} onClick={()=>go(id)} aria-current={view===id?'page':undefined}><Icon size={18}/>{label}{['roster','alerts','stock'].includes(id)&&<small className={id==='alerts'?'red':''}>{id==='roster'?data.animals.length:id==='alerts'?warnings.length:data.products.length}</small>}</button></div>)}</nav><div className="sidefoot">보호소 운영 · 공유 저장</div></aside>
+  <aside><div className="brand"><span><PawPrint size={21}/></span>우애영 보호소</div><nav aria-label="주 메뉴">{menus.map(([id,label,Icon],i)=><div key={id}>{[0,3,5].includes(i)&&<div className="group">{i===0?'운영':i===3?'자원':'설정'}</div>}<button className={view===id?'active':''} onClick={()=>go(id)} aria-current={view===id?'page':undefined}><Icon size={18}/>{label}{['roster','alerts','stock'].includes(id)&&<small className={id==='alerts'?'red':''}>{id==='roster'?data.animals.length:id==='alerts'?warnings.length:data.products.length}</small>}</button></div>)}</nav><div className="sidefoot">보호소 운영 · 공유 저장</div></aside>
   <main><header><div><h1>{titles[view][0]}</h1><p>{titles[view][1]}</p></div>{view==='roster'&&<button className="primary" disabled={!ready} onClick={()=>openAnimal()}><Plus size={17}/>동물 추가</button>}{view==='stock'&&<button className="primary" disabled={!ready} onClick={()=>openProduct()}><Plus size={17}/>품목 추가</button>}{view==='print'&&<button className="primary" disabled={!selected.length} onClick={()=>window.print()}><Printer size={17}/>인쇄 ({selected.length}장)</button>}</header>
   {error&&<div role="alert" className="error">{error}</div>}{!ready&&<div className="notice">{error?'저장 연결을 확인하려면 페이지를 새로고침해 주세요.':'보호소 데이터를 불러오는 중입니다…'}</div>}
   {view==='roster'&&<section className="card roster"><div className="search"><Search size={20}/><input aria-label="이름 또는 케이지 검색" placeholder="이름 또는 케이지 검색" value={query} onChange={e=>setQuery(e.target.value)}/></div><div className="tablewrap"><table><thead><tr>{['케이지','이름','체중','나이','상태','영양','특이사항'].map(x=><th key={x}>{x}</th>)}</tr></thead><tbody>{sorted.filter(a=>(a.name+a.cage).includes(query)).map(a=><tr key={a.id}><td><code>{a.cage}</code></td><td><button className="text strong" onClick={()=>openAnimal(a)}>{a.name}</button></td><td>{a.weight}kg</td><td>{a.age}세</td><td>{a.status}</td><td><Badge status={severity(a,data.products)}/></td><td className="muted">{a.notes||'—'}</td></tr>)}</tbody></table></div>{!sorted.some(a=>(a.name+a.cage).includes(query))&&<div className="empty">검색 결과가 없습니다.</div>}</section>}
@@ -50,6 +50,5 @@ export default function Home(){
   </dialog>
  </div>
 }
-
 
 

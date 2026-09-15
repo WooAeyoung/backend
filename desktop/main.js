@@ -92,7 +92,7 @@ async function createWindow() {
     minWidth: 900,
     minHeight: 600,
     backgroundColor: "#f4f5f3",
-    title: "PetBalance",
+    title: "우애영",
     icon: resolveIcon(),
     frame: false,
     titleBarStyle: "hidden",

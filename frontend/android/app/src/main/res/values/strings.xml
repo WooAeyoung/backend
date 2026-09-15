@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">PetBalance AI</string>
-    <string name="title_activity_main">PetBalance AI</string>
+    <string name="app_name">우애영</string>
+    <string name="title_activity_main">우애영</string>
     <string name="package_name">ai.petbalance.app</string>
     <string name="custom_url_scheme">ai.petbalance.app</string>
 </resources>
