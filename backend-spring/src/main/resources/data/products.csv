@@ -1,0 +1,92 @@
+product_id,product_name,brand,category,serving_basis_g,nutrient,amount_mg,label_complete,monthly_price_krw,source
+food_a,밸런스 성견 사료,밸런스펫,주식,100,칼슘,1050,true,42000,verified_demo
+food_a,밸런스 성견 사료,밸런스펫,주식,100,인,820,true,42000,verified_demo
+food_a,밸런스 성견 사료,밸런스펫,주식,100,비타민D,0.018,true,42000,verified_demo
+food_a,밸런스 성견 사료,밸런스펫,주식,100,아연,16,true,42000,verified_demo
+food_a,밸런스 성견 사료,밸런스펫,주식,100,철,9,true,42000,verified_demo
+supp_cal,튼튼 칼슘 영양제,튼튼,영양제,2,칼슘,420,true,18000,verified_demo
+supp_cal,튼튼 칼슘 영양제,튼튼,영양제,2,인,160,true,18000,verified_demo
+supp_cal,튼튼 칼슘 영양제,튼튼,영양제,2,비타민D,0.008,true,18000,verified_demo
+snack_a,치즈 트릿,요미,간식,10,칼슘,95,false,9000,verified_demo
+snack_a,치즈 트릿,요미,간식,10,인,55,false,9000,verified_demo
+multi_a,데일리 멀티 영양제,데일리,영양제,3,칼슘,120,true,22000,verified_demo
+multi_a,데일리 멀티 영양제,데일리,영양제,3,비타민D,0.012,true,22000,verified_demo
+multi_a,데일리 멀티 영양제,데일리,영양제,3,아연,4.5,true,22000,verified_demo
+multi_a,데일리 멀티 영양제,데일리,영양제,3,철,2.2,true,22000,verified_demo
+food_lamb,저알러지 램 사료,네이처핏,주식,100,칼슘,1200,true,55000,demo_synthetic
+food_lamb,저알러지 램 사료,네이처핏,주식,100,인,950,true,55000,demo_synthetic
+food_lamb,저알러지 램 사료,네이처핏,주식,100,비타민D,0.02,true,55000,demo_synthetic
+food_lamb,저알러지 램 사료,네이처핏,주식,100,아연,18,true,55000,demo_synthetic
+food_lamb,저알러지 램 사료,네이처핏,주식,100,철,11,true,55000,demo_synthetic
+food_lamb,저알러지 램 사료,네이처핏,주식,100,구리,1.6,true,55000,demo_synthetic
+food_lamb,저알러지 램 사료,네이처핏,주식,100,조단백,27000,true,55000,demo_synthetic
+food_lamb,저알러지 램 사료,네이처핏,주식,100,조지방,15000,true,55000,demo_synthetic
+food_senior,시니어 케어 사료,밸런스펫,주식,100,칼슘,900,true,48000,demo_synthetic
+food_senior,시니어 케어 사료,밸런스펫,주식,100,인,700,true,48000,demo_synthetic
+food_senior,시니어 케어 사료,밸런스펫,주식,100,비타민D,0.016,true,48000,demo_synthetic
+food_senior,시니어 케어 사료,밸런스펫,주식,100,아연,15,true,48000,demo_synthetic
+food_senior,시니어 케어 사료,밸런스펫,주식,100,철,8.5,true,48000,demo_synthetic
+food_senior,시니어 케어 사료,밸런스펫,주식,100,오메가3,900,true,48000,demo_synthetic
+food_grainfree,그레인프리 연어 사료,노스씨,주식,100,칼슘,1350,true,62000,demo_synthetic
+food_grainfree,그레인프리 연어 사료,노스씨,주식,100,인,1000,true,62000,demo_synthetic
+food_grainfree,그레인프리 연어 사료,노스씨,주식,100,비타민D,0.022,true,62000,demo_synthetic
+food_grainfree,그레인프리 연어 사료,노스씨,주식,100,아연,20,true,62000,demo_synthetic
+food_grainfree,그레인프리 연어 사료,노스씨,주식,100,철,12,true,62000,demo_synthetic
+food_grainfree,그레인프리 연어 사료,노스씨,주식,100,셀레늄,0.35,true,62000,demo_synthetic
+food_grainfree,그레인프리 연어 사료,노스씨,주식,100,오메가3,1400,true,62000,demo_synthetic
+food_wet,습식 치킨 스튜,키친펫,주식,150,칼슘,480,false,60000,demo_synthetic
+food_wet,습식 치킨 스튜,키친펫,주식,150,인,360,false,60000,demo_synthetic
+food_wet,습식 치킨 스튜,키친펫,주식,150,아연,6,false,60000,demo_synthetic
+food_wet,습식 치킨 스튜,키친펫,주식,150,철,4,false,60000,demo_synthetic
+food_puppy_adult,올라이프 치킨앤라이스,홈밀,주식,100,칼슘,1100,true,39000,demo_synthetic
+food_puppy_adult,올라이프 치킨앤라이스,홈밀,주식,100,인,880,true,39000,demo_synthetic
+food_puppy_adult,올라이프 치킨앤라이스,홈밀,주식,100,비타민D,0.019,true,39000,demo_synthetic
+food_puppy_adult,올라이프 치킨앤라이스,홈밀,주식,100,아연,17,true,39000,demo_synthetic
+food_puppy_adult,올라이프 치킨앤라이스,홈밀,주식,100,철,10,true,39000,demo_synthetic
+food_puppy_adult,올라이프 치킨앤라이스,홈밀,주식,100,구리,1.4,true,39000,demo_synthetic
+food_light,체중조절 라이트 사료,밸런스펫,주식,100,칼슘,1000,true,45000,demo_synthetic
+food_light,체중조절 라이트 사료,밸런스펫,주식,100,인,800,true,45000,demo_synthetic
+food_light,체중조절 라이트 사료,밸런스펫,주식,100,비타민D,0.017,true,45000,demo_synthetic
+food_light,체중조절 라이트 사료,밸런스펫,주식,100,아연,16,true,45000,demo_synthetic
+food_light,체중조절 라이트 사료,밸런스펫,주식,100,철,9.5,true,45000,demo_synthetic
+food_light,체중조절 라이트 사료,밸런스펫,주식,100,조섬유,6500,true,45000,demo_synthetic
+snack_jerky,닭가슴살 저키,요미,간식,15,칼슘,60,false,12000,demo_synthetic
+snack_jerky,닭가슴살 저키,요미,간식,15,인,140,false,12000,demo_synthetic
+snack_jerky,닭가슴살 저키,요미,간식,15,나트륨,90,false,12000,demo_synthetic
+snack_dental,덴탈껌 라지,덴티,간식,20,칼슘,220,true,15000,demo_synthetic
+snack_dental,덴탈껌 라지,덴티,간식,20,인,130,true,15000,demo_synthetic
+snack_dental,덴탈껌 라지,덴티,간식,20,아연,2.5,true,15000,demo_synthetic
+snack_yogurt,동결건조 요거트바이트,프로즌,간식,8,칼슘,180,true,11000,demo_synthetic
+snack_yogurt,동결건조 요거트바이트,프로즌,간식,8,인,120,true,11000,demo_synthetic
+snack_sweetpotato,고구마 말랭이,네이처핏,간식,12,칼륨,210,true,7000,demo_synthetic
+snack_sweetpotato,고구마 말랭이,네이처핏,간식,12,칼슘,20,true,7000,demo_synthetic
+snack_sweetpotato,고구마 말랭이,네이처핏,간식,12,조섬유,1400,true,7000,demo_synthetic
+snack_liver,소간 큐브,요미,간식,6,철,6.5,false,8500,demo_synthetic
+snack_liver,소간 큐브,요미,간식,6,구리,0.9,false,8500,demo_synthetic
+snack_liver,소간 큐브,요미,간식,6,비타민A,3.2,false,8500,demo_synthetic
+snack_liver,소간 큐브,요미,간식,6,인,190,false,8500,demo_synthetic
+supp_omega,오메가3 피쉬오일,노스씨,영양제,4,오메가3,1200,true,28000,demo_synthetic
+supp_omega,오메가3 피쉬오일,노스씨,영양제,4,오메가6,300,true,28000,demo_synthetic
+supp_omega,오메가3 피쉬오일,노스씨,영양제,4,비타민E,5,true,28000,demo_synthetic
+supp_joint,관절 글루코사민 츄어블,무브프리,영양제,5,글루코사민,500,true,33000,demo_synthetic
+supp_joint,관절 글루코사민 츄어블,무브프리,영양제,5,콘드로이틴,400,true,33000,demo_synthetic
+supp_joint,관절 글루코사민 츄어블,무브프리,영양제,5,망간,2,true,33000,demo_synthetic
+supp_joint,관절 글루코사민 츄어블,무브프리,영양제,5,비타민C,30,true,33000,demo_synthetic
+supp_skin,스킨앤코트 비오틴,코트케어,영양제,3,아연,8,true,24000,demo_synthetic
+supp_skin,스킨앤코트 비오틴,코트케어,영양제,3,비타민E,6,true,24000,demo_synthetic
+supp_skin,스킨앤코트 비오틴,코트케어,영양제,3,오메가6,450,true,24000,demo_synthetic
+supp_skin,스킨앤코트 비오틴,코트케어,영양제,3,구리,0.6,true,24000,demo_synthetic
+supp_probiotic,장건강 프로바이오틱스,바이옴,영양제,2,칼슘,30,false,27000,demo_synthetic
+supp_vitd,비타민D3 드롭,선샤인,영양제,1,비타민D,0.025,true,16000,demo_synthetic
+supp_iron,철분 플러스,레드셀,영양제,2,철,12,true,19000,demo_synthetic
+supp_iron,철분 플러스,레드셀,영양제,2,비타민C,40,true,19000,demo_synthetic
+supp_iron,철분 플러스,레드셀,영양제,2,구리,0.5,true,19000,demo_synthetic
+supp_multi_sr,시니어 멀티비타민,데일리,영양제,3,칼슘,100,true,26000,demo_synthetic
+supp_multi_sr,시니어 멀티비타민,데일리,영양제,3,비타민D,0.01,true,26000,demo_synthetic
+supp_multi_sr,시니어 멀티비타민,데일리,영양제,3,비타민E,8,true,26000,demo_synthetic
+supp_multi_sr,시니어 멀티비타민,데일리,영양제,3,아연,5,true,26000,demo_synthetic
+supp_multi_sr,시니어 멀티비타민,데일리,영양제,3,셀레늄,0.05,true,26000,demo_synthetic
+supp_multi_sr,시니어 멀티비타민,데일리,영양제,3,요오드,0.2,true,26000,demo_synthetic
+supp_calmag,칼슘마그네슘 밸런스,튼튼,영양제,4,칼슘,500,true,21000,demo_synthetic
+supp_calmag,칼슘마그네슘 밸런스,튼튼,영양제,4,마그네슘,200,true,21000,demo_synthetic
+supp_calmag,칼슘마그네슘 밸런스,튼튼,영양제,4,비타민D,0.015,true,21000,demo_synthetic

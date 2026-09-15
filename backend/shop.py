@@ -193,7 +193,7 @@ _SEED = [
 ]
 
 
-_SEED_USER_EMAIL = "seed@petbalance.internal"
+_SEED_USER_EMAIL = "seed@wooaeyoung.internal"
 
 
 def seed_reviews_if_empty(db_path: Path | None = None) -> None:

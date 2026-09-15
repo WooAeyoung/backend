@@ -5,7 +5,7 @@
 - F-026: 프로필·식단 CRUD (생성/읽기/수정/삭제)
 - F-027: 분석 API (FastAPI) — 영양소 합산·상태 판정·기여도 반환
 
-이 모듈은 Streamlit 앱에서 로컬 SQLite 파일(db/petbalance.db)을 통해
+이 모듈은 Streamlit 앱에서 로컬 SQLite 파일(db/wooaeyoung.db)을 통해
 사용되며, 동시에 FastAPI 서버에서도 동일한 엔진을 재사용한다.
 """
 
@@ -27,10 +27,10 @@ from backend.nutrition import (
     validate_products,
 )
 
-# 설치형 셸은 쓰기 가능한 사용자 디렉터리를 PB_DB 로 넘긴다(패키징 시 필수).
+# 설치형 셸은 쓰기 가능한 사용자 디렉터리를 WOOAEYOUNG_DB 로 넘긴다(패키징 시 필수).
 DB_PATH = Path(
-    os.environ.get("PB_DB")
-    or (Path(__file__).resolve().parent / "db" / "petbalance.db")
+    os.environ.get("WOOAEYOUNG_DB")
+    or (Path(__file__).resolve().parent / "db" / "wooaeyoung.db")
 )
 
 

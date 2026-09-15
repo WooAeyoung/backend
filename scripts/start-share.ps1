@@ -13,9 +13,9 @@ $server = $null
 $tunnel = $null
 $savedEnv = @{}
 $shareEnv = @{
-    PB_PUBLIC_SERVER = '1'
-    PB_DB = (Join-Path $runtimeDir 'petbalance.db')
-    PB_CORS_ORIGINS = ''
+    WOOAEYOUNG_PUBLIC_SERVER = '1'
+    WOOAEYOUNG_DB = (Join-Path $runtimeDir 'wooaeyoung.db')
+    WOOAEYOUNG_CORS_ORIGINS = ''
     ANTHROPIC_API_KEY = ''
     PYTHONUNBUFFERED = '1'
 }

@@ -157,13 +157,13 @@ class AuthTests(unittest.TestCase):
     def test_register_login_me_logout(self):
         reg = client.post(
             self._q("/api/auth/register"),
-            json={"email": "a@petbalance.test", "password": "supersecret1"},
+            json={"email": "a@wooaeyoung.test", "password": "supersecret1"},
         )
         self.assertEqual(reg.status_code, 201)
         token = reg.json()["token"]
         me = client.get(self._q("/api/auth/me"), headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(me.status_code, 200)
-        self.assertEqual(me.json()["email"], "a@petbalance.test")
+        self.assertEqual(me.json()["email"], "a@wooaeyoung.test")
         out = client.post(self._q("/api/auth/logout"), headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(out.status_code, 200)
         me2 = client.get(self._q("/api/auth/me"), headers={"Authorization": f"Bearer {token}"})
@@ -172,29 +172,29 @@ class AuthTests(unittest.TestCase):
     def test_bad_password(self):
         client.post(
             self._q("/api/auth/register"),
-            json={"email": "b@petbalance.test", "password": "supersecret1"},
+            json={"email": "b@wooaeyoung.test", "password": "supersecret1"},
         )
         bad = client.post(
             self._q("/api/auth/login"),
-            json={"email": "b@petbalance.test", "password": "wrongpass1"},
+            json={"email": "b@wooaeyoung.test", "password": "wrongpass1"},
         )
         self.assertEqual(bad.status_code, 401)
 
     def test_short_password_rejected(self):
         r = client.post(
             self._q("/api/auth/register"),
-            json={"email": "c@petbalance.test", "password": "short"},
+            json={"email": "c@wooaeyoung.test", "password": "short"},
         )
         self.assertEqual(r.status_code, 400)
 
     def test_pets_are_user_scoped(self):
         t1 = client.post(
             self._q("/api/auth/register"),
-            json={"email": "u1@petbalance.test", "password": "supersecret1"},
+            json={"email": "u1@wooaeyoung.test", "password": "supersecret1"},
         ).json()["token"]
         t2 = client.post(
             self._q("/api/auth/register"),
-            json={"email": "u2@petbalance.test", "password": "supersecret1"},
+            json={"email": "u2@wooaeyoung.test", "password": "supersecret1"},
         ).json()["token"]
         save = client.post(
             self._q("/api/session/save"),

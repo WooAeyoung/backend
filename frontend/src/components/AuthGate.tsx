@@ -109,7 +109,7 @@ export function AuthGate() {
           <Field label="API 서버 URL (비우면 이 앱 내장 서버)">
             <input
               className="input"
-              placeholder="예: https://petbalance.mycompany.com"
+              placeholder="예: https://wooaeyoung.example.com"
               value={apiBase}
               onChange={(e) => setApiBaseInput(e.target.value)}
             />

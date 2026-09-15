@@ -1,10 +1,12 @@
-# PetBalance AI
+# 우애영
+
+기존 DB·설치 앱을 사용하는 경우 [이름 변경과 데이터 이전 안내](docs/brand-migration.md)를 확인하세요.
 
 ## 웹 공유 서버
 
 설치 없이 브라우저로 공유하려면 [웹 서버 배포 안내](docs/server-deployment.md)를 참고하세요.
 `Dockerfile`과 `compose.yaml`은 웹 화면·API·영구 저장소를 함께 실행합니다.
-외부 공개 시 `PB_PUBLIC_SERVER=1`을 사용하고 HTTPS 주소를 연결하세요.
+외부 공개 시 `WOOAEYOUNG_PUBLIC_SERVER=1`을 사용하고 HTTPS 주소를 연결하세요.
 
 여러 제품(사료·간식·영양제)의 실제 하루 급여량을 합산해 영양소별 총량·상태·제품
 기여도와 "확인 필요" 신호를 설명하는 **성견용 데스크톱 앱**입니다.
@@ -46,11 +48,11 @@ npm run dist
 `npm run dist` 는 순서대로:
 
 1. `frontend/` 를 `frontend/dist/` 로 빌드
-2. PyInstaller 로 백엔드를 `dist/petbalance-backend/` 폴더 실행파일로 동결 (CSV·빌드된 UI 포함)
-3. electron-builder 로 `release/PetBalance-AI-Setup-<버전>.exe` (NSIS) 생성
+2. PyInstaller 로 백엔드를 `dist/wooaeyoung-backend/` 폴더 실행파일로 동결 (CSV·빌드된 UI 포함)
+3. electron-builder 로 `release/WooAeyoung-Setup-<버전>.exe` (NSIS) 생성
 
 패키지 앱은 분석 서버를 빈 포트로 띄우고 `/health` 확인 후 창을 엽니다. 저장 DB 는
-사용자 데이터 폴더(`%APPDATA%/PetBalance AI/petbalance.db`)에 만들어집니다.
+사용자 데이터 폴더(`%APPDATA%/우애영/wooaeyoung.db`)에 만들어집니다.
 
 ## 아키텍처
 

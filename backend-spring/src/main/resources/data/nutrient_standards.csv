@@ -1,0 +1,15 @@
+nutrient,demo_min_mg,demo_max_mg,unit,source,source_url,version,basis,verified
+칼슘,750,3750,mg/day,AAFCO Dog Food Nutrient Profiles (adult maintenance),https://www.aafco.org/,2016,"성견 유지기 10kg·600kcal/day 기준으로 1000kcal당 값 환산",false
+인,600,2400,mg/day,AAFCO Dog Food Nutrient Profiles (adult maintenance),https://www.aafco.org/,2016,"성견 유지기 10kg·600kcal/day 기준",false
+비타민D,0.0019,0.0113,mg/day,AAFCO Dog Food Nutrient Profiles (adult maintenance),https://www.aafco.org/,2016,"콜레칼시페롤 질량. 125~750 IU/1000kcal 환산",false
+비타민A,0.225,11.25,mg/day,AAFCO Dog Food Nutrient Profiles (adult maintenance),https://www.aafco.org/,2016,"레티놀 당량. 1250~62500 IU/1000kcal, 1 IU=0.3µg",false
+비타민E,5.0,60.0,mg/day,AAFCO min + NRC 안전상한 참고,https://nap.nationalacademies.org/catalog/10668/,NRC 2006,"d-α-토코페롤. 최소 12.5 IU/1000kcal",false
+아연,12,150,mg/day,AAFCO min + 역대 최대치 참고,https://www.aafco.org/,2016,"20 mg/1000kcal 최소, SUL 근사 최대",false
+철,6,120,mg/day,AAFCO min + 안전상한 근사,https://www.aafco.org/,2016,"10 mg/1000kcal 최소",false
+구리,1.1,16.9,mg/day,AAFCO Dog Food Nutrient Profiles,https://www.aafco.org/,2016,"1.83 mg/1000kcal 최소",false
+망간,0.72,18,mg/day,AAFCO Dog Food Nutrient Profiles,https://www.aafco.org/,2016,"1.2 mg/1000kcal 최소",false
+요오드,0.15,1.65,mg/day,AAFCO Dog Food Nutrient Profiles,https://www.aafco.org/,2016,"0.25~2.75 mg/1000kcal",false
+셀레늄,0.048,0.3,mg/day,AAFCO Dog Food Nutrient Profiles,https://www.aafco.org/,2016,"0.08~0.5 mg/1000kcal",false
+나트륨,120,900,mg/day,AAFCO min + 역대 최대치 참고,https://www.aafco.org/,2016,"0.2~1.5 g/1000kcal",false
+칼륨,900,4000,mg/day,AAFCO min + 안전 근사 상한,https://www.aafco.org/,2016,"1.5 g/1000kcal 최소",false
+마그네슘,90,600,mg/day,AAFCO min + 안전 근사 상한,https://www.aafco.org/,2016,"0.15 g/1000kcal 최소",false

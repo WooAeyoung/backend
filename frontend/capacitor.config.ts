@@ -1,13 +1,16 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
+const serverUrl = process.env.WOOAEYOUNG_SERVER_URL?.trim();
+if (!serverUrl || new URL(serverUrl).protocol !== 'https:') {
+  throw new Error('WOOAEYOUNG_SERVER_URL에 배포된 우애영 HTTPS 서버 주소를 설정하세요.');
+}
+
 const config: CapacitorConfig = {
-  appId: 'ai.petbalance.app',
+  appId: 'ai.wooaeyoung.app',
   appName: '우애영',
   webDir: 'dist',
   server: {
-    // 라이브 Vercel 배포를 그대로 감싸는 방식 — 별도 오프라인 번들이 아니라
-    // WebView가 실제 사이트를 로드한다. API 호출도 이 origin 기준 상대경로로 그대로 동작한다.
-    url: 'https://petbalance-ai.vercel.app',
+    url: serverUrl,
     cleartext: false,
   },
 };

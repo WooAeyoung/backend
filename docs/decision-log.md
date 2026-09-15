@@ -9,7 +9,7 @@
 | 2026-09-04 | 셸은 Electron + electron-builder, 백엔드는 PyInstaller 로 동결해 sidecar 로 실행 | Node 툴체인 이미 존재, 대상 PC에 Python 불필요, 진짜 Windows 설치파일(.exe) 산출 | pywebview 단일 exe(경량이나 Python 중심), Tauri | `desktop/main.js` 가 빈 포트 탐색→spawn→`/health` 대기→창 로드 |
 | 2026-09-04 | React는 저장 없이 `POST /api/session/analyze` 로 매 조합 변경 시(250ms 디바운스) 재분석 | 화면 상태와 DB를 분리, 슬라이더 조작이 즉시 반영되면서도 계산 로직은 백엔드 단일 소스 | 프론트에서 재계산, 매번 펫 저장 | 기존 `analyze()` 재사용하는 세션 엔드포인트 추가 |
 | 2026-09-04 | 차트 색은 dataviz 스킬 레퍼런스 팔레트(범주형 slot 1-4 + 상태 팔레트)를 CSS 토큰으로 고정, 상태는 색+아이콘+라벨 이중 인코딩 | CVD 안전, 라이트/다크 일관, 색 단독 의미 전달 금지 | 임의 색상, 차트 라이브러리 기본 테마 | `frontend/src/styles/tokens.css`, 차트는 경량 div/SVG 자작 |
-| 2026-09-04 | 저장 DB 경로는 `PB_DB` 환경변수로 주입(패키지: 사용자 데이터 폴더) | 동결된 exe 내부는 읽기 전용, 쓰기 가능한 위치 필요 | exe 옆에 db 생성 | `backend/database.py` 가 `PB_DB` 우선, 읽기 자산은 `sys._MEIPASS` 기준 |
+| 2026-09-04 | 저장 DB 경로는 `WOOAEYOUNG_DB` 환경변수로 주입(패키지: 사용자 데이터 폴더) | 동결된 exe 내부는 읽기 전용, 쓰기 가능한 위치 필요 | exe 옆에 db 생성 | `backend/database.py` 가 `WOOAEYOUNG_DB` 우선, 읽기 자산은 `sys._MEIPASS` 기준 |
 | 2026-09-04 | UI를 사이드바 앱 레이아웃으로 전면 개편(스크롤 대시보드 → 좌측 내비 + 화면 전환 + 상태바), 밀도 상향 | "웹 같다"는 피드백. 설치형 앱은 지속 내비게이션·상태 표시가 기본 | 스크롤 유지+시각 압축 | `AppShell`/`Sidebar`/`StatusBar`, 토큰 라운드·간격 축소, `container` 폭 제한 해제 |
 | 2026-09-04 | 인증(F-028)은 별도 서비스 없이 기존 FastAPI에 내장, 표준 라이브러리만 사용 | 백엔드가 곧 계정 서버. 의존성 추가 없이 PBKDF2 + 세션 토큰 테이블로 충분 | JWT 라이브러리, 외부 IdP | `backend/auth.py`, `users`/`sessions` 테이블, `pets.user_id` 마이그레이션, `Depends(current_user)` |
 | 2026-09-04 | 여러 기기 동기화는 "같은 API 서버 URL 공유"로 해결(앱 설정에서 지정) | 설치형은 각자 로컬 백엔드지만, 팀이 백엔드 하나 호스팅하면 계정·데이터 공유됨 | P2P 동기화, 클라우드 전용 | 프론트 `getApiBase()`/설정 화면, 클라이언트가 base URL + Bearer 토큰 주입 |

@@ -4,7 +4,7 @@
 // 후속 기능(파일 저장 대화상자 등)을 위해 최소 표면만 노출한다.
 const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("petbalance", {
+contextBridge.exposeInMainWorld("wooaeyoung", {
   isElectron: true,
   platform: process.platform,
   version: process.env.npm_package_version || "0.2.0",

@@ -14,10 +14,10 @@ import uvicorn
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="petbalance-backend")
-    parser.add_argument("--host", default=os.environ.get("PB_HOST", "127.0.0.1"))
+    parser = argparse.ArgumentParser(prog="wooaeyoung-backend")
+    parser.add_argument("--host", default=os.environ.get("WOOAEYOUNG_HOST", "127.0.0.1"))
     parser.add_argument(
-        "--port", type=int, default=int(os.environ.get("PORT") or os.environ.get("PB_PORT", "8756"))
+        "--port", type=int, default=int(os.environ.get("PORT") or os.environ.get("WOOAEYOUNG_PORT", "8756"))
     )
     args = parser.parse_args()
     uvicorn.run(

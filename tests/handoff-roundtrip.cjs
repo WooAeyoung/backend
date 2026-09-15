@@ -14,6 +14,9 @@ const animal = {id:'test',name:'나비 🐾',weight:4.1,age:2,cage:'A-3',status:
 const products = [{id:'a',name:'밸런스 성견 사료',brand:'밸런스펫',category:'주식',basis:100,price:42000,nutrients:{칼슘:1050,비타민D:0.002}},{id:'b',name:'데일리 멀티',brand:'',category:'영양제',basis:3,price:18000,nutrients:{칼슘:120}}];
 const code=createHandoff(animal,{name:'행복한 보호소',products});
 const decoded=parseHandoff(code);
+assert.equal(decoded.kind, 'wooaeyoung-handoff');
+const legacy = {...decoded, kind: 'petbalance-handoff'};
+assert.equal(parseHandoff(Buffer.from(JSON.stringify(legacy)).toString('base64')).kind, 'wooaeyoung-handoff');
 assert.equal(decoded.animal.name,animal.name);
 assert.equal(decoded.animal.healthNotes,animal.notes);
 assert.equal(decoded.animal.weightKg,4.1);

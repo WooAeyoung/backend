@@ -1,1 +1,1 @@
-"""PetBalance AI core package."""
+"""우애영 core package."""

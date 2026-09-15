@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">우애영</string>
     <string name="title_activity_main">우애영</string>
-    <string name="package_name">ai.petbalance.app</string>
-    <string name="custom_url_scheme">ai.petbalance.app</string>
+    <string name="package_name">ai.wooaeyoung.app</string>
+    <string name="custom_url_scheme">ai.wooaeyoung.app</string>
 </resources>

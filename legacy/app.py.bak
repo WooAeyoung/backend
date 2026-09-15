@@ -23,7 +23,7 @@ ROOT = Path(__file__).parent
 PRODUCTS_PATH = ROOT / "data" / "processed" / "products.csv"
 STANDARDS_PATH = ROOT / "data" / "processed" / "nutrient_standards.csv"
 
-st.set_page_config(page_title="PetBalance AI", page_icon="🐾", layout="wide")
+st.set_page_config(page_title="우애영", page_icon="🐾", layout="wide")
 
 st.markdown(
     """
@@ -41,7 +41,7 @@ st.markdown(
 )
 
 st.markdown(
-    '<div class="hero"><h1>🐾 PetBalance AI</h1>'
+    '<div class="hero"><h1>🐾 우애영</h1>'
     '<p>여러 제품을 하나의 식단으로 계산하는 영양 의사결정 보조 서비스</p></div>',
     unsafe_allow_html=True,
 )

@@ -1,4 +1,4 @@
-# PetBalance AI MVP Brief
+# 우애영 MVP Brief
 
 ## 문제
 

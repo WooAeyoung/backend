@@ -8,7 +8,7 @@ type Theme = "light" | "dark" | "system";
 
 function currentTheme(): Theme {
   try {
-    return (localStorage.getItem("pb-theme") as Theme) || "system";
+    return (localStorage.getItem("wooaeyoung-theme") as Theme) || "system";
   } catch {
     return "system";
   }
@@ -18,7 +18,7 @@ function applyTheme(t: Theme) {
   if (t === "system") root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", t);
   try {
-    localStorage.setItem("pb-theme", t);
+    localStorage.setItem("wooaeyoung-theme", t);
   } catch {
     /* ignore */
   }
@@ -104,7 +104,7 @@ export function SettingsView() {
           <Field label="API 서버 URL">
             <input
               className="input"
-              placeholder="예: https://petbalance.mycompany.com"
+              placeholder="예: https://wooaeyoung.example.com"
               value={apiBase}
               onChange={(e) => setApiBaseInput(e.target.value)}
             />

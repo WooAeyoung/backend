@@ -88,8 +88,8 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
   function finish() {
     dispatch({ type: "profile", patch: { name: name.trim() || "우리 아이", weight, age, breed } });
     try {
-      localStorage.setItem("pb-goals", JSON.stringify(goals));
-      localStorage.setItem("pb-onboarded", "1");
+      localStorage.setItem("wooaeyoung-goals", JSON.stringify(goals));
+      localStorage.setItem("wooaeyoung-onboarded", "1");
     } catch {
       /* ignore */
     }
@@ -1102,7 +1102,7 @@ function MyScreen({ onOrders }: { onOrders: () => void }) {
   const [notif, setNotif] = useState(true);
   const [theme, setTheme] = useState(() => {
     try {
-      return localStorage.getItem("pb-theme") || "system";
+      return localStorage.getItem("wooaeyoung-theme") || "system";
     } catch {
       return "system";
     }
@@ -1113,7 +1113,7 @@ function MyScreen({ onOrders }: { onOrders: () => void }) {
     if (t === "system") r.removeAttribute("data-theme");
     else r.setAttribute("data-theme", t);
     try {
-      localStorage.setItem("pb-theme", t);
+      localStorage.setItem("wooaeyoung-theme", t);
     } catch {
       /* ignore */
     }

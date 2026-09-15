@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useSession } from "../state/session";
 import { useAuth } from "../state/auth";
 import { Icon, type IconName } from "./Icon";
@@ -15,10 +15,10 @@ const NAV: { id: View; label: string; title: string; icon: IconName }[] = [
   { id: "analysis", label: "영양소 분석", title: "영양소 분석", icon: "list" },
   { id: "products", label: "제품 추가", title: "제품 추가", icon: "plus" },
 ];
-const pb = (window as unknown as { petbalance?: {
+const wooaeyoung = (window as unknown as { wooaeyoung?: {
   isElectron?: boolean; platform?: string;
   win?: { minimize(): void; toggleMaximize(): void; close(): void };
-} }).petbalance;
+} }).wooaeyoung;
 
 export function AppShell() {
   const [view, setView] = useState<View>("diet");
@@ -28,13 +28,13 @@ export function AppShell() {
   const current = NAV.find((item) => item.id === view)!;
   return (
     <div className="appwin">
-      <div className={"titlebar" + (pb?.platform === "darwin" ? " mac" : "")}>
+      <div className={"titlebar" + (wooaeyoung?.platform === "darwin" ? " mac" : "")}>
         <span className="tb-brand"><span className="tb-logo" aria-hidden><Icon name="paw" size={12} /></span>우애영</span>
         <span className="tb-spacer" />
-        {pb?.isElectron && pb.platform !== "darwin" && <div className="win-btns no-print">
-          <button aria-label="최소화" onClick={() => pb.win?.minimize()}>─</button>
-          <button aria-label="최대화" onClick={() => pb.win?.toggleMaximize()}>▢</button>
-          <button className="close" aria-label="닫기" onClick={() => pb.win?.close()}>✕</button>
+        {wooaeyoung?.isElectron && wooaeyoung.platform !== "darwin" && <div className="win-btns no-print">
+          <button aria-label="최소화" onClick={() => wooaeyoung.win?.minimize()}>─</button>
+          <button aria-label="최대화" onClick={() => wooaeyoung.win?.toggleMaximize()}>▢</button>
+          <button className="close" aria-label="닫기" onClick={() => wooaeyoung.win?.close()}>✕</button>
         </div>}
       </div>
       <div className="appbody">

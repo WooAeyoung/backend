@@ -27,9 +27,9 @@ function findFreePort() {
 
 /** dev: `python -m backend`  ·  packaged: 번들된 실행파일 */
 function backendCommand(port) {
-  const env = { ...process.env, PB_PORT: String(port), PB_HOST: "127.0.0.1" };
+  const env = { ...process.env, WOOAEYOUNG_PORT: String(port), WOOAEYOUNG_HOST: "127.0.0.1" };
   if (isDev) {
-    const py = process.env.PB_PYTHON || (process.platform === "win32" ? "python" : "python3");
+    const py = process.env.WOOAEYOUNG_PYTHON || (process.platform === "win32" ? "python" : "python3");
     return {
       cmd: py,
       args: ["-m", "backend", "--port", String(port)],
@@ -37,9 +37,9 @@ function backendCommand(port) {
     };
   }
   const exe =
-    process.platform === "win32" ? "petbalance-backend.exe" : "petbalance-backend";
+    process.platform === "win32" ? "wooaeyoung-backend.exe" : "wooaeyoung-backend";
   const bin = path.join(process.resourcesPath, "backend", exe);
-  env.PB_DB = path.join(app.getPath("userData"), "petbalance.db");
+  env.WOOAEYOUNG_DB = path.join(app.getPath("userData"), "wooaeyoung.db");
   return { cmd: bin, args: ["--port", String(port)], opts: { env } };
 }
 
@@ -120,7 +120,7 @@ async function createWindow() {
     cb(permission === "media" || permission === "camera");
   });
 
-  if (isDev && process.env.PB_VITE === "1") {
+  if (isDev && process.env.WOOAEYOUNG_VITE === "1") {
     // 선택: Vite 개발 서버(HMR)로 UI 로드. API 는 프록시로 backendPort 전달.
     await win.loadURL("http://127.0.0.1:5173");
     win.webContents.openDevTools({ mode: "detach" });

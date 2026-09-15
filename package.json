@@ -1,5 +1,5 @@
 {
-  "name": "petbalance-ai",
+  "name": "wooaeyoung-ai",
   "productName": "우애영",
   "version": "0.2.0",
   "private": true,
@@ -13,9 +13,9 @@
     "frontend:dev": "cd frontend && npm run dev",
     "frontend:build": "cd frontend && npm run build",
     "dev": "concurrently -k -n api,ui -c blue,magenta \"npm:backend\" \"npm:frontend:dev\"",
-    "dev:app": "concurrently -k -n api,ui,app \"npm:backend\" \"npm:frontend:dev\" \"wait-on http-get://127.0.0.1:5173 && cross-env PB_VITE=1 electron .\"",
+    "dev:app": "concurrently -k -n api,ui,app \"npm:backend\" \"npm:frontend:dev\" \"wait-on http-get://127.0.0.1:5173 && cross-env WOOAEYOUNG_VITE=1 electron .\"",
     "start": "npm run frontend:build && electron .",
-    "backend:freeze": "pyinstaller --noconfirm --distpath dist --workpath build/.pyinstaller build/petbalance-backend.spec",
+    "backend:freeze": "pyinstaller --noconfirm --distpath dist --workpath build/.pyinstaller build/wooaeyoung-backend.spec",
     "dist": "npm run frontend:build && npm run backend:freeze && electron-builder"
   },
   "devDependencies": {
@@ -26,7 +26,7 @@
     "wait-on": "^8.0.1"
   },
   "build": {
-    "appId": "ai.petbalance.desktop",
+    "appId": "ai.wooaeyoung.desktop",
     "productName": "우애영",
     "directories": {
       "output": "release",
@@ -38,7 +38,7 @@
     ],
     "extraResources": [
       {
-        "from": "dist/petbalance-backend",
+        "from": "dist/wooaeyoung-backend",
         "to": "backend",
         "filter": ["**/*"]
       }

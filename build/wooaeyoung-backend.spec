@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
-"""PetBalance AI 분석 백엔드를 단일 폴더 실행파일로 동결한다.
+"""우애영 분석 백엔드를 단일 폴더 실행파일로 동결한다.
 
-  npm run backend:freeze      # → dist/petbalance-backend/petbalance-backend(.exe)
+  npm run backend:freeze      # → dist/wooaeyoung-backend/wooaeyoung-backend(.exe)
 
 electron-builder 가 이 폴더를 앱 리소스의 resources/backend/ 로 복사하고,
 desktop/main.js 가 자식 프로세스로 실행한다.
@@ -42,7 +42,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="petbalance-backend",
+    name="wooaeyoung-backend",
     console=True,
     disable_windowed_traceback=False,
     icon=None,
@@ -53,5 +53,5 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=False,
-    name="petbalance-backend",
+    name="wooaeyoung-backend",
 )

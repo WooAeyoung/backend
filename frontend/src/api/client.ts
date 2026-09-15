@@ -10,8 +10,8 @@ import type {
   User,
 } from "./types";
 
-const API_BASE_KEY = "pb-api-base";
-const TOKEN_KEY = "pb-token";
+const API_BASE_KEY = "wooaeyoung-api-base";
+const TOKEN_KEY = "wooaeyoung-token";
 
 export function getApiBase(): string {
   try {

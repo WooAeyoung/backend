@@ -1,5 +1,5 @@
 {
-  "project_name": "PetBalance AI",
+  "project_name": "우애영",
   "hackathon_theme": "반려동물 영양 안전과 정보 탐색 문제",
   "problem_statement": "여러 제품을 급여하는 보호자는 하루 총 영양소와 중복 가능성을 알기 어렵다.",
   "target_user": "사료 외 간식·영양제를 함께 급여하는 성견 보호자",
@@ -11,7 +11,7 @@
   "current_phase": "all_34_features_implemented_sidebar_app",
   "assumptions": ["성견 단일 생애주기", "기준값은 실제 급여용이 아닌 기능 검증용"],
   "decisions": ["판정은 규칙 엔진이 담당", "미표기 영양소를 0으로 간주하지 않음", "가격 추천보다 조합 분석 우선", "UI는 React SPA, 설치형은 Electron+PyInstaller sidecar", "Streamlit UI는 legacy/로 보존"],
-  "deliverables": ["backend/api.py", "backend/nutrition.py", "backend/label_ocr.py", "backend/database.py", "frontend/ (React SPA)", "desktop/main.js", "build/petbalance-backend.spec", "data/processed/products.csv", "data/processed/nutrient_standards.csv", "tests/ (42개)", "sql/schema.sql"],
+  "deliverables": ["backend/api.py", "backend/nutrition.py", "backend/label_ocr.py", "backend/database.py", "frontend/ (React SPA)", "desktop/main.js", "build/wooaeyoung-backend.spec", "data/processed/products.csv", "data/processed/nutrient_standards.csv", "tests/ (42개)", "sql/schema.sql"],
   "work_items": [
     {"task":"src→backend 재구성 + FastAPI 확장","status":"done"},
     {"task":"React 사이드바 앱 레이아웃 전면 개편 + 상태바","status":"done"},

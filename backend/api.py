@@ -1,7 +1,7 @@
 """분석 API 서버 (FastAPI + Uvicorn).
 
 F-027: 분석 API — 영양소 합산·상태 판정·제품별 기여도를 JSON 으로 반환한다.
-로컬 SQLite(db/petbalance.db)와 CSV 데모 데이터를 함께 사용할 수 있다.
+로컬 SQLite(db/wooaeyoung.db)와 CSV 데모 데이터를 함께 사용할 수 있다.
 """
 
 from __future__ import annotations
@@ -68,13 +68,13 @@ from backend.nutrition import (
     summarize_intake,
 )
 
-APP = FastAPI(title="PetBalance AI Analysis API", version="0.2.0")
-PUBLIC_SERVER = os.environ.get("PB_PUBLIC_SERVER", "0") == "1"
+APP = FastAPI(title="우애영 Analysis API", version="0.2.0")
+PUBLIC_SERVER = os.environ.get("WOOAEYOUNG_PUBLIC_SERVER", "0") == "1"
 
 APP.add_middleware(
     CORSMiddleware,
     allow_origins=(
-        [s.strip() for s in os.environ.get("PB_CORS_ORIGINS", "").split(",") if s.strip()]
+        [s.strip() for s in os.environ.get("WOOAEYOUNG_CORS_ORIGINS", "").split(",") if s.strip()]
         if PUBLIC_SERVER else ["*"]
     ),
     allow_methods=["*"],
@@ -121,7 +121,7 @@ def _ensure_schema() -> None:
 ROOT = Path(__file__).resolve().parent.parent
 # PyInstaller 로 동결하면 읽기 전용 자산은 _MEIPASS 아래에 풀린다.
 BUNDLE = Path(getattr(sys, "_MEIPASS", ROOT))
-# 저장 DB 는 database 모듈과 같은 경로를 쓴다(PB_DB 우선). 두 곳이 갈리면 안 된다.
+# 저장 DB 는 database 모듈과 같은 경로를 쓴다(WOOAEYOUNG_DB 우선). 두 곳이 갈리면 안 된다.
 DEFAULT_DB = DB_PATH
 PROCESSED = BUNDLE / "data" / "processed"
 FRONTEND_DIST = BUNDLE / "frontend" / "dist"

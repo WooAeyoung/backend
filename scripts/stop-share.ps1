@@ -13,4 +13,4 @@ foreach ($kind in @('tunnel', 'server')) {
     }
 }
 Remove-Item -LiteralPath $stateFile
-Write-Output 'Sharing stopped. Saved app data is retained in .runtime/share/petbalance.db.'
+Write-Output 'Sharing stopped. Saved app data is retained in .runtime/share/wooaeyoung.db.'

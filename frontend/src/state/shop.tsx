@@ -44,8 +44,8 @@ interface ShopCtx {
 }
 
 const Ctx = createContext<ShopCtx | null>(null);
-const CART_KEY = "pb-cart";
-const DIET_KEY = "pb-diet";
+const CART_KEY = "wooaeyoung-cart";
+const DIET_KEY = "wooaeyoung-diet";
 const DEF_G: Record<string, number> = { food_a: 120, supp_cal: 2, snack_a: 10, multi_a: 3 };
 
 export function ShopProvider({ children }: { children: ReactNode }) {
