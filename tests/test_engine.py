@@ -49,13 +49,23 @@ def test_puppy_energy_uses_expected_adult_weight_and_returns_contributions():
     result = response.json()
     assert result["referenceEnergyKcal"] == pytest.approx((254.1 - 135 * (6 / 20)) * 6 ** 0.75)
     assert result["contributions"][0]["name"] == "데일리 밸런스 독"
-    assert result["summary"] == {"deficient":0,"adequate":0,"caution":0,"excess":0,"noStandard":6}
-    assert any("성장기 영양 기준선" in warning for warning in result["warnings"])
+    assert result["summary"]["noStandard"] == 2
+    nutrients = {item["nutrientId"]: item for item in result["nutrients"]}
+    kcal = result["referenceEnergyKcal"]
+    assert nutrients["CALCIUM"]["minimum"] == pytest.approx(kcal / 1000 * 2000)
+    assert nutrients["PHOSPHORUS"]["minimum"] == pytest.approx(kcal / 1000 * 1750)
+    assert nutrients["VITAMIN_D"]["minimum"] == pytest.approx(kcal / 1000 * 3.125)
 
     body["maxItems"] = 3
     recommendation = client.post("/api/v1/recommendations", json=body).json()
-    assert recommendation["items"] == []
-    assert "판정할 수 없습니다" in recommendation["message"]
+    assert len(recommendation["items"]) <= 3
+    assert "기준" in recommendation["message"]
+
+def test_large_breed_puppy_uses_early_late_growth_calcium_rule():
+    body = payload(); body["profile"].update({"weightKg":5,"age":{"value":5,"unit":"MONTH"},"expectedAdultWeightKg":20})
+    result = client.post("/api/v1/analyses", json=body).json()
+    calcium = next(item for item in result["nutrients"] if item["nutrientId"] == "CALCIUM")
+    assert calcium["minimum"] == pytest.approx(result["referenceEnergyKcal"] / 1000 * 2500)
 
 def test_product_search_uses_prefix_index_and_barcode_hash():
     prefix = client.get("/api/v1/products", params={"query":"칼슘"})

@@ -41,11 +41,14 @@ def energy(request: AnalysisRequest) -> float:
 
 def thresholds(request: AnalysisRequest, kcal: float) -> dict:
     species = request.profile.species.value
-    if life_stage(request) != "ADULT":
-        return {nutrient_id: {"minimum": None, "caution": None, "upper": None} for nutrient_id in STANDARDS[species]}
+    stage = life_stage(request)
     caution_ratio = 0.75 if species == "DOG" else 0.5
+    standards = deepcopy(STANDARDS[species][stage])
+    # FEDIAF 2025 footnote b: 예상 성체 15 kg 초과인 개는 6개월까지 후기 성장기 칼슘 2.5 g/1000 kcal를 적용한다.
+    if species == "DOG" and stage == "GROWTH_LATE" and request.profile.expectedAdultWeightKg > 15 and request.profile.age.days < 182.625:
+        standards["CALCIUM"] = {"minimum": 2500, "upper": 4500}
     result = {}
-    for nutrient_id, values in STANDARDS[species].items():
+    for nutrient_id, values in standards.items():
         minimum = kcal / 1000 * values["minimum"] if values.get("minimum") is not None else None
         upper = kcal / 1000 * values["upper"] if values.get("upper") is not None else None
         caution = kcal / 1000 * values["caution"] if values.get("caution") is not None else (upper * caution_ratio if upper else None)
@@ -124,16 +127,17 @@ def analyze(request: AnalysisRequest) -> dict:
         calcium = next(x["total"] for x in nutrients if x["nutrientId"] == "CALCIUM")
         phosphorus = next(x["total"] for x in nutrients if x["nutrientId"] == "PHOSPHORUS")
         value = calcium / phosphorus if phosphorus else None
-        ratios["calciumPhosphorus"] = {"value":value,"status":"UNAVAILABLE" if value is None else ("LOW" if value < 1 else "HIGH" if value > 2 else "ADEQUATE")}
+        stage = life_stage(request)
+        if stage == "GROWTH_EARLY": ratio_upper = 1.6
+        elif stage == "GROWTH_LATE": ratio_upper = 1.8 if request.profile.expectedAdultWeightKg <= 15 or request.profile.age.days >= 182.625 else 1.6
+        else: ratio_upper = 2.0
+        ratios["calciumPhosphorus"] = {"value":value,"status":"UNAVAILABLE" if value is None else ("LOW" if value < 1 else "HIGH" if value > ratio_upper else "ADEQUATE")}
     fingerprint = sha256(request.model_dump_json().encode()).hexdigest()[:16]
     result_warnings=warnings+["비타민 E와 오메가3는 현재 제품 단위가 공식 기준과 달라 기준 없음으로 표시하며 추천 점수에서 제외합니다.","상한이 없는 성분은 안전하다는 뜻이 아니라 비교 가능한 공식 상한을 적용하지 않았다는 뜻입니다."]
-    if life_stage(request) != "ADULT": result_warnings.append("성장기 영양 기준선은 아직 지원하지 않아 모든 성분을 기준 없음으로 표시하고 영양제 추천을 제공하지 않습니다.")
-    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025, adult values per 1000 kcal ME","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":result_warnings}
+    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025, life-stage values per 1000 kcal ME","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":result_warnings}
 
 def recommend(request: RecommendationRequest) -> dict:
     base = analyze(request)
-    if all(item["status"] == "NO_STANDARD" for item in base["nutrients"]):
-        return {"traceId":base["traceId"],"standardVersion":STANDARD_VERSION,"message":"성장기 영양 기준선이 아직 지원되지 않아 추천 안전성을 판정할 수 없습니다.","items":[],"excluded":[],"usesEstimatedFeed":base["usesEstimatedFeed"]}
     current = {x["nutrientId"]:x["total"] for x in base["nutrients"]}
     limits = {x["nutrientId"]:{"minimum":x["minimum"],"caution":x["caution"],"upper":x["upper"]} for x in base["nutrients"]}
     original = {x["nutrientId"]:x["status"] for x in base["nutrients"]}
@@ -162,5 +166,5 @@ def recommend(request: RecommendationRequest) -> dict:
         selected.append({"productId":product["id"],"name":product["name"],"dailyAmount":product["recommendedDailyAmount"],"unit":product["servingUnit"],"score":round(best[0],3),"fixedNutrients":fixed,"projectedStatuses":statuses})
         remaining = [p for p in remaining if p["id"] != product["id"]]
         original = statuses
-    return {"traceId":base["traceId"],"standardVersion":STANDARD_VERSION,"message":"현재 부족 성분은 없습니다. 안전 범위 후보입니다." if base["summary"]["deficient"] == 0 else "부족 성분과 안전 여유를 함께 고려했습니다.","items":selected,"excluded":list({x["productId"]:x for x in excluded}.values()),"usesEstimatedFeed":base["usesEstimatedFeed"]}
+    return {"traceId":base["traceId"],"standardVersion":STANDARD_VERSION,"message":"적용 가능한 기준에서 주의·과다가 검출되지 않은 후보입니다." if base["summary"]["deficient"] == 0 else "부족 성분, 기준선까지의 여유, 중복 성분을 함께 고려했습니다.","items":selected,"excluded":list({x["productId"]:x for x in excluded}.values()),"usesEstimatedFeed":base["usesEstimatedFeed"]}
 
