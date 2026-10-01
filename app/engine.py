@@ -143,7 +143,8 @@ def analyze(request: AnalysisRequest) -> dict:
         ratios["calciumPhosphorus"] = {"value":value,"status":calcium_phosphorus_status(request, calcium, phosphorus)}
     fingerprint = sha256(request.model_dump_json().encode()).hexdigest()[:16]
     result_warnings=warnings+["비타민 E와 오메가3는 현재 제품 단위가 공식 기준과 달라 기준 없음으로 표시하며 추천 점수에서 제외합니다.","상한이 없는 성분은 안전하다는 뜻이 아니라 비교 가능한 공식 상한을 적용하지 않았다는 뜻입니다."]
-    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025, life-stage values per 1000 kcal ME","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":result_warnings}
+    caution_percent = 75 if request.profile.species.value == "DOG" else 50
+    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025, life-stage values per 1000 kcal ME","cautionPolicy":f"서비스 조기 경고 기준: 공식 상한의 {caution_percent}%부터 주의","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":result_warnings}
 
 def recommend(request: RecommendationRequest) -> dict:
     base = analyze(request)

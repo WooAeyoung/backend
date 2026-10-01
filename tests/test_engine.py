@@ -36,10 +36,17 @@ def test_analysis_returns_trace_ratio_and_all_nutrients():
     assert response.status_code == 200
     body = response.json()
     assert body["standardVersion"] == "FEDIAF-2025.09"
+    assert body["cautionPolicy"] == "서비스 조기 경고 기준: 공식 상한의 75%부터 주의"
     assert len(body["nutrients"]) == 6
     assert body["ratios"]["calciumPhosphorus"]["status"] == "ADEQUATE"
     assert next(item for item in body["nutrients"] if item["nutrientId"] == "VITAMIN_E")["status"] == "NO_STANDARD"
     assert next(item for item in body["nutrients"] if item["nutrientId"] == "ZINC")["status"] in {"DEFICIENT", "ADEQUATE_NO_UPPER_LIMIT"}
+
+def test_cat_caution_policy_is_labeled_as_service_policy():
+    body = payload("feed-balanced-cat", 80)
+    body["profile"] = {"name":"나비","species":"CAT","weightKg":4,"age":{"value":24,"unit":"MONTH"},"completeFeed":True}
+    result = client.post("/api/v1/analyses", json=body).json()
+    assert result["cautionPolicy"] == "서비스 조기 경고 기준: 공식 상한의 50%부터 주의"
 
 def test_estimated_feed_is_explicit():
     response = client.post("/api/v1/analyses", json=payload("feed-complete-unknown",100))
