@@ -8,6 +8,8 @@ from .catalog import ENERGY_K, NUTRIENTS, PRODUCT_BY_ID, PRODUCTS, STANDARDS, ST
 from .models import AnalysisRequest, ProductType, RecommendationRequest
 
 UNIT_FACTOR = {"UG": 0.001, "MG": 1.0, "G": 1000.0}
+NUTRIENT_IDS = tuple(NUTRIENTS)
+NUTRIENT_INDEX = {nutrient_id: index for index, nutrient_id in enumerate(NUTRIENT_IDS)}
 
 class AnalysisError(ValueError):
     pass
@@ -55,8 +57,9 @@ def thresholds(request: AnalysisRequest, kcal: float) -> dict:
         result[nutrient_id] = {"minimum": minimum, "caution": caution, "upper": upper}
     return result
 
-def aggregate(request: AnalysisRequest, limits: dict) -> tuple[dict, bool, list[str], list[dict]]:
-    totals = {key: {"fromFeed":0.0,"fromSupplements":0.0,"source":"ACTUAL"} for key in NUTRIENTS}
+def aggregate(request: AnalysisRequest, limits: dict) -> tuple[list[dict], bool, list[str], list[dict]]:
+    # 성분 ID를 고정 인덱스로 바꿔 모든 합산에서 같은 순서와 O(1) 위치 접근을 보장한다.
+    totals = [{"fromFeed":0.0,"fromSupplements":0.0,"source":"ACTUAL"} for _ in NUTRIENT_IDS]
     estimated, warnings, contributions = False, [], []
     for item in request.items:
         product = PRODUCT_BY_ID.get(item.productId)
@@ -72,8 +75,9 @@ def aggregate(request: AnalysisRequest, limits: dict) -> tuple[dict, bool, list[
                 values = {}
                 for nutrient_id, line in limits.items():
                     if line["minimum"] is not None:
-                        totals[nutrient_id][bucket] += line["minimum"]
-                        totals[nutrient_id]["source"] = "ESTIMATED"
+                        nutrient_total = totals[NUTRIENT_INDEX[nutrient_id]]
+                        nutrient_total[bucket] += line["minimum"]
+                        nutrient_total["source"] = "ESTIMATED"
                         values[nutrient_id] = line["minimum"]
                 contributions.append({"name":product["name"],"type":"FEED","source":"ESTIMATED","nutrients":values})
                 warnings.append("사료 상세 성분이 없어 최소 권장량으로 추정했습니다.")
@@ -84,7 +88,7 @@ def aggregate(request: AnalysisRequest, limits: dict) -> tuple[dict, bool, list[
             values = {}
             for nutrient_id, value in product["nutrients"].items():
                 applied = value * ratio
-                totals[nutrient_id][bucket] += applied
+                totals[NUTRIENT_INDEX[nutrient_id]][bucket] += applied
                 values[nutrient_id] = applied
             contributions.append({"name":product["name"],"type":product["type"],"source":"ACTUAL","nutrients":values})
     for item in request.manualItems:
@@ -99,7 +103,7 @@ def aggregate(request: AnalysisRequest, limits: dict) -> tuple[dict, bool, list[
             if not meta:
                 raise AnalysisError(f"지원하지 않는 성분입니다: {nutrient.nutrientId}")
             applied = convert(nutrient.amount, nutrient.unit, meta["unit"]) * ratio
-            totals[nutrient.nutrientId][bucket] += applied
+            totals[NUTRIENT_INDEX[nutrient.nutrientId]][bucket] += applied
             values[nutrient.nutrientId] = applied
         contributions.append({"name":item.name,"type":item.type.value,"source":"ACTUAL","nutrients":values})
     return totals, estimated, warnings, contributions
@@ -125,8 +129,8 @@ def analyze(request: AnalysisRequest) -> dict:
     limits = thresholds(request, kcal)
     totals, estimated, warnings, contributions = aggregate(request, limits)
     nutrients, summary = [], {"deficient":0,"adequate":0,"caution":0,"excess":0,"noStandard":0}
-    for nutrient_id, meta in NUTRIENTS.items():
-        parts = totals[nutrient_id]
+    for index, (nutrient_id, meta) in enumerate(NUTRIENTS.items()):
+        parts = totals[index]
         total = parts["fromFeed"] + parts["fromSupplements"]
         status = classify(total, limits[nutrient_id])
         summary[{"NO_STANDARD":"noStandard","DEFICIENT":"deficient","CAUTION":"caution","EXCESS":"excess"}.get(status,"adequate")] += 1
@@ -148,8 +152,31 @@ def recommend(request: RecommendationRequest) -> dict:
     original = {x["nutrientId"]:x["status"] for x in base["nutrients"]}
     selected, excluded = [], []
     remaining = [p for p in PRODUCTS if p["type"] == "SUPPLEMENT" and p.get("recommendedDailyAmount")]
+    class MaxHeap:
+        def __init__(self): self.values = []
+        def push(self, value):
+            self.values.append(value); index = len(self.values) - 1
+            while index:
+                parent = (index - 1) // 2
+                if self.values[parent][:4] >= value[:4]: break
+                self.values[parent], self.values[index] = self.values[index], self.values[parent]
+                index = parent
+        def pop(self):
+            if not self.values: return None
+            top, last = self.values[0], self.values.pop()
+            if self.values:
+                self.values[0] = last; index = 0
+                while True:
+                    left, right = index * 2 + 1, index * 2 + 2
+                    if left >= len(self.values): break
+                    best = right if right < len(self.values) and self.values[right][:4] > self.values[left][:4] else left
+                    if self.values[index][:4] >= self.values[best][:4]: break
+                    self.values[index], self.values[best] = self.values[best], self.values[index]
+                    index = best
+            return top
+
     for _ in range(request.maxItems):
-        safe = []
+        safe = MaxHeap()
         for product in remaining:
             ratio = product["recommendedDailyAmount"] / product["servingAmount"]
             projected = deepcopy(current)
@@ -167,9 +194,9 @@ def recommend(request: RecommendationRequest) -> dict:
             margins = [(limits[k]["upper"]-projected[k])/(limits[k]["upper"]-limits[k]["minimum"]) for k in product["nutrients"] if limits[k]["upper"] and limits[k]["minimum"] and limits[k]["upper"] > limits[k]["minimum"]]
             margin = max(0.0, min(1.0, sum(margins)/len(margins))) if margins else 0.0
             score = 10 * fixed + 5 * margin - overlap
-            safe.append((score,fixed,-len(product["nutrients"]),product["name"],product,projected,statuses))
-        if not safe: break
-        best = max(safe, key=lambda x:(x[0],x[1],x[2],x[3]))
+            safe.push((score,fixed,-len(product["nutrients"]),product["name"],product,projected,statuses))
+        best = safe.pop()
+        if best is None: break
         _, fixed, _, _, product, current, statuses = best
         selected.append({"productId":product["id"],"name":product["name"],"dailyAmount":product["recommendedDailyAmount"],"unit":product["servingUnit"],"score":round(best[0],3),"fixedNutrients":fixed,"projectedStatuses":statuses})
         remaining = [p for p in remaining if p["id"] != product["id"]]

@@ -6,11 +6,12 @@
     "인증과 영구 DB 없이 데모 카탈로그 사용",
     "사료 실제값과 추정값을 결과에서 구분",
     "추천 전 모든 성분의 주의·과다 여부 재계산",
-    "제품 JSON을 시작 시 메모리에 적재하고 해시·트라이 인덱스로 검색",
+    "제품 JSON을 시작 시 메모리에 적재하고 직접 구현한 해시·트라이 인덱스로 검색",
+    "고정 성분 순서 배열로 합산하고 직접 구현한 최대 힙으로 추천 후보 선택",
     "FEDIAF 2025와 단위가 일치하는 성분만 기준선 판정",
     "단위가 맞지 않는 비타민 E·오메가3는 기준 없음으로 분리"
   ],
-  "deliverables": ["data/products.json", "app/catalog_index.py", "app/main.py", "app/engine.py", "app/catalog.py", "tests/test_engine.py"],
+  "deliverables": ["data/products.json", "app/catalog_index.py", "app/main.py", "app/engine.py", "app/catalog.py", "tests/test_engine.py", "README.md"],
   "blockers": ["실제 제품 데이터의 비타민 E IU와 EPA+DHA 세부값 확보 필요"],
   "next_action": "실제 제품 라벨에 IU와 EPA+DHA가 제공되면 해당 성분의 공식 기준 비교를 활성화한다"
 }

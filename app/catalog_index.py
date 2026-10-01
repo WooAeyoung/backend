@@ -19,17 +19,52 @@ class _TrieNode:
         self.product_ids: list[str] = []
 
 
+class HashTable:
+    """Separate-chaining hash table used for product identity lookup."""
+
+    def __init__(self, size: int = 31) -> None:
+        self._buckets: list[list[tuple[str, dict]]] = [[] for _ in range(size)]
+
+    def _slot(self, key: str) -> int:
+        value = 0
+        for char in key:
+            value = (value * 31 + ord(char)) & 0xFFFFFFFF
+        return value % len(self._buckets)
+
+    def __setitem__(self, key: str, value: dict) -> None:
+        bucket = self._buckets[self._slot(key)]
+        for index, (stored_key, _) in enumerate(bucket):
+            if stored_key == key:
+                bucket[index] = (key, value)
+                return
+        bucket.append((key, value))
+
+    def get(self, key: str, default=None):
+        for stored_key, value in self._buckets[self._slot(key)]:
+            if stored_key == key:
+                return value
+        return default
+
+    def __contains__(self, key: str) -> bool:
+        return self.get(key) is not None
+
+    def __getitem__(self, key: str) -> dict:
+        value = self.get(key)
+        if value is None:
+            raise KeyError(key)
+        return value
+
+
 class ProductCatalog:
     """In-memory catalog with O(1) identity lookup and prefix search."""
 
     def __init__(self, products: Iterable[dict]) -> None:
         self.products = list(products)
-        self.by_id = {product["id"]: product for product in self.products}
-        self.by_barcode = {
-            product["barcode"]: product
-            for product in self.products
-            if product.get("barcode")
-        }
+        self.by_id, self.by_barcode = HashTable(), HashTable()
+        for product in self.products:
+            self.by_id[product["id"]] = product
+            if product.get("barcode"):
+                self.by_barcode[product["barcode"]] = product
         self._root = _TrieNode()
         for product in self.products:
             searchable = {
