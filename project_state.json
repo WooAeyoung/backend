@@ -1,6 +1,6 @@
 {
   "project_name": "우애영 Backend",
-  "current_phase": "mvp_scope_implemented_and_verified",
+  "current_phase": "f12_implemented_and_verified",
   "decisions": [
     "FastAPI 단일 계산 원천",
     "인증과 영구 DB 없이 데모 카탈로그 사용",
@@ -9,7 +9,9 @@
     "제품 JSON을 시작 시 메모리에 적재하고 직접 구현한 해시·트라이 인덱스로 검색",
     "고정 성분 순서 배열로 합산하고 직접 구현한 최대 힙으로 추천 후보 선택",
     "FEDIAF 2025와 단위가 일치하는 성분만 기준선 판정",
-    "단위가 맞지 않는 비타민 E·오메가3는 기준 없음으로 분리"
+    "단위가 맞지 않는 비타민 E·오메가3는 기준 없음으로 분리",
+    "개 75%·고양이 50% 주의선은 FEDIAF 공식값이 아닌 서비스 내부 조기 경고 정책으로 분리",
+    "F-12 수치·단위·각주 원문 대조와 백엔드 테스트·프론트엔드 빌드 완료"
   ],
   "deliverables": ["data/products.json", "app/catalog_index.py", "app/main.py", "app/engine.py", "app/catalog.py", "tests/test_engine.py", "README.md"],
   "blockers": ["실제 제품 데이터의 비타민 E IU와 EPA+DHA 세부값 확보 필요"],
