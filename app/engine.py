@@ -41,6 +41,8 @@ def energy(request: AnalysisRequest) -> float:
 
 def thresholds(request: AnalysisRequest, kcal: float) -> dict:
     species = request.profile.species.value
+    if life_stage(request) != "ADULT":
+        return {nutrient_id: {"minimum": None, "caution": None, "upper": None} for nutrient_id in STANDARDS[species]}
     caution_ratio = 0.75 if species == "DOG" else 0.5
     result = {}
     for nutrient_id, values in STANDARDS[species].items():
