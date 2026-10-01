@@ -20,9 +20,11 @@ def test_analysis_returns_trace_ratio_and_all_nutrients():
     response = client.post("/api/v1/analyses", json=payload())
     assert response.status_code == 200
     body = response.json()
-    assert body["standardVersion"] == "DEMO-2026.1"
+    assert body["standardVersion"] == "FEDIAF-2025.09"
     assert len(body["nutrients"]) == 6
     assert body["ratios"]["calciumPhosphorus"]["status"] == "ADEQUATE"
+    assert next(item for item in body["nutrients"] if item["nutrientId"] == "VITAMIN_E")["status"] == "NO_STANDARD"
+    assert next(item for item in body["nutrients"] if item["nutrientId"] == "ZINC")["status"] in {"DEFICIENT", "ADEQUATE_NO_UPPER_LIMIT"}
 
 def test_estimated_feed_is_explicit():
     response = client.post("/api/v1/analyses", json=payload("feed-complete-unknown",100))

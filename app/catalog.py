@@ -2,7 +2,7 @@ from pathlib import Path
 
 from .catalog_index import ProductCatalog
 
-STANDARD_VERSION = "DEMO-2026.1"
+STANDARD_VERSION = "FEDIAF-2025.09"
 
 NUTRIENTS = {
     "CALCIUM": {"name": "칼슘", "unit": "MG"},
@@ -18,17 +18,18 @@ CATALOG = ProductCatalog.from_json(Path(__file__).parents[1] / "data" / "product
 PRODUCTS = CATALOG.products
 PRODUCT_BY_ID = CATALOG.by_id
 
-# 1000 kcal 기준 데모 값. 실제 급여 판단에 사용할 수 없다.
+# FEDIAF Nutritional Guidelines 2025 성체 1000 kcal ME 기준.
+# 현재 제품 단위와 직접 비교할 수 없는 비타민 E와 오메가3는 기준 없음으로 둔다.
 STANDARDS = {
     "DOG": {
-        "CALCIUM":{"minimum":1000,"upper":2500}, "PHOSPHORUS":{"minimum":750,"upper":2000},
-        "VITAMIN_D":{"minimum":12.5,"upper":80}, "VITAMIN_E":{"minimum":12,"upper":100},
-        "OMEGA3":{"minimum":300,"upper":1200}, "ZINC":{"minimum":18,"upper":75},
+        "CALCIUM":{"minimum":1450,"upper":6250}, "PHOSPHORUS":{"minimum":1160,"upper":4000},
+        "VITAMIN_D":{"minimum":3.975,"upper":20}, "VITAMIN_E":{"minimum":None,"upper":None},
+        "OMEGA3":{"minimum":None,"upper":None}, "ZINC":{"minimum":20.8,"upper":None},
     },
     "CAT": {
-        "CALCIUM":{"minimum":1250,"upper":3000}, "PHOSPHORUS":{"minimum":1000,"upper":2500},
-        "VITAMIN_D":{"minimum":10,"upper":75}, "VITAMIN_E":{"minimum":10,"upper":100},
-        "OMEGA3":{"minimum":250,"upper":1000}, "ZINC":{"minimum":20,"upper":70},
+        "CALCIUM":{"minimum":1330,"upper":None}, "PHOSPHORUS":{"minimum":850,"upper":None},
+        "VITAMIN_D":{"minimum":2.0825,"upper":187.5}, "VITAMIN_E":{"minimum":None,"upper":None},
+        "OMEGA3":{"minimum":None,"upper":None}, "ZINC":{"minimum":25,"upper":None},
     },
 }
 ENERGY_K = {"DOG": 95.0, "CAT": 100.0}

@@ -124,7 +124,7 @@ def analyze(request: AnalysisRequest) -> dict:
         value = calcium / phosphorus if phosphorus else None
         ratios["calciumPhosphorus"] = {"value":value,"status":"UNAVAILABLE" if value is None else ("LOW" if value < 1 else "HIGH" if value > 2 else "ADEQUATE")}
     fingerprint = sha256(request.model_dump_json().encode()).hexdigest()[:16]
-    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025 Table VII-8b 열량식; 영양소 표는 데모 기준","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":warnings+["영양소 기준선은 현재 검증용 데모 기준입니다. FEDIAF 2025 성장기 열량식만 예상 성체 체중을 반영합니다. 실제 급여 판단은 수의사 상담을 확인하세요."]}
+    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025, adult values per 1000 kcal ME","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":warnings+["비타민 E와 오메가3는 현재 제품 단위가 공식 기준과 달라 기준 없음으로 표시하며 추천 점수에서 제외합니다.","상한이 없는 성분은 안전하다는 뜻이 아니라 비교 가능한 공식 상한을 적용하지 않았다는 뜻입니다."]}
 
 def recommend(request: RecommendationRequest) -> dict:
     base = analyze(request)
