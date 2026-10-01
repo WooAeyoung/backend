@@ -49,6 +49,13 @@ def test_puppy_energy_uses_expected_adult_weight_and_returns_contributions():
     result = response.json()
     assert result["referenceEnergyKcal"] == pytest.approx((254.1 - 135 * (6 / 20)) * 6 ** 0.75)
     assert result["contributions"][0]["name"] == "데일리 밸런스 독"
+    assert result["summary"] == {"deficient":0,"adequate":0,"caution":0,"excess":0,"noStandard":6}
+    assert any("성장기 영양 기준선" in warning for warning in result["warnings"])
+
+    body["maxItems"] = 3
+    recommendation = client.post("/api/v1/recommendations", json=body).json()
+    assert recommendation["items"] == []
+    assert "판정할 수 없습니다" in recommendation["message"]
 
 def test_product_search_uses_prefix_index_and_barcode_hash():
     prefix = client.get("/api/v1/products", params={"query":"칼슘"})

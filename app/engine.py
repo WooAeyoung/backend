@@ -112,12 +112,12 @@ def analyze(request: AnalysisRequest) -> dict:
     kcal = energy(request)
     limits = thresholds(request, kcal)
     totals, estimated, warnings, contributions = aggregate(request, limits)
-    nutrients, summary = [], {"deficient":0,"adequate":0,"caution":0,"excess":0}
+    nutrients, summary = [], {"deficient":0,"adequate":0,"caution":0,"excess":0,"noStandard":0}
     for nutrient_id, meta in NUTRIENTS.items():
         parts = totals[nutrient_id]
         total = parts["fromFeed"] + parts["fromSupplements"]
         status = classify(total, limits[nutrient_id])
-        summary[{"DEFICIENT":"deficient","CAUTION":"caution","EXCESS":"excess"}.get(status,"adequate")] += 1
+        summary[{"NO_STANDARD":"noStandard","DEFICIENT":"deficient","CAUTION":"caution","EXCESS":"excess"}.get(status,"adequate")] += 1
         nutrients.append({"nutrientId":nutrient_id,"name":meta["name"],"unit":meta["unit"],**parts,"total":total,**limits[nutrient_id],"status":status})
     ratios = {}
     if request.profile.species.value == "DOG":
@@ -126,10 +126,14 @@ def analyze(request: AnalysisRequest) -> dict:
         value = calcium / phosphorus if phosphorus else None
         ratios["calciumPhosphorus"] = {"value":value,"status":"UNAVAILABLE" if value is None else ("LOW" if value < 1 else "HIGH" if value > 2 else "ADEQUATE")}
     fingerprint = sha256(request.model_dump_json().encode()).hexdigest()[:16]
-    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025, adult values per 1000 kcal ME","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":warnings+["비타민 E와 오메가3는 현재 제품 단위가 공식 기준과 달라 기준 없음으로 표시하며 추천 점수에서 제외합니다.","상한이 없는 성분은 안전하다는 뜻이 아니라 비교 가능한 공식 상한을 적용하지 않았다는 뜻입니다."]}
+    result_warnings=warnings+["비타민 E와 오메가3는 현재 제품 단위가 공식 기준과 달라 기준 없음으로 표시하며 추천 점수에서 제외합니다.","상한이 없는 성분은 안전하다는 뜻이 아니라 비교 가능한 공식 상한을 적용하지 않았다는 뜻입니다."]
+    if life_stage(request) != "ADULT": result_warnings.append("성장기 영양 기준선은 아직 지원하지 않아 모든 성분을 기준 없음으로 표시하고 영양제 추천을 제공하지 않습니다.")
+    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025, adult values per 1000 kcal ME","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":result_warnings}
 
 def recommend(request: RecommendationRequest) -> dict:
     base = analyze(request)
+    if all(item["status"] == "NO_STANDARD" for item in base["nutrients"]):
+        return {"traceId":base["traceId"],"standardVersion":STANDARD_VERSION,"message":"성장기 영양 기준선이 아직 지원되지 않아 추천 안전성을 판정할 수 없습니다.","items":[],"excluded":[],"usesEstimatedFeed":base["usesEstimatedFeed"]}
     current = {x["nutrientId"]:x["total"] for x in base["nutrients"]}
     limits = {x["nutrientId"]:{"minimum":x["minimum"],"caution":x["caution"],"upper":x["upper"]} for x in base["nutrients"]}
     original = {x["nutrientId"]:x["status"] for x in base["nutrients"]}
@@ -147,7 +151,7 @@ def recommend(request: RecommendationRequest) -> dict:
                 excluded.append({"productId":product["id"],"name":product["name"],"reason":f"추가 후 주의·과다 예상: {', '.join(harmful)}"})
                 continue
             fixed = sum(1 for key,status in original.items() if status == "DEFICIENT" and statuses[key] != "DEFICIENT")
-            overlap = sum(1 for key in product["nutrients"] if original.get(key) != "DEFICIENT")
+            overlap = sum(1 for key in product["nutrients"] if original.get(key) not in {"DEFICIENT","NO_STANDARD"})
             margins = [(limits[k]["upper"]-projected[k])/(limits[k]["upper"]-limits[k]["minimum"]) for k in product["nutrients"] if limits[k]["upper"] and limits[k]["minimum"] and limits[k]["upper"] > limits[k]["minimum"]]
             margin = max(0.0, min(1.0, sum(margins)/len(margins))) if margins else 0.0
             score = 10 * fixed + 5 * margin - overlap
