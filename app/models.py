@@ -17,8 +17,8 @@ class Age(BaseModel):
     unit: Literal["WEEK", "MONTH"]
 
     @property
-    def days(self) -> int:
-        return round(self.value * (7 if self.unit == "WEEK" else 30.4375))
+    def days(self) -> float:
+        return self.value * (7 if self.unit == "WEEK" else 30.4375)
 
 class Profile(BaseModel):
     name: str = Field(default="우리 아이", min_length=1, max_length=30)

@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
-from app.engine import classify
+from app.engine import classify, life_stage
+from app.models import AnalysisRequest
 from app.main import app
 
 client = TestClient(app)
@@ -66,6 +67,24 @@ def test_large_breed_puppy_uses_early_late_growth_calcium_rule():
     result = client.post("/api/v1/analyses", json=body).json()
     calcium = next(item for item in result["nutrients"] if item["nutrientId"] == "CALCIUM")
     assert calcium["minimum"] == pytest.approx(result["referenceEnergyKcal"] / 1000 * 2500)
+
+def test_recommendation_excludes_candidate_that_breaks_calcium_phosphorus_ratio():
+    body = payload(amount=1); body["maxItems"] = 3
+    result = client.post("/api/v1/recommendations", json=body).json()
+    excluded = next(item for item in result["excluded"] if item["productId"] == "supp-calcium")
+    assert "칼슘:인 비율" in excluded["reason"]
+
+@pytest.mark.parametrize(("weeks", "expected"), [(13.999, "GROWTH_EARLY"), (14, "GROWTH_LATE")])
+def test_fourteen_week_life_stage_boundary(weeks, expected):
+    body = payload(); body["profile"].update({"age":{"value":weeks,"unit":"WEEK"},"expectedAdultWeightKg":15})
+    assert life_stage(AnalysisRequest.model_validate(body)) == expected
+
+@pytest.mark.parametrize(("adult_weight", "months", "calcium_per_1000"), [(15, 5, 2000), (15.01, 5, 2500), (20, 6, 2000)])
+def test_large_breed_weight_and_six_month_calcium_boundaries(adult_weight, months, calcium_per_1000):
+    body = payload(); body["profile"].update({"weightKg":5,"age":{"value":months,"unit":"MONTH"},"expectedAdultWeightKg":adult_weight})
+    result = client.post("/api/v1/analyses", json=body).json()
+    calcium = next(item for item in result["nutrients"] if item["nutrientId"] == "CALCIUM")
+    assert calcium["minimum"] == pytest.approx(result["referenceEnergyKcal"] / 1000 * calcium_per_1000)
 
 def test_product_search_uses_prefix_index_and_barcode_hash():
     prefix = client.get("/api/v1/products", params={"query":"칼슘"})

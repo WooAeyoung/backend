@@ -111,6 +111,15 @@ def classify(total: float, line: dict) -> str:
     if line["caution"] is not None and total >= line["caution"]: return "CAUTION"
     return "ADEQUATE" if line["upper"] is not None else "ADEQUATE_NO_UPPER_LIMIT"
 
+def calcium_phosphorus_status(request: AnalysisRequest, calcium: float, phosphorus: float) -> str:
+    if not phosphorus:
+        return "UNAVAILABLE"
+    stage, value = life_stage(request), calcium / phosphorus
+    if stage == "GROWTH_EARLY": upper = 1.6
+    elif stage == "GROWTH_LATE": upper = 1.8 if request.profile.expectedAdultWeightKg <= 15 or request.profile.age.days >= 182.625 else 1.6
+    else: upper = 2.0
+    return "LOW" if value < 1 else "HIGH" if value > upper else "ADEQUATE"
+
 def analyze(request: AnalysisRequest) -> dict:
     kcal = energy(request)
     limits = thresholds(request, kcal)
@@ -127,11 +136,7 @@ def analyze(request: AnalysisRequest) -> dict:
         calcium = next(x["total"] for x in nutrients if x["nutrientId"] == "CALCIUM")
         phosphorus = next(x["total"] for x in nutrients if x["nutrientId"] == "PHOSPHORUS")
         value = calcium / phosphorus if phosphorus else None
-        stage = life_stage(request)
-        if stage == "GROWTH_EARLY": ratio_upper = 1.6
-        elif stage == "GROWTH_LATE": ratio_upper = 1.8 if request.profile.expectedAdultWeightKg <= 15 or request.profile.age.days >= 182.625 else 1.6
-        else: ratio_upper = 2.0
-        ratios["calciumPhosphorus"] = {"value":value,"status":"UNAVAILABLE" if value is None else ("LOW" if value < 1 else "HIGH" if value > ratio_upper else "ADEQUATE")}
+        ratios["calciumPhosphorus"] = {"value":value,"status":calcium_phosphorus_status(request, calcium, phosphorus)}
     fingerprint = sha256(request.model_dump_json().encode()).hexdigest()[:16]
     result_warnings=warnings+["비타민 E와 오메가3는 현재 제품 단위가 공식 기준과 달라 기준 없음으로 표시하며 추천 점수에서 제외합니다.","상한이 없는 성분은 안전하다는 뜻이 아니라 비교 가능한 공식 상한을 적용하지 않았다는 뜻입니다."]
     return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025, life-stage values per 1000 kcal ME","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":result_warnings}
@@ -151,8 +156,11 @@ def recommend(request: RecommendationRequest) -> dict:
             for key, value in product["nutrients"].items(): projected[key] += value * ratio
             statuses = {key:classify(value, limits[key]) for key,value in projected.items()}
             harmful = [NUTRIENTS[key]["name"] for key,status in statuses.items() if key in product["nutrients"] and status in {"CAUTION","EXCESS"}]
+            if request.profile.species.value == "DOG" and ({"CALCIUM", "PHOSPHORUS"} & product["nutrients"].keys()):
+                ratio_status = calcium_phosphorus_status(request, projected["CALCIUM"], projected["PHOSPHORUS"])
+                if ratio_status in {"LOW", "HIGH"}: harmful.append("칼슘:인 비율")
             if harmful:
-                excluded.append({"productId":product["id"],"name":product["name"],"reason":f"추가 후 주의·과다 예상: {', '.join(harmful)}"})
+                excluded.append({"productId":product["id"],"name":product["name"],"reason":f"추가 후 기준 이탈 예상: {', '.join(harmful)}"})
                 continue
             fixed = sum(1 for key,status in original.items() if status == "DEFICIENT" and statuses[key] != "DEFICIENT")
             overlap = sum(1 for key in product["nutrients"] if original.get(key) not in {"DEFICIENT","NO_STANDARD"})
