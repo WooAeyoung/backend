@@ -21,11 +21,23 @@ def convert(value: float, source: str, target: str) -> float:
     return value * UNIT_FACTOR[source] / UNIT_FACTOR[target]
 
 def life_stage(request: AnalysisRequest) -> str:
-    return ("KITTEN" if request.profile.age.days < 365 else "ADULT") if request.profile.species.value == "CAT" else ("PUPPY" if request.profile.age.days < 365 else "ADULT")
+    days = request.profile.age.days
+    if request.profile.species.value == "CAT":
+        return "GROWTH" if days < 365 else "ADULT"
+    if days < 98:
+        return "GROWTH_EARLY"
+    return "GROWTH_LATE" if days < 365 else "ADULT"
 
 def energy(request: AnalysisRequest) -> float:
     species = request.profile.species.value
-    return ENERGY_K[species] * request.profile.weightKg ** (0.75 if species == "DOG" else 0.67)
+    stage = life_stage(request)
+    # FEDIAF의 생애주기별 에너지 기준 구조를 적용한다.
+    # 세부 영양소 표는 catalog.py의 기준 버전과 함께 관리한다.
+    factor = 95.0 if species == "DOG" and stage == "ADULT" else 110.0 if species == "DOG" else 75.0 if stage == "ADULT" else 100.0
+    if species == "DOG" and stage != "ADULT":
+        # FEDIAF 2025 Table VII-8b, 8주~1년: 예상 성체 체중 비율을 사용한다.
+        factor = 254.1 - 135.0 * (request.profile.weightKg / request.profile.expectedAdultWeightKg)
+    return factor * request.profile.weightKg ** (0.75 if species == "DOG" else 0.67)
 
 def thresholds(request: AnalysisRequest, kcal: float) -> dict:
     species = request.profile.species.value
@@ -38,9 +50,9 @@ def thresholds(request: AnalysisRequest, kcal: float) -> dict:
         result[nutrient_id] = {"minimum": minimum, "caution": caution, "upper": upper}
     return result
 
-def aggregate(request: AnalysisRequest, limits: dict) -> tuple[dict, bool, list[str]]:
+def aggregate(request: AnalysisRequest, limits: dict) -> tuple[dict, bool, list[str], list[dict]]:
     totals = {key: {"fromFeed":0.0,"fromSupplements":0.0,"source":"ACTUAL"} for key in NUTRIENTS}
-    estimated, warnings = False, []
+    estimated, warnings, contributions = False, [], []
     for item in request.items:
         product = PRODUCT_BY_ID.get(item.productId)
         if not product:
@@ -52,19 +64,28 @@ def aggregate(request: AnalysisRequest, limits: dict) -> tuple[dict, bool, list[
         if product["type"] == "FEED" and not product["nutrients"]:
             if request.profile.completeFeed:
                 estimated = True
+                values = {}
                 for nutrient_id, line in limits.items():
                     if line["minimum"] is not None:
                         totals[nutrient_id][bucket] += line["minimum"]
                         totals[nutrient_id]["source"] = "ESTIMATED"
+                        values[nutrient_id] = line["minimum"]
+                contributions.append({"name":product["name"],"type":"FEED","source":"ESTIMATED","nutrients":values})
                 warnings.append("사료 상세 성분이 없어 최소 권장량으로 추정했습니다.")
             else:
+                contributions.append({"name":product["name"],"type":"FEED","source":"ACTUAL","nutrients":{}})
                 warnings.append("사료 성분을 알 수 없어 사료 기여량을 0으로 계산했습니다.")
         else:
+            values = {}
             for nutrient_id, value in product["nutrients"].items():
-                totals[nutrient_id][bucket] += value * ratio
+                applied = value * ratio
+                totals[nutrient_id][bucket] += applied
+                values[nutrient_id] = applied
+            contributions.append({"name":product["name"],"type":product["type"],"source":"ACTUAL","nutrients":values})
     for item in request.manualItems:
         bucket = "fromFeed" if item.type == ProductType.FEED else "fromSupplements"
         ratio, seen = item.dailyAmount / item.servingAmount, set()
+        values = {}
         for nutrient in item.nutrients:
             if nutrient.nutrientId in seen:
                 raise AnalysisError(f"중복 성분입니다: {nutrient.nutrientId}")
@@ -72,8 +93,11 @@ def aggregate(request: AnalysisRequest, limits: dict) -> tuple[dict, bool, list[
             meta = NUTRIENTS.get(nutrient.nutrientId)
             if not meta:
                 raise AnalysisError(f"지원하지 않는 성분입니다: {nutrient.nutrientId}")
-            totals[nutrient.nutrientId][bucket] += convert(nutrient.amount, nutrient.unit, meta["unit"]) * ratio
-    return totals, estimated, warnings
+            applied = convert(nutrient.amount, nutrient.unit, meta["unit"]) * ratio
+            totals[nutrient.nutrientId][bucket] += applied
+            values[nutrient.nutrientId] = applied
+        contributions.append({"name":item.name,"type":item.type.value,"source":"ACTUAL","nutrients":values})
+    return totals, estimated, warnings, contributions
 
 def classify(total: float, line: dict) -> str:
     if line["minimum"] is None and line["upper"] is None: return "NO_STANDARD"
@@ -85,7 +109,7 @@ def classify(total: float, line: dict) -> str:
 def analyze(request: AnalysisRequest) -> dict:
     kcal = energy(request)
     limits = thresholds(request, kcal)
-    totals, estimated, warnings = aggregate(request, limits)
+    totals, estimated, warnings, contributions = aggregate(request, limits)
     nutrients, summary = [], {"deficient":0,"adequate":0,"caution":0,"excess":0}
     for nutrient_id, meta in NUTRIENTS.items():
         parts = totals[nutrient_id]
@@ -100,7 +124,7 @@ def analyze(request: AnalysisRequest) -> dict:
         value = calcium / phosphorus if phosphorus else None
         ratios["calciumPhosphorus"] = {"value":value,"status":"UNAVAILABLE" if value is None else ("LOW" if value < 1 else "HIGH" if value > 2 else "ADEQUATE")}
     fingerprint = sha256(request.model_dump_json().encode()).hexdigest()[:16]
-    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"ratios":ratios,"warnings":warnings}
+    return {"traceId":f"{fingerprint}-{uuid4().hex[:8]}","standardVersion":STANDARD_VERSION,"standardSource":"FEDIAF Nutritional Guidelines 2025 Table VII-8b 열량식; 영양소 표는 데모 기준","lifeStage":life_stage(request),"referenceEnergyKcal":kcal,"usesEstimatedFeed":estimated,"summary":summary,"nutrients":nutrients,"contributions":contributions,"ratios":ratios,"warnings":warnings+["영양소 기준선은 현재 검증용 데모 기준입니다. FEDIAF 2025 성장기 열량식만 예상 성체 체중을 반영합니다. 실제 급여 판단은 수의사 상담을 확인하세요."]}
 
 def recommend(request: RecommendationRequest) -> dict:
     base = analyze(request)
@@ -116,13 +140,13 @@ def recommend(request: RecommendationRequest) -> dict:
             projected = deepcopy(current)
             for key, value in product["nutrients"].items(): projected[key] += value * ratio
             statuses = {key:classify(value, limits[key]) for key,value in projected.items()}
-            harmful = [NUTRIENTS[key]["name"] for key,status in statuses.items() if status in {"CAUTION","EXCESS"} and original.get(key) not in {"CAUTION","EXCESS"}]
+            harmful = [NUTRIENTS[key]["name"] for key,status in statuses.items() if key in product["nutrients"] and status in {"CAUTION","EXCESS"}]
             if harmful:
-                excluded.append({"productId":product["id"],"name":product["name"],"reason":f"주의·과다 예상: {', '.join(harmful)}"})
+                excluded.append({"productId":product["id"],"name":product["name"],"reason":f"추가 후 주의·과다 예상: {', '.join(harmful)}"})
                 continue
             fixed = sum(1 for key,status in original.items() if status == "DEFICIENT" and statuses[key] != "DEFICIENT")
             overlap = sum(1 for key in product["nutrients"] if original.get(key) != "DEFICIENT")
-            margins = [(limits[k]["upper"]-v)/(limits[k]["upper"]-limits[k]["minimum"]) for k,v in projected.items() if limits[k]["upper"] and limits[k]["minimum"] and limits[k]["upper"] > limits[k]["minimum"]]
+            margins = [(limits[k]["upper"]-projected[k])/(limits[k]["upper"]-limits[k]["minimum"]) for k in product["nutrients"] if limits[k]["upper"] and limits[k]["minimum"] and limits[k]["upper"] > limits[k]["minimum"]]
             margin = max(0.0, min(1.0, sum(margins)/len(margins))) if margins else 0.0
             score = 10 * fixed + 5 * margin - overlap
             safe.append((score,fixed,-len(product["nutrients"]),product["name"],product,projected,statuses))

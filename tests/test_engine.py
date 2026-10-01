@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 from app.engine import classify
 from app.main import app
@@ -38,4 +39,26 @@ def test_recommendation_never_returns_more_than_requested():
 def test_puppy_requires_adult_size():
     body = payload(); body["profile"]["age"] = {"value":6,"unit":"MONTH"}
     assert client.post("/api/v1/analyses", json=body).status_code == 422
+
+def test_puppy_energy_uses_expected_adult_weight_and_returns_contributions():
+    body = payload(); body["profile"].update({"weightKg":6,"age":{"value":6,"unit":"MONTH"},"expectedAdultWeightKg":20})
+    response = client.post("/api/v1/analyses", json=body)
+    assert response.status_code == 200
+    result = response.json()
+    assert result["referenceEnergyKcal"] == pytest.approx((254.1 - 135 * (6 / 20)) * 6 ** 0.75)
+    assert result["contributions"][0]["name"] == "데일리 밸런스 독"
+
+def test_product_search_uses_prefix_index_and_barcode_hash():
+    prefix = client.get("/api/v1/products", params={"query":"칼슘"})
+    assert prefix.status_code == 200
+    assert [item["id"] for item in prefix.json()["items"]] == ["supp-calcium"]
+
+    barcode = client.get("/api/v1/products", params={"query":"8801000000059"})
+    assert barcode.status_code == 200
+    assert barcode.json()["items"][0]["id"] == "supp-omega"
+
+def test_product_search_can_filter_type():
+    response = client.get("/api/v1/products", params={"query":"데일리", "type":"SUPPLEMENT"})
+    assert response.status_code == 200
+    assert [item["id"] for item in response.json()["items"]] == ["supp-multi"]
 

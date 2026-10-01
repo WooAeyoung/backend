@@ -1,13 +1,14 @@
 {
   "project_name": "우애영 Backend",
-  "current_phase": "mvp_implemented",
+  "current_phase": "mvp_scope_implemented_and_verified",
   "decisions": [
     "FastAPI 단일 계산 원천",
     "인증과 영구 DB 없이 데모 카탈로그 사용",
     "사료 실제값과 추정값을 결과에서 구분",
-    "추천 전 모든 성분의 주의·과다 여부 재계산"
+    "추천 전 모든 성분의 주의·과다 여부 재계산",
+    "제품 JSON을 시작 시 메모리에 적재하고 해시·트라이 인덱스로 검색"
   ],
-  "deliverables": ["app/main.py", "app/engine.py", "app/catalog.py", "tests/test_engine.py"],
+  "deliverables": ["data/products.json", "app/catalog_index.py", "app/main.py", "app/engine.py", "app/catalog.py", "tests/test_engine.py"],
   "blockers": ["공인 영양 기준 및 제품 데이터 검증 필요"],
-  "next_action": "공인 데이터로 app/catalog.py의 데모 값을 교체한다"
+  "next_action": "공인 데이터로 data/products.json과 데모 영양 기준을 교체한다"
 }

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from .catalog import NUTRIENTS, PRODUCTS, STANDARD_VERSION
+from .catalog import CATALOG, NUTRIENTS, STANDARD_VERSION
 from .engine import AnalysisError, analyze, recommend
 from .models import AnalysisRequest, RecommendationRequest
 
@@ -12,9 +12,9 @@ def health(): return {"status":"ok","standardVersion":STANDARD_VERSION}
 
 @app.get("/api/v1/products")
 def products(query: str = Query(default="", max_length=100), type: str | None = None, limit: int = Query(default=10, ge=1, le=20)):
-    needle = "".join(query.lower().split())
-    items = [p for p in PRODUCTS if (not needle or needle in "".join((p["name"]+p["brand"]).lower().split())) and (not type or p["type"] == type)]
-    return {"items":[{k:p[k] for k in ("id","name","brand","type","servingUnit","dataQuality")} for p in items[:limit]]}
+    items = CATALOG.search(query=query, product_type=type, limit=limit)
+    public_fields = ("id", "barcode", "name", "brand", "type", "servingUnit", "dataQuality")
+    return {"items":[{key:product[key] for key in public_fields if key in product} for product in items]}
 
 @app.get("/api/v1/nutrients")
 def nutrients(): return {"items":[{"id":key,**value} for key,value in NUTRIENTS.items()]}

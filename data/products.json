@@ -1,0 +1,11 @@
+{
+  "products": [
+    {"id":"feed-balanced-dog","barcode":"8801000000011","name":"데일리 밸런스 독","brand":"우애영 데모","type":"FEED","servingAmount":100,"servingUnit":"G","dataQuality":"COMPLETE","nutrients":{"CALCIUM":900,"PHOSPHORUS":720,"VITAMIN_D":6,"VITAMIN_E":10,"OMEGA3":180,"ZINC":12}},
+    {"id":"feed-balanced-cat","barcode":"8801000000028","name":"데일리 밸런스 캣","brand":"우애영 데모","type":"FEED","servingAmount":80,"servingUnit":"G","dataQuality":"COMPLETE","nutrients":{"CALCIUM":760,"PHOSPHORUS":650,"VITAMIN_D":5,"VITAMIN_E":9,"OMEGA3":220,"ZINC":10}},
+    {"id":"feed-complete-unknown","barcode":"8801000000035","name":"성분 미표기 완전사료","brand":"우애영 데모","type":"FEED","servingAmount":100,"servingUnit":"G","dataQuality":"MINIMUM_ONLY","nutrients":{}},
+    {"id":"supp-calcium","barcode":"8801000000042","name":"칼슘 플러스","brand":"우애영 데모","type":"SUPPLEMENT","servingAmount":1,"servingUnit":"TABLET","recommendedDailyAmount":1,"dataQuality":"COMPLETE","nutrients":{"CALCIUM":180,"PHOSPHORUS":60}},
+    {"id":"supp-omega","barcode":"8801000000059","name":"오메가 밸런스","brand":"우애영 데모","type":"SUPPLEMENT","servingAmount":1,"servingUnit":"CAPSULE","recommendedDailyAmount":1,"dataQuality":"COMPLETE","nutrients":{"OMEGA3":240,"VITAMIN_E":2}},
+    {"id":"supp-multi","barcode":"8801000000066","name":"데일리 멀티","brand":"우애영 데모","type":"SUPPLEMENT","servingAmount":1,"servingUnit":"TABLET","recommendedDailyAmount":1,"dataQuality":"COMPLETE","nutrients":{"VITAMIN_D":4,"VITAMIN_E":6,"ZINC":5}},
+    {"id":"supp-zinc","barcode":"8801000000073","name":"아연 케어","brand":"우애영 데모","type":"SUPPLEMENT","servingAmount":1,"servingUnit":"TABLET","recommendedDailyAmount":1,"dataQuality":"COMPLETE","nutrients":{"ZINC":7}}
+  ]
+}

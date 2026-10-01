@@ -26,14 +26,16 @@ class Profile(BaseModel):
     weightKg: float = Field(gt=0, le=100)
     age: Age
     adultSize: Literal["S", "M", "L", "XL", "XXL"] | None = None
+    expectedAdultWeightKg: float | None = Field(default=None, gt=0, le=100)
     completeFeed: bool = True
 
     @model_validator(mode="after")
     def validate_profile(self):
         if self.age.days < 56:
             raise ValueError("8주 미만 개체는 현재 지원하지 않습니다.")
-        if self.species == Species.DOG and self.age.days < 365 and not self.adultSize:
-            raise ValueError("12개월 미만 개는 예상 성체 체급이 필요합니다.")
+        if self.species == Species.DOG and self.age.days < 365:
+            if self.expectedAdultWeightKg is None or self.expectedAdultWeightKg < self.weightKg:
+                raise ValueError("12개월 미만 개는 현재 체중 이상인 예상 성체 체중이 필요합니다.")
         return self
 
 class FeedingItem(BaseModel):
