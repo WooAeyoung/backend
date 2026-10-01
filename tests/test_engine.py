@@ -1,10 +1,24 @@
 import pytest
 from fastapi.testclient import TestClient
 from app.engine import classify, life_stage
+from app.catalog import STANDARDS
 from app.models import AnalysisRequest
 from app.main import app
 
 client = TestClient(app)
+
+def test_fediaf_2025_standard_constants_match_verified_table():
+    assert STANDARDS == {
+        "DOG": {
+            "ADULT": {"CALCIUM":{"minimum":1450,"upper":6250},"PHOSPHORUS":{"minimum":1160,"upper":4000},"VITAMIN_D":{"minimum":159/40,"upper":800/40},"VITAMIN_E":{"minimum":None,"upper":None},"OMEGA3":{"minimum":None,"upper":None},"ZINC":{"minimum":20.8,"upper":None}},
+            "GROWTH_EARLY": {"CALCIUM":{"minimum":2500,"upper":4000},"PHOSPHORUS":{"minimum":2250,"upper":None},"VITAMIN_D":{"minimum":138/40,"upper":800/40},"VITAMIN_E":{"minimum":None,"upper":None},"OMEGA3":{"minimum":None,"upper":None},"ZINC":{"minimum":25,"upper":None}},
+            "GROWTH_LATE": {"CALCIUM":{"minimum":2000,"upper":4500},"PHOSPHORUS":{"minimum":1750,"upper":None},"VITAMIN_D":{"minimum":125/40,"upper":800/40},"VITAMIN_E":{"minimum":None,"upper":None},"OMEGA3":{"minimum":None,"upper":None},"ZINC":{"minimum":25,"upper":None}},
+        },
+        "CAT": {
+            "ADULT": {"CALCIUM":{"minimum":1330,"upper":None},"PHOSPHORUS":{"minimum":850,"upper":None},"VITAMIN_D":{"minimum":83.3/40,"upper":7500/40},"VITAMIN_E":{"minimum":None,"upper":None},"OMEGA3":{"minimum":None,"upper":None},"ZINC":{"minimum":25,"upper":None}},
+            "GROWTH": {"CALCIUM":{"minimum":2500,"upper":None},"PHOSPHORUS":{"minimum":2100,"upper":None},"VITAMIN_D":{"minimum":70/40,"upper":7500/40},"VITAMIN_E":{"minimum":None,"upper":None},"OMEGA3":{"minimum":None,"upper":None},"ZINC":{"minimum":18.8,"upper":None}},
+        },
+    }
 
 def payload(product="feed-balanced-dog", amount=80):
     return {"profile":{"name":"몽이","species":"DOG","weightKg":6.2,"age":{"value":24,"unit":"MONTH"},"completeFeed":True},"items":[{"productId":product,"dailyAmount":amount,"unit":"G"}],"manualItems":[]}

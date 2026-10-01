@@ -2,7 +2,7 @@
 
 사료와 영양제의 하루 성분량을 합산해 FEDIAF 2025 생애주기별 기준과 비교하고, 적용 가능한 기준에서 주의·과다와 Ca:P 비율 이탈이 없는 후보를 추천하는 FastAPI MVP입니다.
 
-> 제품과 영양 기준 수치는 기능 검증용 데모입니다. 실제 급여 판단이나 수의학적 처방에 사용할 수 없습니다.
+> 제품 수치는 기능 검증용 데모이며, 영양 기준선은 FEDIAF Nutritional Guidelines 2025를 적용합니다. 이 서비스는 실제 급여 판단이나 수의학적 처방을 대신하지 않습니다.
 
 ## 실행
 
@@ -33,4 +33,6 @@ pytest -q
 - 직접 구현한 최대 힙과 선택 후 재평가를 이용한 최대 3개 추천
 
 영양 기준 출처: https://europeanpetfood.org/wp-content/uploads/2025/09/FEDIAF-Nutritional-Guidelines_2025-ONLINE.pdf
+
+수치·단위·각주 대조 기록: [docs/standards-validation.md](docs/standards-validation.md)
 
