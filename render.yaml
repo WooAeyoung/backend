@@ -10,3 +10,5 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.7
+      - key: CORS_ORIGINS
+        value: https://wooaeyoung.github.io

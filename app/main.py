@@ -1,3 +1,4 @@
+import os
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query
@@ -7,7 +8,20 @@ from .engine import AnalysisError, analyze, recommend
 from .models import AnalysisRequest, RecommendationRequest
 
 app = FastAPI(title="우애영 API", version="1.0.0")
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"], allow_methods=["*"], allow_headers=["*"])
+cors_origins = [
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:5173,https://wooaeyoung.github.io",
+    ).split(",")
+    if origin.strip()
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors_origins,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/health")
 def health(): return {"status":"ok","standardVersion":STANDARD_VERSION}
