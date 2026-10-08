@@ -18,6 +18,9 @@ API 문서: `http://localhost:8000/docs`
 
 카카오 챗봇 스킬 URL: `https://<배포-호스트>/api/v1/kakao/skill`
 
+지원 명령어: `/도움말`, `/상태`, `/이슈`, `/배포`, `/프론트`
+슬래시 없이 `도움말`, `상태`처럼 입력해도 같은 명령으로 처리합니다.
+
 ## Render 배포
 
 저장소 루트의 `render.yaml`을 Blueprint로 등록하면 FastAPI 서비스가 생성됩니다.
