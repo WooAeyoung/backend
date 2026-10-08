@@ -16,6 +16,14 @@ uvicorn app.main:app --reload
 
 API 문서: `http://localhost:8000/docs`
 
+카카오 챗봇 스킬 URL: `https://<배포-호스트>/api/v1/kakao/skill`
+
+## Render 배포
+
+저장소 루트의 `render.yaml`을 Blueprint로 등록하면 FastAPI 서비스가 생성됩니다.
+배포 후 `/health`가 `200 OK`인지 확인하고 카카오 챗봇 관리자센터의 스킬 URL에
+`/api/v1/kakao/skill` 엔드포인트를 등록합니다.
+
 ## 테스트
 
 ```powershell
