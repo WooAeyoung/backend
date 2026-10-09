@@ -85,6 +85,7 @@ def kakao_skill(payload: dict[str, Any]):
             "• /상태 - 연결 상태 확인\n"
             "• /이슈 - GitHub 이슈 명령 안내\n"
             "• /배포 - GitHub Actions 실행 안내\n"
+            "• /백엔드 - Backend 주소 보기\n"
             "• /프론트 - 프론트엔드 주소 보기\n"
             "• /내아이디 - 명령 권한 등록용 ID 확인"
         ),
@@ -104,9 +105,20 @@ def kakao_skill(payload: dict[str, Any]):
             "서비스: https://wooaeyoung.github.io/Frontend/\n"
             "저장소: https://github.com/WooAeyoung/Frontend"
         ),
+        "백엔드": (
+            "우애영 Backend\n"
+            "API 문서: https://wooaeyoung-backend.onrender.com/docs\n"
+            "상태 확인: https://wooaeyoung-backend.onrender.com/health\n"
+            "저장소: https://github.com/WooAeyoung/backend"
+        ),
         "내아이디": f"내 카카오 사용자 ID: {user_id or '확인할 수 없음'}",
     }
-    aliases = {"help": "도움말", "헬프": "도움말", "메뉴": "도움말"}
+    aliases = {
+        "help": "도움말",
+        "헬프": "도움말",
+        "메뉴": "도움말",
+        "backend": "백엔드",
+    }
     command = aliases.get(normalized, normalized)
     if command.startswith("이슈 "):
         parts = normalized.split(" ", 2)
@@ -160,6 +172,7 @@ def kakao_skill(payload: dict[str, Any]):
                 {"action": "message", "label": "연결 상태", "messageText": "/상태"},
                 {"action": "message", "label": "이슈 만들기", "messageText": "/이슈"},
                 {"action": "message", "label": "배포하기", "messageText": "/배포"},
+                {"action": "message", "label": "백엔드 열기", "messageText": "/백엔드"},
                 {"action": "message", "label": "프론트 열기", "messageText": "/프론트"},
                 {"action": "message", "label": "내 ID", "messageText": "/내아이디"},
             ],

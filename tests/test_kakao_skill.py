@@ -16,7 +16,19 @@ def test_kakao_skill_returns_open_builder_response():
     body = response.json()
     assert body["version"] == "2.0"
     assert "/상태" in body["template"]["outputs"][0]["simpleText"]["text"]
-    assert len(body["template"]["quickReplies"]) == 6
+    assert len(body["template"]["quickReplies"]) == 7
+
+
+def test_kakao_skill_returns_backend_links():
+    response = client.post(
+        "/api/v1/kakao/skill",
+        json={"userRequest": {"utterance": "/백엔드"}},
+    )
+
+    assert response.status_code == 200
+    text = response.json()["template"]["outputs"][0]["simpleText"]["text"]
+    assert "https://wooaeyoung-backend.onrender.com/docs" in text
+    assert "https://github.com/WooAeyoung/backend" in text
 
 
 def test_kakao_skill_handles_empty_payload():
