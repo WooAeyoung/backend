@@ -24,6 +24,9 @@ API 문서: `http://localhost:8000/docs`
 GitHub 쓰기 명령은 Render 환경변수 `GITHUB_TOKEN`과
 `KAKAO_ALLOWED_USER_IDS`(쉼표로 구분한 카카오 사용자 ID)가 모두 설정된 사용자만 실행할 수 있습니다.
 
+GitHub push/issue 카카오 알림은 두 저장소의 Actions에 `KAKAO_REST_API_KEY`,
+`KAKAO_CLIENT_SECRET`, `KAKAO_REFRESH_TOKEN`, `KAKAO_SECRET_UPDATER_TOKEN` 비밀값이 필요합니다.
+
 ## Render 배포
 
 저장소 루트의 `render.yaml`을 Blueprint로 등록하면 FastAPI 서비스가 생성됩니다.

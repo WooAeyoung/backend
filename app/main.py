@@ -1,9 +1,11 @@
 import os
 import json
+import base64
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+from nacl.public import PublicKey, SealedBox
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -75,11 +77,14 @@ def kakao_user_is_allowed(user_id: str) -> bool:
 
 @app.get("/api/v1/kakao/oauth/callback")
 def kakao_oauth_callback(code: str):
-    """Exchange a one-time Kakao authorization code during initial setup."""
+    """Exchange a one-time Kakao authorization code for setup."""
     client_id = os.getenv("KAKAO_REST_API_KEY", "").strip()
     client_secret = os.getenv("KAKAO_CLIENT_SECRET", "").strip()
+    secret_writer = os.getenv("GITHUB_SECRET_TOKEN", "").strip()
     if not client_id or not client_secret:
         raise HTTPException(status_code=503, detail="Kakao OAuth is not configured.")
+    if not secret_writer:
+        raise HTTPException(status_code=503, detail="GitHub secret writer is not configured.")
 
     request = Request(
         "https://kauth.kakao.com/oauth/token",
@@ -97,9 +102,68 @@ def kakao_oauth_callback(code: str):
     )
     try:
         with urlopen(request, timeout=10) as response:
-            return json.loads(response.read())
+            token_data = json.loads(response.read())
+            refresh_token = token_data.get("refresh_token", "")
+            if not refresh_token:
+                raise HTTPException(status_code=502, detail="Kakao did not return a refresh token.")
+            values = {
+                "KAKAO_REST_API_KEY": client_id,
+                "KAKAO_CLIENT_SECRET": client_secret,
+                "KAKAO_REFRESH_TOKEN": refresh_token,
+                "KAKAO_SECRET_UPDATER_TOKEN": secret_writer,
+            }
+            for repository in GITHUB_REPOSITORIES.values():
+                for name, value in values.items():
+                    _set_github_actions_secret(repository, name, value)
+            from fastapi.responses import Response
+
+            return Response(
+                content="카카오 승인이 완료되어 Backend와 Frontend의 GitHub Actions 비밀값에 등록했습니다.",
+                media_type="text/plain; charset=utf-8",
+                headers={"Cache-Control": "no-store"},
+            )
     except (HTTPError, URLError) as error:
         raise HTTPException(status_code=502, detail="Kakao OAuth token exchange failed.") from error
+
+
+def _set_github_actions_secret(repository: str, name: str, value: str) -> None:
+    github_token = os.getenv("GITHUB_SECRET_TOKEN", "").strip()
+    if not github_token:
+        raise HTTPException(status_code=503, detail="GitHub integration is not configured.")
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {github_token}",
+        "User-Agent": "wooaeyoung-kakao-bot",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    try:
+        with urlopen(Request(
+            f"https://api.github.com/repos/{repository}/actions/secrets/public-key",
+            headers=headers,
+        ), timeout=10) as response:
+            public_key_data = json.loads(response.read())
+        sealed = SealedBox(PublicKey(base64.b64decode(public_key_data["key"]))).encrypt(value.encode())
+        body = json.dumps({
+            "encrypted_value": base64.b64encode(sealed).decode("ascii"),
+            "key_id": public_key_data["key_id"],
+        }).encode("utf-8")
+        request = Request(
+            f"https://api.github.com/repos/{repository}/actions/secrets/{name}",
+            data=body,
+            method="PUT",
+            headers={**headers, "Content-Type": "application/json"},
+        )
+        with urlopen(request, timeout=10):
+            pass
+    except HTTPError as error:
+        if error.code in (401, 403):
+            raise HTTPException(
+                status_code=503,
+                detail="GitHub token needs repository Actions secrets write permission.",
+            ) from error
+        raise HTTPException(status_code=502, detail="Could not store Kakao credentials in GitHub.") from error
+    except (URLError, KeyError, ValueError) as error:
+        raise HTTPException(status_code=502, detail="Could not store Kakao credentials in GitHub.") from error
 
 
 @app.post("/api/v1/kakao/skill")
