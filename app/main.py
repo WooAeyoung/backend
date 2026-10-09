@@ -1,3 +1,6 @@
+import secrets
+from fastapi import Request as FastAPIRequest
+from fastapi.responses import RedirectResponse
 import os
 import json
 import base64
@@ -75,9 +78,25 @@ def kakao_user_is_allowed(user_id: str) -> bool:
     return bool(user_id and user_id in allowed)
 
 
+@app.get("/api/v1/kakao/oauth/start")
+def kakao_oauth_start():
+    client_id = os.getenv("KAKAO_REST_API_KEY", "").strip()
+    if not client_id:
+        raise HTTPException(status_code=503, detail="Kakao OAuth is not configured.")
+    state = secrets.token_urlsafe(32)
+    redirect_uri = "https://wooaeyoung-backend.onrender.com/api/v1/kakao/oauth/callback"
+    authorize_url = "https://kauth.kakao.com/oauth/authorize?" + urlencode({"client_id": client_id, "redirect_uri": redirect_uri, "response_type": "code", "scope": "talk_message", "state": state})
+    response = RedirectResponse(authorize_url, status_code=302)
+    response.set_cookie("kakao_oauth_state", state, max_age=600, httponly=True, secure=True, samesite="lax")
+    return response
+
+
 @app.get("/api/v1/kakao/oauth/callback")
-def kakao_oauth_callback(code: str):
+def kakao_oauth_callback(request: FastAPIRequest, code: str, state: str):
     """Exchange a one-time Kakao authorization code for setup."""
+    if state != request.cookies.get("kakao_oauth_state"):
+        raise HTTPException(status_code=400, detail="Kakao OAuth state mismatch. Start the connection again.")
+
     client_id = os.getenv("KAKAO_REST_API_KEY", "").strip()
     client_secret = os.getenv("KAKAO_CLIENT_SECRET", "").strip()
     secret_writer = os.getenv("GITHUB_SECRET_TOKEN", "").strip()
@@ -123,7 +142,7 @@ def kakao_oauth_callback(code: str):
                 headers={"Cache-Control": "no-store"},
             )
     except (HTTPError, URLError) as error:
-        raise HTTPException(status_code=502, detail="Kakao OAuth token exchange failed.") from error
+        raise HTTPException(status_code=502, detail=f"Kakao OAuth token exchange failed: {error.read().decode('utf-8', errors='replace')[:300]}") from error
 
 
 def _set_github_actions_secret(repository: str, name: str, value: str) -> None:
