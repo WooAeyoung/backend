@@ -2,6 +2,7 @@ import os
 import json
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from fastapi import FastAPI, HTTPException, Query
@@ -70,6 +71,35 @@ def kakao_user_is_allowed(user_id: str) -> bool:
         if value.strip()
     }
     return bool(user_id and user_id in allowed)
+
+
+@app.get("/api/v1/kakao/oauth/callback")
+def kakao_oauth_callback(code: str):
+    """Exchange a one-time Kakao authorization code during initial setup."""
+    client_id = os.getenv("KAKAO_REST_API_KEY", "").strip()
+    client_secret = os.getenv("KAKAO_CLIENT_SECRET", "").strip()
+    if not client_id or not client_secret:
+        raise HTTPException(status_code=503, detail="Kakao OAuth is not configured.")
+
+    request = Request(
+        "https://kauth.kakao.com/oauth/token",
+        data=urlencode(
+            {
+                "grant_type": "authorization_code",
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "redirect_uri": "https://wooaeyoung-backend.onrender.com/api/v1/kakao/oauth/callback",
+                "code": code,
+            }
+        ).encode("utf-8"),
+        method="POST",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+    try:
+        with urlopen(request, timeout=10) as response:
+            return json.loads(response.read())
+    except (HTTPError, URLError) as error:
+        raise HTTPException(status_code=502, detail="Kakao OAuth token exchange failed.") from error
 
 
 @app.post("/api/v1/kakao/skill")
