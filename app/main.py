@@ -142,7 +142,7 @@ def kakao_oauth_callback(request: FastAPIRequest, code: str, state: str):
                 headers={"Cache-Control": "no-store"},
             )
     except (HTTPError, URLError) as error:
-        raise HTTPException(status_code=502, detail=f"Kakao OAuth token exchange failed: {error.read().decode('utf-8', errors='replace')[:300]}") from error
+        raise HTTPException(status_code=502, detail="Kakao OAuth token exchange failed.") from error
 
 
 def _set_github_actions_secret(repository: str, name: str, value: str) -> None:
