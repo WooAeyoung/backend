@@ -198,6 +198,7 @@ def kakao_skill(payload: dict[str, Any]):
             "• /상태 - 연결 상태 확인\n"
             "• /이슈 - GitHub 이슈 명령 안내\n"
             "• /배포 - GitHub Actions 실행 안내\n"
+            "• /로그인 - 카카오 인증 시작\n"
             "• /백엔드 - Backend 주소 보기\n"
             "• /프론트 - 프론트엔드 주소 보기\n"
             "• /내아이디 - 명령 권한 등록용 ID 확인"
@@ -225,6 +226,10 @@ def kakao_skill(payload: dict[str, Any]):
             "저장소: https://github.com/WooAeyoung/backend"
         ),
         "내아이디": f"내 카카오 사용자 ID: {user_id or '확인할 수 없음'}",
+        "로그인": (
+            "카카오 인증을 시작하려면 아래 링크를 열어 주세요.\n"
+            "https://wooaeyoung-backend.onrender.com/api/v1/kakao/oauth/start"
+        ),
     }
     aliases = {
         "help": "도움말",
@@ -285,6 +290,7 @@ def kakao_skill(payload: dict[str, Any]):
                 {"action": "message", "label": "연결 상태", "messageText": "/상태"},
                 {"action": "message", "label": "이슈 만들기", "messageText": "/이슈"},
                 {"action": "message", "label": "배포하기", "messageText": "/배포"},
+                {"action": "message", "label": "로그인", "messageText": "/로그인"},
                 {"action": "message", "label": "백엔드 열기", "messageText": "/백엔드"},
                 {"action": "message", "label": "프론트 열기", "messageText": "/프론트"},
                 {"action": "message", "label": "내 ID", "messageText": "/내아이디"},

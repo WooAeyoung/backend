@@ -16,7 +16,7 @@ def test_kakao_skill_returns_open_builder_response():
     body = response.json()
     assert body["version"] == "2.0"
     assert "/상태" in body["template"]["outputs"][0]["simpleText"]["text"]
-    assert len(body["template"]["quickReplies"]) == 7
+    assert len(body["template"]["quickReplies"]) == 8
 
 
 def test_kakao_skill_returns_backend_links():
@@ -85,3 +85,14 @@ def test_kakao_returns_user_id():
     assert response.status_code == 200
     text = response.json()["template"]["outputs"][0]["simpleText"]["text"]
     assert "user-123" in text
+
+
+def test_kakao_login_returns_oauth_start_link():
+    response = client.post(
+        "/api/v1/kakao/skill",
+        json={"userRequest": {"utterance": "/로그인"}},
+    )
+
+    assert response.status_code == 200
+    text = response.json()["template"]["outputs"][0]["simpleText"]["text"]
+    assert "/api/v1/kakao/oauth/start" in text
