@@ -33,6 +33,11 @@ GitHub push/issue 카카오 알림은 두 저장소의 Actions에 `KAKAO_REST_AP
 배포 후 `/health`가 `200 OK`인지 확인하고 카카오 챗봇 관리자센터의 스킬 URL에
 `/api/v1/kakao/skill` 엔드포인트를 등록합니다.
 
+프론트엔드 로컬 개발 환경에서도 API를 호출할 수 있도록 Render의 `CORS_ORIGINS`에
+배포 주소와 `http://localhost:5173`을 함께 등록합니다. 반려동물 기록은 현재
+브라우저 로컬 저장 방식이며, 서버 저장은 사용자 인증과 계정별 데이터 분리가
+마련된 뒤 추가합니다.
+
 ## 테스트
 
 ```powershell
