@@ -24,15 +24,31 @@ jobs:
             if (repo !== 'backend') throw new Error('This workflow belongs to the backend repository.');
             const plan = {"1":{"scope":"기준 버전·영양소 마스터와 API 계약","due":"2026-10-19"},"2":{"scope":"생애주기·성장곡선·열량 계산","due":"2026-10-23"},"3":{"scope":"단위 환산과 실제·추정 근거","due":"2026-10-27"},"4":{"scope":"체중별 용량과 추천 점수식","due":"2026-10-31"},"5":{"scope":"NIAS API 계약과 T1~T16 검산","due":"2026-11-05"}};
             const sequence = [1,2,3,4,5];
+            const followUps = {
+              5: { title: '[Backend] NIAS 통합 회귀·운영 API 안정화', scope: 'T1~T16 및 FEDIAF 회귀 검산, API 계약·버전·체크섬 일치, 배포 상태와 오류 응답 검증', effortDays: 6 }
+            };
+
+            const seoulDateAfter = days => {
+              const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+                timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit'
+              }).formatToParts(new Date()).filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)]));
+              const date = new Date(Date.UTC(parts.year, parts.month - 1, parts.day + days));
+              return date.toISOString().slice(0, 10);
+            };
 
             if (context.eventName === 'issues' && context.payload.action === 'closed') {
               const closed = context.payload.issue;
+              const assignees = (closed.assignees || []).map(user => user.login);
               const index = sequence.indexOf(closed.number);
-              if (index >= 0 && index < sequence.length - 1) {
-                const nextNumber = sequence[index + 1];
+              const candidates = index >= 0 ? sequence.slice(index + 1) : [];
+              let nextNumber = null;
+              for (const number of candidates) {
+                const candidate = await github.rest.issues.get({ owner, repo, issue_number: number });
+                if (candidate.data.state === 'open') { nextNumber = number; break; }
+              }
+              if (nextNumber) {
                 const next = await github.rest.issues.get({ owner, repo, issue_number: nextNumber });
                 if (next.data.state === 'open') {
-                  const assignees = (closed.assignees || []).map(user => user.login);
                   if (assignees.length) {
                     await github.rest.issues.addAssignees({ owner, repo, issue_number: nextNumber, assignees });
                   }
@@ -42,7 +58,27 @@ jobs:
                     body: `<!-- next-work:${closed.number}:${nextNumber} -->\n${assignees.map(login => `@${login}`).join(' ')}\n\n이전 이슈 #${closed.number} 완료를 확인해 다음 작업을 배정합니다.\n\n- 작업 범위: ${item.scope}\n- 마감일: **${item.due}**\n- 제출 기준: 최신 main 기반 PR, 검증 결과, 남은 차단 요인`
                   });
                 }
+                return;
               }
+
+              const marker = `<!-- generated-from:${owner}/${repo}#${closed.number} -->`;
+              const allIssues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'all', per_page: 100 });
+              if (allIssues.some(issue => (issue.body || '').includes(marker))) return;
+
+              const template = followUps[closed.number] || {
+                title: `[Backend] ${closed.title} 후속 검증·안정화`,
+                scope: `#${closed.number} 결과의 회귀 검증, API 계약 확인, 배포 오류와 남은 차단 요인 해소`,
+                effortDays: 6
+              };
+              const due = seoulDateAfter(template.effortDays);
+              const created = await github.rest.issues.create({
+                owner, repo, title: template.title, assignees,
+                body: `${marker}\n## 작업 목표\n${template.scope}\n\n## 완료 기준\n- 최신 main 기반 PR 연결\n- 자동 테스트·API 응답 검증 결과 첨부\n- 버전·출처·체크섬 및 남은 차단 요인 기록\n- 의료 기준·제품 데이터는 검증 출처가 없으면 데모 한계 명시\n\n마감일: **${due}**\n원본 이슈: #${closed.number}`
+              });
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: closed.number,
+                body: `후속 작업 #${created.data.number}을(를) 생성하고 ${assignees.map(login => `@${login}`).join(' ')}에게 배정했습니다. 마감일은 **${due}**입니다.`
+              });
               return;
             }
 
@@ -61,8 +97,10 @@ jobs:
             });
 
             for (const issue of issues) {
-              if (issue.pull_request || !plan[issue.number]) continue;
-              const item = plan[issue.number];
+              if (issue.pull_request) continue;
+              const dueMatch = (issue.body || '').match(/마감일:\s*\*\*(\d{4}-\d{2}-\d{2})\*\*/);
+              const item = plan[issue.number] || (dueMatch ? { scope: issue.title, due: dueMatch[1] } : null);
+              if (!item) continue;
               const [year, month, day] = item.due.split('-').map(Number);
               const daysLeft = Math.round((Date.UTC(year, month - 1, day) - todayUtc) / 86400000);
               if (!reminderDays.has(daysLeft)) continue;
