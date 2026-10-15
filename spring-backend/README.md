@@ -30,3 +30,16 @@ cd spring-backend
 $env:MAVEN_OPTS='-Xms64m -Xmx256m -XX:+UseSerialGC'
 .\mvnw.cmd -DforkCount=0 test
 ```
+
+## 기준 프로필 (FEDIAF_2025 · NIAS_V3)
+
+Python 서버와 같은 기준 프로필 구조를 Java에도 구현했습니다. 계약은 [../docs/api-standard-profiles.md](../docs/api-standard-profiles.md)를 따릅니다.
+
+- 데이터: `src/main/resources/standards/` (Render Docker 빌드가 `spring-backend`만 쓰므로 `../data/standards`의 복사본). `StandardsIntegrityTest`가 두 복사본이 같은지 검사하므로 기준값을 바꿀 때는 두 곳을 함께 고칩니다.
+- 코드: `domain/standard/` (모델·로더·무결성 검사·레지스트리), `NutritionService` (프로필별 계산).
+- 미검증 기준값: `ALLOW_UNVERIFIED_STANDARDS`(기본 false). Java는 시작 시 한 번 읽습니다.
+- FEDIAF 회귀: `src/test/resources/golden/fediaf_2025.json`은 리팩터링 전 Java 응답입니다. 의도적으로 기준을 바꿀 때만 다시 만듭니다.
+
+```powershell
+.\mvnw.cmd -DforkCount=0 "-Dgolden.generate=true" "-Dgolden.force=true" -Dtest=FediafGoldenTest test
+```

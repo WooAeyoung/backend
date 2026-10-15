@@ -54,3 +54,12 @@
 3. 기준 프로필 선택 UI를 붙인다면 NIAS에서 체급(`adultSize`) 입력을 받는다.
 4. 성분 단위·이름은 하드코딩하지 말고 `GET /api/v1/nutrients?standardProfile=`에서 읽는다.
 5. `standard.warnings`를 결과 화면에 표시한다.
+
+## Java Spring 서버
+
+Java(`spring-backend`)도 같은 요청·응답 계약을 구현했다. 차이는 다음과 같다.
+
+- FEDIAF의 `ratios.calciumPhosphorus.value`는 인이 0일 때 기존대로 Java는 `0`, Python은 `null`이다(기존 차이 유지). NIAS는 두 서버 모두 `null`이다.
+- FEDIAF 추천 점수식과 데모 제품 데이터는 기존부터 두 서버가 다르며 이번 변경에서 바꾸지 않았다.
+- `ALLOW_UNVERIFIED_STANDARDS`를 Python은 요청마다, Java는 시작 시 읽는다.
+- `standardProfile` 오류: 본문 값 오류는 `VALIDATION_ERROR`(필드 메시지), 쿼리 값 오류는 `{"detail":{"code":"VALIDATION_ERROR"}}`로 둘 다 422다.
