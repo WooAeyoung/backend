@@ -75,6 +75,11 @@ jobs:
                 owner, repo, title: template.title, assignees,
                 body: `${marker}\n## 작업 목표\n${template.scope}\n\n## 완료 기준\n- 최신 main 기반 PR 연결\n- 자동 테스트·API 응답 검증 결과 첨부\n- 버전·출처·체크섬 및 남은 차단 요인 기록\n- 의료 기준·제품 데이터는 검증 출처가 없으면 데모 한계 명시\n\n마감일: **${due}**\n원본 이슈: #${closed.number}`
               });
+              await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/issue-field-values', {
+                owner, repo, issue_number: created.data.number,
+                issue_field_values: [{ field_id: 46958333, value: due }],
+                headers: { 'X-GitHub-Api-Version': '2026-03-10' }
+              });
               await github.rest.issues.createComment({
                 owner, repo, issue_number: closed.number,
                 body: `후속 작업 #${created.data.number}을(를) 생성하고 ${assignees.map(login => `@${login}`).join(' ')}에게 배정했습니다. 마감일은 **${due}**입니다.`
