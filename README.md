@@ -1,10 +1,28 @@
 # 우애영 Backend
 
-사료와 영양제의 하루 성분량을 합산해 FEDIAF 2025 생애주기별 기준과 비교하고, 적용 가능한 기준에서 주의·과다와 Ca:P 비율 이탈이 없는 후보를 추천하는 FastAPI MVP입니다.
+운영 백엔드는 **Java 17 + Spring Boot**입니다. 기존 **Python + FastAPI** 구현은 영양 계산 기준 검증과 전환기 회귀 비교용으로 보존합니다.
+
+```text
+React·TypeScript 프론트
+          ↓
+Java·Spring 운영 API
+          ↕ 결과 비교
+Python·FastAPI 계산 기준·데이터 검증
+```
 
 > 제품 수치는 기능 검증용 데모이며, 영양 기준선은 FEDIAF Nutritional Guidelines 2025를 적용합니다. 이 서비스는 실제 급여 판단이나 수의학적 처방을 대신하지 않습니다.
 
-## 실행
+## Java 운영 서버 실행
+
+```powershell
+cd C:\Users\yeoh0\wooaeyoung1\backend\spring-backend
+$env:MAVEN_OPTS='-Xms64m -Xmx256m -XX:+UseSerialGC'
+.\mvnw.cmd spring-boot:run
+```
+
+기본 주소는 `http://localhost:8080`입니다. 자세한 환경변수와 API는 [spring-backend/README.md](spring-backend/README.md)를 참고하세요.
+
+## Python 기준 서버 실행
 
 ```powershell
 cd C:\Users\yeoh0\wooaeyoung1\backend
@@ -14,47 +32,48 @@ pip install -e ".[dev]"
 uvicorn app.main:app --reload
 ```
 
-API 문서: `http://localhost:8000/docs`
+Python 서버의 기본 주소는 `http://localhost:8000`입니다. 운영 기능을 새로 추가할 때는 Java에 구현하고, Python 계산 코드는 기준 수치 검증이 필요할 때만 변경합니다.
 
-카카오 챗봇 스킬 URL: `https://<배포-호스트>/api/v1/kakao/skill`
+## API
 
-지원 명령어: `/도움말`, `/상태`, `/이슈`, `/배포`, `/백엔드`, `/프론트`, `/내아이디`
-슬래시 없이 `도움말`, `상태`처럼 입력해도 같은 명령으로 처리합니다.
+- `GET /health`
+- `GET /api/v1/products`
+- `GET /api/v1/nutrients`
+- `POST /api/v1/analyses`
+- `POST /api/v1/recommendations`
+- `POST /api/v1/kakao/skill`
 
-GitHub 쓰기 명령은 Render 환경변수 `GITHUB_TOKEN`과
-`KAKAO_ALLOWED_USER_IDS`(쉼표로 구분한 카카오 사용자 ID)가 모두 설정된 사용자만 실행할 수 있습니다.
-
-GitHub push/issue 카카오 알림은 두 저장소의 Actions에 `KAKAO_REST_API_KEY`,
-`KAKAO_CLIENT_SECRET`, `KAKAO_REFRESH_TOKEN`, `KAKAO_SECRET_UPDATER_TOKEN` 비밀값이 필요합니다.
-
-## Render 배포
-
-저장소 루트의 `render.yaml`을 Blueprint로 등록하면 FastAPI 서비스가 생성됩니다.
-배포 후 `/health`가 `200 OK`인지 확인하고 카카오 챗봇 관리자센터의 스킬 URL에
-`/api/v1/kakao/skill` 엔드포인트를 등록합니다.
-
-프론트엔드 로컬 개발 환경에서도 API를 호출할 수 있도록 Render의 `CORS_ORIGINS`에
-배포 주소와 `http://localhost:5173`을 함께 등록합니다. 반려동물 기록은 현재
-브라우저 로컬 저장 방식이며, 서버 저장은 사용자 인증과 계정별 데이터 분리가
-마련된 뒤 추가합니다.
+프론트는 Java 서버의 `VITE_API_URL`을 사용합니다. 카카오 OAuth 자동 등록만 전환 기간 동안 Python 서비스로 연결합니다.
 
 ## 테스트
+
+Java API 테스트:
+
+```powershell
+cd spring-backend
+$env:MAVEN_OPTS='-Xms64m -Xmx256m -XX:+UseSerialGC'
+.\mvnw.cmd -DforkCount=0 test
+```
+
+Python 기준 테스트:
 
 ```powershell
 pytest -q
 ```
 
-## 구현 범위
+두 서버를 각각 8000·8080 포트로 실행한 뒤 결과 일치 확인:
 
-- 프로필 검증과 생애주기 판정
-- 제품 검색과 데모 카탈로그
-- JSON 제품 파일 시작 시 메모리 적재, 직접 구현한 ID·바코드 해시 조회, 제품명·브랜드 트라이 자동완성
-- 고정 성분 순서 배열을 이용한 사료 실제값/추정값, 영양제 및 수동 제품 합산
-- 기준 열량, 하한·주의선·상한, 상태 판정
-- 개의 칼슘:인 비율
-- 직접 구현한 최대 힙과 선택 후 재평가를 이용한 최대 3개 추천
+```powershell
+python scripts\compare_backends.py
+```
+
+## Render 배포
+
+- `render.yaml`: Java Spring 운영 서버
+- `render-python-legacy.yaml`: Python 기준·복구 서버
+
+운영 전환 전 Java `/health`, 영양 분석, 추천, 카카오 `/상태`를 확인합니다. Python 서비스는 Java 운영 검증이 끝날 때까지 중단하지 않습니다.
 
 영양 기준 출처: https://europeanpetfood.org/wp-content/uploads/2025/09/FEDIAF-Nutritional-Guidelines_2025-ONLINE.pdf
 
 수치·단위·각주 대조 기록: [docs/standards-validation.md](docs/standards-validation.md)
-

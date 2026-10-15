@@ -1,0 +1,8 @@
+server:
+  port: ${PORT:8080}
+app:
+  cors-origins: ${CORS_ORIGINS:http://localhost:5173,https://wooaeyoung.github.io}
+  github-token: ${GITHUB_TOKEN:}
+  kakao-allowed-user-ids: ${KAKAO_ALLOWED_USER_IDS:}
+  public-base-url: ${PUBLIC_BASE_URL:https://wooaeyoung-backend.onrender.com}
+  kakao-oauth-base-url: ${KAKAO_OAUTH_BASE_URL:https://wooaeyoung-backend.onrender.com}
