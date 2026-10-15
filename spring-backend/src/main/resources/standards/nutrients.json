@@ -1,0 +1,425 @@
+{
+  "nutrients": [
+    {
+      "id": "PROTEIN",
+      "nameKo": "단백질",
+      "nameEn": "Protein",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 1,
+      "prioritySupported": true
+    },
+    {
+      "id": "ARGININE",
+      "nameKo": "아르기닌",
+      "nameEn": "Arginine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 2,
+      "prioritySupported": false
+    },
+    {
+      "id": "HISTIDINE",
+      "nameKo": "히스티딘",
+      "nameEn": "Histidine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 3,
+      "prioritySupported": false
+    },
+    {
+      "id": "ISOLEUCINE",
+      "nameKo": "이소루신",
+      "nameEn": "Isoleucine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 4,
+      "prioritySupported": false
+    },
+    {
+      "id": "LEUCINE",
+      "nameKo": "류신",
+      "nameEn": "Leucine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 5,
+      "prioritySupported": false
+    },
+    {
+      "id": "LYSINE",
+      "nameKo": "라이신",
+      "nameEn": "Lysine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 6,
+      "prioritySupported": false
+    },
+    {
+      "id": "METHIONINE",
+      "nameKo": "메치오닌",
+      "nameEn": "Methionine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 7,
+      "prioritySupported": false
+    },
+    {
+      "id": "METHIONINE_CYSTINE",
+      "nameKo": "메치오닌+시스틴",
+      "nameEn": "Methionine + cystine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 8,
+      "prioritySupported": false
+    },
+    {
+      "id": "PHENYLALANINE",
+      "nameKo": "페닐알라닌",
+      "nameEn": "Phenylalanine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 9,
+      "prioritySupported": false
+    },
+    {
+      "id": "PHENYLALANINE_TYROSINE",
+      "nameKo": "페닐알라닌+티로신",
+      "nameEn": "Phenylalanine + tyrosine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 10,
+      "prioritySupported": false
+    },
+    {
+      "id": "THREONINE",
+      "nameKo": "트레오닌",
+      "nameEn": "Threonine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 11,
+      "prioritySupported": false
+    },
+    {
+      "id": "TRYPTOPHAN",
+      "nameKo": "트립토판",
+      "nameEn": "Tryptophan",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 12,
+      "prioritySupported": false
+    },
+    {
+      "id": "VALINE",
+      "nameKo": "발린",
+      "nameEn": "Valine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 13,
+      "prioritySupported": false
+    },
+    {
+      "id": "FAT",
+      "nameKo": "지방",
+      "nameEn": "Fat",
+      "category": "FAT_FATTY_ACID",
+      "baseUnit": "G",
+      "sortOrder": 14,
+      "prioritySupported": true
+    },
+    {
+      "id": "LINOLEIC_ACID",
+      "nameKo": "리놀레산",
+      "nameEn": "Linoleic acid",
+      "category": "FAT_FATTY_ACID",
+      "baseUnit": "G",
+      "sortOrder": 15,
+      "prioritySupported": true
+    },
+    {
+      "id": "ARACHIDONIC_ACID",
+      "nameKo": "아라키돈산",
+      "nameEn": "Arachidonic acid",
+      "category": "FAT_FATTY_ACID",
+      "baseUnit": "MG",
+      "sortOrder": 16,
+      "prioritySupported": false
+    },
+    {
+      "id": "ALPHA_LINOLENIC_ACID",
+      "nameKo": "알파-리놀렌산",
+      "nameEn": "Alpha-linolenic acid",
+      "category": "FAT_FATTY_ACID",
+      "baseUnit": "G",
+      "sortOrder": 17,
+      "prioritySupported": true
+    },
+    {
+      "id": "EPA_DHA",
+      "nameKo": "EPA+DHA",
+      "nameEn": "EPA + DHA",
+      "category": "FAT_FATTY_ACID",
+      "baseUnit": "G",
+      "sortOrder": 18,
+      "prioritySupported": true
+    },
+    {
+      "id": "CALCIUM",
+      "nameKo": "칼슘",
+      "nameEn": "Calcium",
+      "category": "MINERAL",
+      "baseUnit": "G",
+      "sortOrder": 19,
+      "prioritySupported": true
+    },
+    {
+      "id": "PHOSPHORUS",
+      "nameKo": "인",
+      "nameEn": "Phosphorus",
+      "category": "MINERAL",
+      "baseUnit": "G",
+      "sortOrder": 20,
+      "prioritySupported": true
+    },
+    {
+      "id": "POTASSIUM",
+      "nameKo": "칼륨",
+      "nameEn": "Potassium",
+      "category": "MINERAL",
+      "baseUnit": "G",
+      "sortOrder": 21,
+      "prioritySupported": true
+    },
+    {
+      "id": "SODIUM",
+      "nameKo": "나트륨",
+      "nameEn": "Sodium",
+      "category": "MINERAL",
+      "baseUnit": "G",
+      "sortOrder": 22,
+      "prioritySupported": true
+    },
+    {
+      "id": "CHLORIDE",
+      "nameKo": "염소",
+      "nameEn": "Chloride",
+      "category": "MINERAL",
+      "baseUnit": "G",
+      "sortOrder": 23,
+      "prioritySupported": false
+    },
+    {
+      "id": "MAGNESIUM",
+      "nameKo": "마그네슘",
+      "nameEn": "Magnesium",
+      "category": "MINERAL",
+      "baseUnit": "G",
+      "sortOrder": 24,
+      "prioritySupported": true
+    },
+    {
+      "id": "COPPER",
+      "nameKo": "구리",
+      "nameEn": "Copper",
+      "category": "TRACE_ELEMENT",
+      "baseUnit": "MG",
+      "sortOrder": 25,
+      "prioritySupported": true
+    },
+    {
+      "id": "IODINE",
+      "nameKo": "요오드",
+      "nameEn": "Iodine",
+      "category": "TRACE_ELEMENT",
+      "baseUnit": "MG",
+      "sortOrder": 26,
+      "prioritySupported": false
+    },
+    {
+      "id": "IRON",
+      "nameKo": "철",
+      "nameEn": "Iron",
+      "category": "TRACE_ELEMENT",
+      "baseUnit": "MG",
+      "sortOrder": 27,
+      "prioritySupported": true
+    },
+    {
+      "id": "MANGANESE",
+      "nameKo": "망간",
+      "nameEn": "Manganese",
+      "category": "TRACE_ELEMENT",
+      "baseUnit": "MG",
+      "sortOrder": 28,
+      "prioritySupported": false
+    },
+    {
+      "id": "SELENIUM",
+      "nameKo": "셀레늄",
+      "nameEn": "Selenium",
+      "category": "TRACE_ELEMENT",
+      "baseUnit": "UG",
+      "sortOrder": 29,
+      "prioritySupported": true
+    },
+    {
+      "id": "ZINC",
+      "nameKo": "아연",
+      "nameEn": "Zinc",
+      "category": "TRACE_ELEMENT",
+      "baseUnit": "MG",
+      "sortOrder": 30,
+      "prioritySupported": true
+    },
+    {
+      "id": "VITAMIN_A",
+      "nameKo": "비타민 A",
+      "nameEn": "Vitamin A",
+      "category": "VITAMIN",
+      "baseUnit": "IU",
+      "sortOrder": 31,
+      "prioritySupported": true
+    },
+    {
+      "id": "VITAMIN_D",
+      "nameKo": "비타민 D",
+      "nameEn": "Vitamin D",
+      "category": "VITAMIN",
+      "baseUnit": "IU",
+      "sortOrder": 32,
+      "prioritySupported": true,
+      "unitConversions": {
+        "UG": 40.0
+      }
+    },
+    {
+      "id": "VITAMIN_E",
+      "nameKo": "비타민 E",
+      "nameEn": "Vitamin E",
+      "category": "VITAMIN",
+      "baseUnit": "IU",
+      "sortOrder": 33,
+      "prioritySupported": true
+    },
+    {
+      "id": "VITAMIN_B1",
+      "nameKo": "비타민 B1 (티아민)",
+      "nameEn": "Vitamin B1 (thiamine)",
+      "category": "VITAMIN",
+      "baseUnit": "MG",
+      "sortOrder": 34,
+      "prioritySupported": false
+    },
+    {
+      "id": "VITAMIN_B2",
+      "nameKo": "비타민 B2 (리보플라빈)",
+      "nameEn": "Vitamin B2 (riboflavin)",
+      "category": "VITAMIN",
+      "baseUnit": "MG",
+      "sortOrder": 35,
+      "prioritySupported": false
+    },
+    {
+      "id": "VITAMIN_B5",
+      "nameKo": "비타민 B5 (판토텐산)",
+      "nameEn": "Vitamin B5 (pantothenic acid)",
+      "category": "VITAMIN",
+      "baseUnit": "MG",
+      "sortOrder": 36,
+      "prioritySupported": false
+    },
+    {
+      "id": "VITAMIN_B6",
+      "nameKo": "비타민 B6 (피리독신)",
+      "nameEn": "Vitamin B6 (pyridoxine)",
+      "category": "VITAMIN",
+      "baseUnit": "MG",
+      "sortOrder": 37,
+      "prioritySupported": false
+    },
+    {
+      "id": "VITAMIN_B12",
+      "nameKo": "비타민 B12 (코발라민)",
+      "nameEn": "Vitamin B12 (cobalamin)",
+      "category": "VITAMIN",
+      "baseUnit": "UG",
+      "sortOrder": 38,
+      "prioritySupported": false
+    },
+    {
+      "id": "VITAMIN_B3",
+      "nameKo": "비타민 B3 (니아신)",
+      "nameEn": "Vitamin B3 (niacin)",
+      "category": "VITAMIN",
+      "baseUnit": "MG",
+      "sortOrder": 39,
+      "prioritySupported": false
+    },
+    {
+      "id": "VITAMIN_B9",
+      "nameKo": "비타민 B9 (엽산)",
+      "nameEn": "Vitamin B9 (folic acid)",
+      "category": "VITAMIN",
+      "baseUnit": "UG",
+      "sortOrder": 40,
+      "prioritySupported": false
+    },
+    {
+      "id": "VITAMIN_B7",
+      "nameKo": "비타민 B7 (비오틴)",
+      "nameEn": "Vitamin B7 (biotin)",
+      "category": "VITAMIN",
+      "baseUnit": "UG",
+      "sortOrder": 41,
+      "prioritySupported": false
+    },
+    {
+      "id": "CHOLINE",
+      "nameKo": "콜린",
+      "nameEn": "Choline",
+      "category": "VITAMIN",
+      "baseUnit": "MG",
+      "sortOrder": 42,
+      "prioritySupported": false
+    },
+    {
+      "id": "VITAMIN_K",
+      "nameKo": "비타민 K",
+      "nameEn": "Vitamin K",
+      "category": "VITAMIN",
+      "baseUnit": "UG",
+      "sortOrder": 43,
+      "prioritySupported": false
+    },
+    {
+      "id": "TAURINE",
+      "nameKo": "타우린",
+      "nameEn": "Taurine",
+      "category": "PROTEIN_AMINO_ACID",
+      "baseUnit": "G",
+      "sortOrder": 44,
+      "prioritySupported": true
+    }
+  ],
+  "profileSpecific": [
+    {
+      "id": "OMEGA3",
+      "nameKo": "오메가3",
+      "nameEn": "Omega-3 (total)",
+      "category": "FAT_FATTY_ACID",
+      "baseUnit": "MG",
+      "sortOrder": 45,
+      "prioritySupported": false,
+      "profiles": [
+        "FEDIAF_2025"
+      ]
+    }
+  ],
+  "catalogUnits": {
+    "CALCIUM": "MG",
+    "PHOSPHORUS": "MG",
+    "VITAMIN_D": "UG",
+    "VITAMIN_E": "MG",
+    "OMEGA3": "MG",
+    "ZINC": "MG"
+  }
+}
