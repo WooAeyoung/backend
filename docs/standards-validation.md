@@ -70,3 +70,47 @@ FEDIAF 표는 최소 권장량과 최대치를 제공하며 별도의 `주의선
 - 백엔드: `pytest -q` — 17개 테스트 통과
 - 프론트엔드: `npm run build` — TypeScript 검사 및 Vite 프로덕션 빌드 통과
 - 결론: F-12의 공식 기준 대조, 서비스 주의선 구분, 정적 웹·백엔드 일치 및 실행 검증 완료
+
+## 기준 프로필 구조 (2026-10-15 추가)
+
+FEDIAF 2025와 NIAS v3를 서로 섞이지 않는 **기준 프로필**로 분리했다. 기준값과 매개변수는 코드가 아니라 `data/standards/`에서 읽고, 시작 시 한 번 검증해 불변 객체로 보관한다.
+
+```text
+data/standards/
+  nutrients.json              영양소 마스터 44개 + 프로필 전용 성분(FEDIAF OMEGA3) + 데모 제품 함량 단위
+  fediaf_2025/profile.json    표시명·발행기관·문서명·버전·계산 매개변수(각각 검증 상태)·생애주기 매핑
+  fediaf_2025/records.csv     기준값 레코드 (profile, nutrientId, lifeStage) 30행
+  nias_v3/profile.json
+  nias_v3/records.csv         44개 성분 × 기준표 생애주기 5개 = 220행
+app/standards/
+  models.py                   Pydantic frozen 모델, StandardProfileId·VerificationStatus
+  loader.py                   CSV 빈 셀 → None, 무결성 검사(실패 시 서버 시작 중단)
+  registry.py                 PROFILES(읽기 전용), get_profile, ALLOW_UNVERIFIED_STANDARDS
+```
+
+- 레코드 필드: `min`, `max`(빈칸 = null), `unit`, `basis`, `sourceDocument`, `sourceTable`, `sourceFootnote`, `verificationStatus`(VERIFIED·UNVERIFIED·NOT_APPLICABLE), `verifiedBy`, `verifiedAt`.
+- 기준값은 양수만 허용한다. 0·음수·NaN·무한대가 들어오면 적재 단계에서 실패하므로 빈칸이 0으로 바뀌는 경로가 없다.
+- 생애주기는 계산 단계(`lifeStages[].id`)와 기준표 열(`recordStage`)을 분리했다. NIAS 고양이 성장 1·2·3단계는 모두 `CAT_GROWTH` 레코드를 쓴다(매핑 확정 필요).
+- FEDIAF 프로필의 기존 6개 성분 ID와 단위(mg·µg)는 바꾸지 않았다. 총 오메가3(`OMEGA3`)는 FEDIAF 전용이며 NIAS의 ALA·EPA+DHA로 매핑하지 않는다.
+- 회귀 방지: `tests/golden/fediaf_2025.json`은 리팩터링 전 코드로 만든 응답 스냅샷이다. `tests/test_fediaf_golden.py`가 부동소수점까지 같은지 검사하며, 새 필드 추가만 허용한다.
+
+## 검증 상태 정책
+
+- `VERIFIED`: 원문 대조 기록이 있는 값. `sourceTable`과 `verifiedAt`이 필수다.
+- `UNVERIFIED`: 원문 대조 전 값. `ALLOW_UNVERIFIED_STANDARDS`(기본 false)가 꺼져 있으면 판정·추천 점수·Ca:P 판정에 쓰지 않는다. 해당 성분은 `UNVERIFIED_STANDARD` 상태로 반환하고 기준선은 null이다.
+- `NOT_APPLICABLE`: 기준을 적용하지 않는 항목(FEDIAF 비타민 E·오메가3)과 서비스 정책 값(주의선 비율, 단위 환산 상수).
+- 미검증 에너지·생애주기 매개변수만 있는 경우에도 분석은 실행한다. 응답 `standard.verification.unverifiedParameters`에 이름을 남기고 `standard.warnings`에 "미검증 프로필" 경고를 넣는다. FEDIAF는 기존 `warnings` 목록을 바꾸지 않기 위해 `standard.warnings`에만 넣고, NIAS는 `warnings`에도 넣는다.
+- `ALLOW_UNVERIFIED_STANDARDS=true`는 테스트·개발용이다. 켜져 있으면 `standard.allowUnverifiedStandards: true`와 경고를 응답에 표시한다.
+
+## 미검증 목록 (2026-10-15 기준)
+
+| 프로필 | 항목 | 상태 | 비고 |
+| --- | --- | --- | --- |
+| NIAS_V3 | 기준값 레코드 220개 전부 | UNVERIFIED | min·max 모두 null. 원문 확인 값을 받으면 채운다. 표 번호(2-17c·d·g·h)는 v3 기준값표 안내 시트에서 옮김 |
+| NIAS_V3 | 에너지 k(110·100·225·187.5·150), 강아지 k식(254.1 − 1.35 × 비율), 대사체중 지수 | UNVERIFIED | 설계안 값 |
+| NIAS_V3 | 경계 8주·14주·4·9·12개월 | UNVERIFIED | 설계안 값 |
+| NIAS_V3 | 성장곡선 S~XXL a·b | UNVERIFIED | 기준값표_매개변수표_v3.xlsx 표 2-7a 설계안 값 |
+| NIAS_V3 | 대형견 31.75 kg·칼슘 상한 4.5, Ca:P 1~2 | UNVERIFIED | 기준값 성격이라 플래그가 꺼져 있으면 판정에 쓰지 않음 |
+| NIAS_V3 | 사료 3,600 kcal/kg | UNVERIFIED | 출처 미확인, 현재 계산에 사용하지 않음 |
+| FEDIAF_2025 | 에너지 k(95·75·100), 강아지 k식(254.1 − 135 × 비율), 대사체중 지수 | UNVERIFIED | 이 문서에 원문 대조 기록이 없음. 계산은 기존과 동일 |
+| FEDIAF_2025 | 기준값 레코드 | VERIFIED 20 / NOT_APPLICABLE 10 | 2026-10-01 대조. 검증자(`verifiedBy`)는 기록이 없어 null |
