@@ -1,4 +1,4 @@
-name: Issue progress reminder bot
+name: Issue deadline and assignment bot
 
 on:
   schedule:
@@ -16,26 +16,14 @@ jobs:
   manage:
     runs-on: ubuntu-latest
     steps:
-      - name: Assign next work or remind assignees
+      - name: Notify at 7, 3 and 1 days before deadline
         uses: actions/github-script@v7
         with:
           script: |
             const { owner, repo } = context.repo;
-            const plan = {
-              Frontend: {
-                1: { scope: '배포 API 연결·영양 기준 선택·오류 재시도와 실제 배포 검증', due: '2026-10-24' },
-                2: { scope: '18개 영양소 입력·결과·근거 UI와 단위·출처·모바일 검증', due: '2026-10-22' },
-                3: { scope: '정적 엔진·추천 결과 일치와 실패 안내·프로덕션 빌드 검증', due: '2026-10-23' }
-              },
-              backend: {
-                1: { scope: '기준 버전·영양소 마스터와 API 계약', due: '2026-10-19' },
-                2: { scope: '생애주기·성장곡선·열량 계산', due: '2026-10-23' },
-                3: { scope: '단위 환산과 실제·추정 근거', due: '2026-10-27' },
-                4: { scope: '체중별 용량과 추천 점수식', due: '2026-10-31' },
-                5: { scope: 'NIAS API 계약과 T1~T16 검산', due: '2026-11-05' }
-              }
-            };
-            const sequence = repo === 'backend' ? [1, 2, 3, 4, 5] : [];
+            if (repo !== 'backend') throw new Error('This workflow belongs to the backend repository.');
+            const plan = {"1":{"scope":"기준 버전·영양소 마스터와 API 계약","due":"2026-10-19"},"2":{"scope":"생애주기·성장곡선·열량 계산","due":"2026-10-23"},"3":{"scope":"단위 환산과 실제·추정 근거","due":"2026-10-27"},"4":{"scope":"체중별 용량과 추천 점수식","due":"2026-10-31"},"5":{"scope":"NIAS API 계약과 T1~T16 검산","due":"2026-11-05"}};
+            const sequence = [1,2,3,4,5];
 
             if (context.eventName === 'issues' && context.payload.action === 'closed') {
               const closed = context.payload.issue;
@@ -48,7 +36,7 @@ jobs:
                   if (assignees.length) {
                     await github.rest.issues.addAssignees({ owner, repo, issue_number: nextNumber, assignees });
                   }
-                  const item = plan[repo][nextNumber];
+                  const item = plan[nextNumber];
                   await github.rest.issues.createComment({
                     owner, repo, issue_number: nextNumber,
                     body: `<!-- next-work:${closed.number}:${nextNumber} -->\n${assignees.map(login => `@${login}`).join(' ')}\n\n이전 이슈 #${closed.number} 완료를 확인해 다음 작업을 배정합니다.\n\n- 작업 범위: ${item.scope}\n- 마감일: **${item.due}**\n- 제출 기준: 최신 main 기반 PR, 검증 결과, 남은 차단 요인`
@@ -58,36 +46,44 @@ jobs:
               return;
             }
 
+            const dateParts = value => Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+              timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit'
+            }).formatToParts(value).filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)]));
+            const now = new Date();
+            const current = dateParts(now);
+            const todayUtc = Date.UTC(current.year, current.month - 1, current.day);
+            const reminderDays = new Set([7, 3, 1]);
             const issues = await github.paginate(github.rest.issues.listForRepo, {
               owner, repo, state: 'open', per_page: 100
             });
             const pulls = await github.paginate(github.rest.pulls.list, {
-              owner, repo, state: 'open', per_page: 100
+              owner, repo, state: 'all', per_page: 100
             });
-            const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
 
             for (const issue of issues) {
-              if (issue.pull_request) continue;
+              if (issue.pull_request || !plan[issue.number]) continue;
+              const item = plan[issue.number];
+              const [year, month, day] = item.due.split('-').map(Number);
+              const daysLeft = Math.round((Date.UTC(year, month - 1, day) - todayUtc) / 86400000);
+              if (!reminderDays.has(daysLeft)) continue;
+
               const comments = await github.paginate(github.rest.issues.listComments, {
                 owner, repo, issue_number: issue.number, per_page: 100
               });
-              const marker = `<!-- progress-reminder:${issue.number}:`;
-              const markers = comments
-                .filter(comment => (comment.body || '').includes(marker))
-                .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-              const previous = markers.at(-1);
-              if ((previous?.body || '').includes(`${marker}${today}`)) continue;
-              const since = previous?.created_at || issue.created_at;
-              const after = value => new Date(value) > new Date(since);
+              const marker = `<!-- deadline-progress:${issue.number}:${item.due}:${daysLeft} -->`;
+              if (comments.some(comment => (comment.body || '').includes(marker))) continue;
+
+              const intervalDays = daysLeft === 7 ? 7 : daysLeft === 3 ? 4 : 2;
+              const since = new Date(now.getTime() - intervalDays * 86400000);
               const humanUpdate = comments.some(comment =>
-                after(comment.created_at) && comment.user.type !== 'Bot'
+                new Date(comment.created_at) > since && comment.user.type !== 'Bot'
               );
               const linkedPr = pulls.some(pr => {
                 const text = `${pr.title}\n${pr.body || ''}`;
-                return after(pr.updated_at) && text.includes(`#${issue.number}`);
+                return new Date(pr.updated_at) > since && text.includes(`#${issue.number}`);
               });
               const commits = await github.paginate(github.rest.repos.listCommits, {
-                owner, repo, since, per_page: 100
+                owner, repo, since: since.toISOString(), per_page: 100
               });
               const linkedCommit = commits.some(commit =>
                 (commit.commit.message || '').includes(`#${issue.number}`)
@@ -95,12 +91,8 @@ jobs:
               if (humanUpdate || linkedPr || linkedCommit) continue;
 
               const assignees = (issue.assignees || []).map(user => `@${user.login}`).join(' ');
-              const item = plan[repo]?.[issue.number] || {
-                scope: '이슈 본문에 정의된 작업 범위',
-                due: new Date(Date.now() + 7 * 86400000).toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' })
-              };
               await github.rest.issues.createComment({
                 owner, repo, issue_number: issue.number,
-                body: `${marker}${today} -->\n${assignees}\n\n마지막 봇 점검 뒤 커밋·연결 PR·담당자 업데이트 증거가 없습니다.\n\n- 작업 범위: ${item.scope}\n- 마감일: **${item.due}**\n- 제출 기준: 최신 main 기반 PR, 검증 결과, 남은 차단 요인\n\n의료 기준·제품 데이터는 검증된 출처가 확인될 때까지 데모 범위와 한계를 PR에 명시해 주세요.`
+                body: `${marker}\n${assignees}\n\n마감 ${daysLeft}일 전 점검에서 최근 작업 증거를 찾지 못했습니다.\n\n- 작업 범위: ${item.scope}\n- 마감일: **${item.due}**\n- 제출 기준: 최신 main 기반 PR, 검증 결과, 남은 차단 요인\n\n의료 기준·제품 데이터는 검증된 출처가 확인될 때까지 데모 범위와 한계를 PR에 명시해 주세요.`
               });
             }
