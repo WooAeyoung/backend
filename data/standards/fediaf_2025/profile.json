@@ -1,0 +1,49 @@
+{
+  "id": "FEDIAF_2025",
+  "displayName": "FEDIAF 2025",
+  "publisher": "FEDIAF (The European Pet Food Industry Federation)",
+  "documentName": "FEDIAF Nutritional Guidelines 2025",
+  "version": "FEDIAF-2025.09",
+  "basis": "per_1000kcal_ME",
+  "sourceText": "FEDIAF Nutritional Guidelines 2025, life-stage values per 1000 kcal ME",
+  "model": "FEDIAF_2025",
+  "nutrients": [
+    {"id": "CALCIUM", "unit": "MG"},
+    {"id": "PHOSPHORUS", "unit": "MG"},
+    {"id": "VITAMIN_D", "unit": "UG"},
+    {"id": "VITAMIN_E", "unit": "MG"},
+    {"id": "OMEGA3", "unit": "MG"},
+    {"id": "ZINC", "unit": "MG"}
+  ],
+  "lifeStages": [
+    {"id": "GROWTH_EARLY", "species": "DOG", "recordStage": "DOG_GROWTH_EARLY"},
+    {"id": "GROWTH_LATE", "species": "DOG", "recordStage": "DOG_GROWTH_LATE"},
+    {"id": "ADULT", "species": "DOG", "recordStage": "DOG_ADULT"},
+    {"id": "GROWTH", "species": "CAT", "recordStage": "CAT_GROWTH"},
+    {"id": "ADULT", "species": "CAT", "recordStage": "CAT_ADULT"}
+  ],
+  "params": {
+    "daysPerMonth": {"value": 30.4375, "verificationStatus": "NOT_APPLICABLE", "basis": "unit_conversion", "source": "365.25 ÷ 12"},
+    "minimumAgeDays": {"value": 56, "verificationStatus": "NOT_APPLICABLE", "basis": "service_policy", "source": "8주 미만 미지원"},
+    "dogEarlyGrowthDays": {"value": 98, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3 (14주 미만 초기 성장기), docs/standards-validation.md"},
+    "adultAgeDays": {"value": 365, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3 (1년 미만 성장기), docs/standards-validation.md"},
+    "metabolicExponentDog": {"value": 0.75, "verificationStatus": "UNVERIFIED", "basis": "literature", "source": "FEDIAF 2025 에너지 기준 (원문 대조 기록 없음)"},
+    "metabolicExponentCat": {"value": 0.67, "verificationStatus": "UNVERIFIED", "basis": "literature", "source": "FEDIAF 2025 에너지 기준 (원문 대조 기록 없음)"},
+    "energyKDogAdult": {"value": 95, "verificationStatus": "UNVERIFIED", "basis": "literature", "source": "FEDIAF 2025 에너지 기준 (원문 대조 기록 없음)"},
+    "energyKCatAdult": {"value": 75, "verificationStatus": "UNVERIFIED", "basis": "literature", "source": "FEDIAF 2025 에너지 기준 (원문 대조 기록 없음)"},
+    "energyKCatGrowth": {"value": 100, "verificationStatus": "UNVERIFIED", "basis": "literature", "source": "FEDIAF 2025 에너지 기준 (원문 대조 기록 없음)"},
+    "puppyEnergyIntercept": {"value": 254.1, "verificationStatus": "UNVERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table VII-8b (코드 주석, 원문 대조 기록 없음)"},
+    "puppyEnergySlope": {"value": 135, "verificationStatus": "UNVERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table VII-8b (코드 주석, 원문 대조 기록 없음)"},
+    "cautionRatioDog": {"value": 0.75, "verificationStatus": "NOT_APPLICABLE", "basis": "service_policy", "source": "서비스 조기 경고 정책 (docs/standards-validation.md)"},
+    "cautionRatioCat": {"value": 0.5, "verificationStatus": "NOT_APPLICABLE", "basis": "service_policy", "source": "서비스 조기 경고 정책 (docs/standards-validation.md)"},
+    "largeBreedAdultWeightKg": {"value": 15, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3 footnote b"},
+    "largeBreedAgeDays": {"value": 182.625, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3 footnote b (생후 6개월)"},
+    "largeBreedCalciumMin": {"value": 2500, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3 footnote b (2.50 g/1000 kcal)"},
+    "largeBreedCalciumMax": {"value": 4500, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3b 후기 성장기 최대"},
+    "caPMin": {"value": 1.0, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3b, docs/standards-validation.md"},
+    "caPUpperGrowthEarly": {"value": 1.6, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3b, docs/standards-validation.md"},
+    "caPUpperGrowthLate": {"value": 1.8, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3b, docs/standards-validation.md"},
+    "caPUpperGrowthLateLargeBreed": {"value": 1.6, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3 footnote b"},
+    "caPUpperAdult": {"value": 2.0, "verificationStatus": "VERIFIED", "basis": "literature", "source": "FEDIAF 2025 Table III-3b, docs/standards-validation.md"}
+  }
+}
