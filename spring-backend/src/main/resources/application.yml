@@ -6,3 +6,5 @@ app:
   kakao-allowed-user-ids: ${KAKAO_ALLOWED_USER_IDS:}
   public-base-url: ${PUBLIC_BASE_URL:https://wooaeyoung-backend.onrender.com}
   kakao-oauth-base-url: ${KAKAO_OAUTH_BASE_URL:https://wooaeyoung-backend.onrender.com}
+  # 미검증 기준값을 판정에 쓸지 여부. 테스트·개발용, 운영은 false.
+  allow-unverified-standards: ${ALLOW_UNVERIFIED_STANDARDS:false}

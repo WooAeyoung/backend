@@ -3,6 +3,7 @@ package kr.co.wooaeyoung.api;
 import jakarta.validation.Valid;
 import kr.co.wooaeyoung.domain.CatalogService;
 import kr.co.wooaeyoung.domain.NutritionService;
+import kr.co.wooaeyoung.domain.standard.StandardModels.StandardProfileId;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -18,8 +19,14 @@ public class ApiController {
     }
 
     @GetMapping("/health")
-    public Map<String, String> health() {
-        return Map.of("status", "ok", "standardVersion", NutritionService.STANDARD_VERSION);
+    public Map<String, Object> health(@RequestParam(required = false) String standardProfile) {
+        StandardProfileId profile = profile(standardProfile);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("status", "ok");
+        result.put("standardVersion", nutrition.standardVersion(profile));
+        result.put("standard", nutrition.profileSummary(profile));
+        result.put("availableProfiles", Arrays.stream(StandardProfileId.values()).map(Enum::name).toList());
+        return result;
     }
 
     @GetMapping("/api/v1/products")
@@ -38,8 +45,16 @@ public class ApiController {
         return Map.of("items", items);
     }
 
+    /** 기본: 프로필이 분석하는 성분. includeAll=true면 공통 44개 + 프로필 전용 성분 마스터 전체. */
     @GetMapping("/api/v1/nutrients")
-    public Map<String, Object> nutrients() { return Map.of("items", nutrition.nutrients()); }
+    public Map<String, Object> nutrients(@RequestParam(required = false) String standardProfile,
+                                         @RequestParam(defaultValue = "false") boolean includeAll) {
+        StandardProfileId profile = profile(standardProfile);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("standard", nutrition.profileSummary(profile));
+        result.put("items", nutrition.nutrients(profile, includeAll));
+        return result;
+    }
 
     @PostMapping("/api/v1/analyses")
     public Map<String, Object> analyses(@Valid @RequestBody ApiModels.AnalysisRequest request) {
@@ -49,5 +64,9 @@ public class ApiController {
     @PostMapping("/api/v1/recommendations")
     public Map<String, Object> recommendations(@Valid @RequestBody ApiModels.RecommendationRequest request) {
         return nutrition.recommend(request);
+    }
+
+    private static StandardProfileId profile(String value) {
+        return StandardProfileId.parse(value).orElseThrow(() -> new UnknownStandardProfileException(value));
     }
 }

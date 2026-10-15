@@ -15,6 +15,12 @@ public class ApiExceptionHandler {
         return Map.of("detail", Map.of("code", "CALCULATION_INPUT_ERROR", "message", error.getMessage()));
     }
 
+    @ExceptionHandler(UnknownStandardProfileException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public Map<String, Object> unknownProfile(UnknownStandardProfileException error) {
+        return Map.of("detail", Map.of("code", "VALIDATION_ERROR", "message", error.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public Map<String, Object> validation(MethodArgumentNotValidException error) {
