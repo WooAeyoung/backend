@@ -4,6 +4,8 @@ from enum import Enum
 from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
+from .standards.models import StandardProfileId
+
 class Species(str, Enum):
     DOG = "DOG"
     CAT = "CAT"
@@ -33,9 +35,6 @@ class Profile(BaseModel):
     def validate_profile(self):
         if self.age.days < 56:
             raise ValueError("8주 미만 개체는 현재 지원하지 않습니다.")
-        if self.species == Species.DOG and self.age.days < 365:
-            if self.expectedAdultWeightKg is None or self.expectedAdultWeightKg < self.weightKg:
-                raise ValueError("12개월 미만 개는 현재 체중 이상인 예상 성체 체중이 필요합니다.")
         return self
 
 class FeedingItem(BaseModel):
@@ -60,6 +59,8 @@ class AnalysisRequest(BaseModel):
     profile: Profile
     items: list[FeedingItem] = []
     manualItems: list[ManualItem] = []
+    # 지정하지 않으면 기존 클라이언트와 같은 FEDIAF 2025. 알 수 없는 값은 422.
+    standardProfile: StandardProfileId = StandardProfileId.FEDIAF_2025
 
     @model_validator(mode="after")
     def require_item(self):
@@ -67,6 +68,15 @@ class AnalysisRequest(BaseModel):
             raise ValueError("분석할 사료 또는 영양제를 하나 이상 추가해주세요.")
         if len(self.items) + len(self.manualItems) > 20:
             raise ValueError("제품은 최대 20개까지 분석할 수 있습니다.")
+        return self
+
+    @model_validator(mode="after")
+    def require_growth_input(self):
+        # FEDIAF 성장기 열량식은 예상 성체 체중을 쓴다. NIAS는 체급(adultSize)을 엔진에서 검사한다.
+        profile = self.profile
+        if self.standardProfile == StandardProfileId.FEDIAF_2025 and profile.species == Species.DOG and profile.age.days < 365:
+            if profile.expectedAdultWeightKg is None or profile.expectedAdultWeightKg < profile.weightKg:
+                raise ValueError("12개월 미만 개는 현재 체중 이상인 예상 성체 체중이 필요합니다.")
         return self
 
 class RecommendationRequest(AnalysisRequest):

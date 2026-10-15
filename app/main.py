@@ -12,9 +12,11 @@ from nacl.public import PublicKey, SealedBox
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from .catalog import CATALOG, NUTRIENTS, STANDARD_VERSION
+from .catalog import CATALOG
 from .engine import AnalysisError, analyze, recommend
 from .models import AnalysisRequest, RecommendationRequest
+from .standards.models import StandardProfileId
+from .standards.registry import DEFAULT_PROFILE, PROFILES, allow_unverified_standards, get_profile, master_nutrients
 
 app = FastAPI(title="우애영 API", version="1.0.0")
 cors_origins = [
@@ -32,8 +34,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def profile_summary(profile_id: StandardProfileId) -> dict:
+    profile = get_profile(profile_id)
+    statuses = [record.verificationStatus.value for record in profile.records]
+    return {"id":profile.id.value,"displayName":profile.displayName,"version":profile.version,"documentName":profile.documentName,
+            "publisher":profile.publisher,"basis":profile.basis,"allowUnverifiedStandards":allow_unverified_standards(),
+            "verification":{"verified":statuses.count("VERIFIED"),"unverified":statuses.count("UNVERIFIED"),"notApplicable":statuses.count("NOT_APPLICABLE")}}
+
 @app.get("/health")
-def health(): return {"status":"ok","standardVersion":STANDARD_VERSION}
+def health(standardProfile: StandardProfileId = DEFAULT_PROFILE):
+    return {"status":"ok","standardVersion":get_profile(standardProfile).version,"standard":profile_summary(standardProfile),
+            "availableProfiles":[profile_id.value for profile_id in PROFILES]}
 
 
 GITHUB_REPOSITORIES = {
@@ -305,7 +316,16 @@ def products(query: str = Query(default="", max_length=100), type: str | None = 
     return {"items":[{key:product[key] for key in public_fields if key in product} for product in items]}
 
 @app.get("/api/v1/nutrients")
-def nutrients(): return {"items":[{"id":key,**value} for key,value in NUTRIENTS.items()]}
+def nutrients(standardProfile: StandardProfileId = DEFAULT_PROFILE, includeAll: bool = False):
+    """기본: 프로필이 분석하는 성분. includeAll=true면 공통 44개 + 프로필 전용 성분 마스터 전체."""
+    profile = get_profile(standardProfile)
+    masters = master_nutrients(profile.id)
+    units = {item.id: item.unit for item in profile.nutrients}
+    ids = sorted(masters, key=lambda key: masters[key].sortOrder) if includeAll else list(units)
+    items = [{"id":key,"name":masters[key].nameKo,"unit":units.get(key, masters[key].baseUnit),"nameEn":masters[key].nameEn,
+              "category":masters[key].category,"baseUnit":masters[key].baseUnit,"prioritySupported":masters[key].prioritySupported,
+              "analyzed":key in units} for key in ids]
+    return {"standard":profile_summary(profile.id),"items":items}
 
 @app.post("/api/v1/analyses")
 def analyses(request: AnalysisRequest):
