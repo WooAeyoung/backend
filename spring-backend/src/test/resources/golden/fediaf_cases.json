@@ -1,0 +1,459 @@
+{
+ "post": [
+  {
+   "name": "adult_dog_10kg_balanced_feed",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "items": [
+     {
+      "productId": "feed-balanced-dog",
+      "dailyAmount": 150,
+      "unit": "G"
+     }
+    ]
+   }
+  },
+  {
+   "name": "adult_dog_10kg_feed_and_supplements",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "items": [
+     {
+      "productId": "feed-balanced-dog",
+      "dailyAmount": 150,
+      "unit": "G"
+     },
+     {
+      "productId": "supp-multi",
+      "dailyAmount": 1,
+      "unit": "TABLET"
+     },
+     {
+      "productId": "supp-omega",
+      "dailyAmount": 1,
+      "unit": "CAPSULE"
+     }
+    ]
+   }
+  },
+  {
+   "name": "adult_cat_4kg_balanced_feed",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "CAT",
+     "weightKg": 4,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "items": [
+     {
+      "productId": "feed-balanced-cat",
+      "dailyAmount": 60,
+      "unit": "G"
+     }
+    ]
+   }
+  },
+  {
+   "name": "growing_cat_6_months",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "CAT",
+     "weightKg": 2.5,
+     "age": {
+      "value": 6,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "items": [
+     {
+      "productId": "feed-balanced-cat",
+      "dailyAmount": 50,
+      "unit": "G"
+     }
+    ]
+   }
+  },
+  {
+   "name": "puppy_early_growth_12_weeks",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 3,
+     "age": {
+      "value": 12,
+      "unit": "WEEK"
+     },
+     "completeFeed": true,
+     "expectedAdultWeightKg": 10
+    },
+    "items": [
+     {
+      "productId": "feed-balanced-dog",
+      "dailyAmount": 90,
+      "unit": "G"
+     }
+    ]
+   }
+  },
+  {
+   "name": "puppy_late_growth_large_breed_5_months",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 12,
+     "age": {
+      "value": 5,
+      "unit": "MONTH"
+     },
+     "completeFeed": true,
+     "expectedAdultWeightKg": 30
+    },
+    "items": [
+     {
+      "productId": "feed-balanced-dog",
+      "dailyAmount": 300,
+      "unit": "G"
+     }
+    ]
+   }
+  },
+  {
+   "name": "puppy_late_growth_small_breed_8_months",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 6,
+     "age": {
+      "value": 8,
+      "unit": "MONTH"
+     },
+     "completeFeed": true,
+     "expectedAdultWeightKg": 8
+    },
+    "items": [
+     {
+      "productId": "feed-balanced-dog",
+      "dailyAmount": 120,
+      "unit": "G"
+     }
+    ]
+   }
+  },
+  {
+   "name": "ca_p_ratio_exactly_upper_2_0",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "manualItems": [
+     {
+      "name": "Ca:P 2.0",
+      "type": "SUPPLEMENT",
+      "servingAmount": 1,
+      "servingUnit": "TABLET",
+      "dailyAmount": 1,
+      "nutrients": [
+       {
+        "nutrientId": "CALCIUM",
+        "amount": 2000,
+        "unit": "MG"
+       },
+       {
+        "nutrientId": "PHOSPHORUS",
+        "amount": 1000,
+        "unit": "MG"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "ca_p_ratio_above_upper",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "manualItems": [
+     {
+      "name": "Ca:P 2.001",
+      "type": "SUPPLEMENT",
+      "servingAmount": 1,
+      "servingUnit": "TABLET",
+      "dailyAmount": 1,
+      "nutrients": [
+       {
+        "nutrientId": "CALCIUM",
+        "amount": 2.001,
+        "unit": "G"
+       },
+       {
+        "nutrientId": "PHOSPHORUS",
+        "amount": 1,
+        "unit": "G"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "ca_p_ratio_exactly_lower_1_0",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "manualItems": [
+     {
+      "name": "Ca:P 1.0",
+      "type": "SUPPLEMENT",
+      "servingAmount": 1,
+      "servingUnit": "TABLET",
+      "dailyAmount": 1,
+      "nutrients": [
+       {
+        "nutrientId": "CALCIUM",
+        "amount": 1000,
+        "unit": "MG"
+       },
+       {
+        "nutrientId": "PHOSPHORUS",
+        "amount": 1000,
+        "unit": "MG"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "ca_p_ratio_below_lower",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "manualItems": [
+     {
+      "name": "Ca:P 0.999",
+      "type": "SUPPLEMENT",
+      "servingAmount": 1,
+      "servingUnit": "TABLET",
+      "dailyAmount": 1,
+      "nutrients": [
+       {
+        "nutrientId": "CALCIUM",
+        "amount": 999,
+        "unit": "MG"
+       },
+       {
+        "nutrientId": "PHOSPHORUS",
+        "amount": 1000,
+        "unit": "MG"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "missing_nutrient_feed_complete",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "items": [
+     {
+      "productId": "feed-complete-unknown",
+      "dailyAmount": 150,
+      "unit": "G"
+     },
+     {
+      "productId": "supp-zinc",
+      "dailyAmount": 1,
+      "unit": "TABLET"
+     }
+    ]
+   }
+  },
+  {
+   "name": "missing_nutrient_feed_not_complete",
+   "path": "/api/v1/analyses",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": false
+    },
+    "items": [
+     {
+      "productId": "feed-complete-unknown",
+      "dailyAmount": 150,
+      "unit": "G"
+     }
+    ]
+   }
+  },
+  {
+   "name": "recommend_adult_dog_low_feed",
+   "path": "/api/v1/recommendations",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "items": [
+     {
+      "productId": "feed-balanced-dog",
+      "dailyAmount": 20,
+      "unit": "G"
+     }
+    ],
+    "maxItems": 3
+   }
+  },
+  {
+   "name": "recommend_adult_cat_low_feed",
+   "path": "/api/v1/recommendations",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "CAT",
+     "weightKg": 4,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "items": [
+     {
+      "productId": "feed-balanced-cat",
+      "dailyAmount": 10,
+      "unit": "G"
+     }
+    ],
+    "maxItems": 3
+   }
+  },
+  {
+   "name": "recommend_estimated_feed",
+   "path": "/api/v1/recommendations",
+   "body": {
+    "profile": {
+     "name": "골든",
+     "species": "DOG",
+     "weightKg": 10,
+     "age": {
+      "value": 36,
+      "unit": "MONTH"
+     },
+     "completeFeed": true
+    },
+    "items": [
+     {
+      "productId": "feed-complete-unknown",
+      "dailyAmount": 150,
+      "unit": "G"
+     }
+    ],
+    "maxItems": 2
+   }
+  }
+ ],
+ "get": [
+  {
+   "name": "health",
+   "path": "/health"
+  },
+  {
+   "name": "nutrients",
+   "path": "/api/v1/nutrients"
+  }
+ ]
+}
