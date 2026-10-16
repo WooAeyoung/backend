@@ -1,0 +1,151 @@
+{
+  "profile": "NIAS_V3",
+  "basis": "per_1000kcal_ME",
+  "sourceDocument": "test",
+  "nutrients": [
+    {
+      "key": "CALCIUM",
+      "unit": "g",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {
+          "value": 1.0,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "2-17d",
+          "sourceYear": null,
+          "verificationStatus": "PENDING_VERIFICATION",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        },
+        "dog_late": {
+          "value": 1.0,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "2-17d",
+          "sourceYear": null,
+          "verificationStatus": "PENDING_VERIFICATION",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        },
+        "dog_adult": {
+          "value": 1.0,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "2-17d",
+          "sourceYear": null,
+          "verificationStatus": "PENDING_VERIFICATION",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        },
+        "cat_growth": {
+          "value": 1.0,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "2-17d",
+          "sourceYear": null,
+          "verificationStatus": "PENDING_VERIFICATION",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        },
+        "cat_adult": {
+          "value": 1.0,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "2-17d",
+          "sourceYear": null,
+          "verificationStatus": "PENDING_VERIFICATION",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        }
+      },
+      "maximum": {
+        "dog_growth": {
+          "value": null,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "N/A",
+          "sourceYear": null,
+          "verificationStatus": "NOT_APPLICABLE",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        },
+        "dog_adult": {
+          "value": null,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "N/A",
+          "sourceYear": null,
+          "verificationStatus": "NOT_APPLICABLE",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        },
+        "cat_growth": {
+          "value": null,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "N/A",
+          "sourceYear": null,
+          "verificationStatus": "NOT_APPLICABLE",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        },
+        "cat_adult": {
+          "value": null,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "N/A",
+          "sourceYear": null,
+          "verificationStatus": "NOT_APPLICABLE",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        }
+      },
+      "caution": {
+        "dog": {
+          "value": 2.0,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "UNCONFIRMED",
+          "sourceYear": null,
+          "verificationStatus": "VERIFIED",
+          "verifiedAt": "2026-10-01",
+          "valueType": "LITERATURE",
+          "note": null
+        },
+        "cat": {
+          "value": null,
+          "unit": "g",
+          "basis": "per_1000kcal_ME",
+          "sourceDocument": "test",
+          "table": "N/A",
+          "sourceYear": null,
+          "verificationStatus": "NOT_APPLICABLE",
+          "verifiedAt": null,
+          "valueType": "LITERATURE",
+          "note": null
+        }
+      }
+    }
+  ]
+}
