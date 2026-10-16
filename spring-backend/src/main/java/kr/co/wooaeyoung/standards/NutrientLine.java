@@ -20,6 +20,11 @@ public record NutrientLine(Limit limit, String blockedStatus, VerificationStatus
      */
     public static NutrientLine build(StandardValue minimum, StandardValue maximum, StandardValue exception, StandardReference derivedCaution,
                                      double cautionRatio, Double kcal, boolean allowUnverified) {
+        return build(minimum, maximum, exception, derivedCaution, cautionRatio, kcal, allowUnverified, UNSUPPORTED);
+    }
+
+    public static NutrientLine build(StandardValue minimum, StandardValue maximum, StandardValue exception, StandardReference derivedCaution,
+                                     double cautionRatio, Double kcal, boolean allowUnverified, String unavailableStatus) {
         boolean exceptionCaution = exception.value() != null;
         StandardReference cautionReference = exceptionCaution || maximum.value() == null ? StandardReference.of(exception) : derivedCaution;
         Map<String, StandardReference> reference = new LinkedHashMap<>();
@@ -32,7 +37,9 @@ public record NutrientLine(Limit limit, String blockedStatus, VerificationStatus
                 exceptionCaution || maximum.value() != null ? cautionReference.verificationStatus() : null);
         Map<String, StandardReference> frozen = Collections.unmodifiableMap(reference);
         Limit empty = new Limit(null, null, null);
-        if (kcal == null) return new NutrientLine(empty, UNSUPPORTED, status, frozen);
+        if (kcal == null) return new NutrientLine(empty,
+                status == VerificationStatus.NOT_APPLICABLE && UNVERIFIED_STANDARD.equals(unavailableStatus) ? null : unavailableStatus,
+                status, frozen);
         if (status == VerificationStatus.PENDING_VERIFICATION && !allowUnverified) return new NutrientLine(empty, UNVERIFIED_STANDARD, status, frozen);
         Double lower = scale(minimum.value(), kcal), upper = scale(maximum.value(), kcal);
         Double caution = exceptionCaution ? scale(exception.value(), kcal) : upper == null ? null : upper * cautionRatio;

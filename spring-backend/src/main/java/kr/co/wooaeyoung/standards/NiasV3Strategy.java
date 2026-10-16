@@ -77,6 +77,7 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
     @Override public Double energy(Profile profile, String stage) {
         if (!stage.equals("ADULT")) return null;
         NiasV3Parameters.Energy energy = parameters.energy();
+        if (energy.verificationStatus() == VerificationStatus.PENDING_VERIFICATION && !allowUnverified) return null;
         double k = profile.species() == Species.DOG ? energy.dogAdultK() : energy.catAdultK();
         return k * Math.pow(profile.weightKg(), energy.exponent().of(profile.species()));
     }
@@ -95,7 +96,8 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
                     StandardValue.TABLE_NOT_APPLICABLE, null, parameters.cautionRatio().verificationStatus(), ValueType.POLICY, maximum.unit(), standards.basis(),
                     "예외 주의값 없음 → NIAS 최대 × " + cautionRatio);
             result.put(meta.id(), NutrientLine.build(nutrient.minimum().get(minimumColumn), maximum, nutrient.caution().get(dog ? "dog" : "cat"),
-                    derivedCaution, cautionRatio, kcal, allowUnverified));
+                    derivedCaution, cautionRatio, kcal, allowUnverified,
+                    stage.equals("ADULT") ? NutrientLine.UNVERIFIED_STANDARD : NutrientLine.UNSUPPORTED));
         }
         return result;
     }

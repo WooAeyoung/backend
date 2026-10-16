@@ -114,6 +114,7 @@ class StandardProfileContractTest {
     @Test void pendingValuesAreNotUsedForJudgement() throws Exception {
         JsonNode analysis = call("/api/v1/analyses", withProfile(ADULT_DOG, "NIAS_V3"));
         assertFalse(analysis.get("standardsVerification").get("allowUnverified").asBoolean());
+        assertTrue(analysis.get("referenceEnergyKcal").isNull());
         assertEquals(18, analysis.get("nutrients").size());
         for (JsonNode row : analysis.get("nutrients")) {
             String status = row.get("status").asText();
@@ -129,6 +130,7 @@ class StandardProfileContractTest {
         // 주의선만 있는 성분도 '기준 없음'으로 처리되지 않는다.
         for (String key : List.of("COPPER", "IRON", "MANGANESE", "ZINC")) assertEquals("UNVERIFIED_STANDARD", row(analysis, key).get("status").asText(), key);
         JsonNode cat = call("/api/v1/analyses", request("CAT", 4, 36, "MONTH", "", "{\"productId\":\"feed-balanced-cat\",\"dailyAmount\":60,\"unit\":\"G\"}", "NIAS_V3"));
+        assertTrue(cat.get("referenceEnergyKcal").isNull());
         assertEquals("UNVERIFIED_STANDARD", row(cat, "SELENIUM").get("status").asText());
         assertEquals("UNCONFIRMED", row(cat, "SELENIUM").get("reference").get("caution").get("table").asText());
         // Ca:P도 미검증 매개변수로 판정하지 않는다.
