@@ -1,0 +1,68 @@
+{
+  "profile": "FEDIAF_2025",
+  "parameterVersion": "FEDIAF-2025.09+params.1",
+  "description": "리팩터링 전 Java 계산 코드(NutritionService)의 정책 상수를 값 변경 없이 옮겼다. verificationStatus는 docs/standards-validation.md로 대조된 섹션만 VERIFIED다.",
+  "age": {
+    "daysPerWeek": 7,
+    "daysPerMonth": 30.4375,
+    "minimumDays": 56,
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "리팩터링 전 Java 코드(ApiModels.Age.days, NutritionService.validate). 8주 미만 미지원과 월 환산 30.4375일은 docs/standards-validation.md에 없음."
+  },
+  "lifeStage": {
+    "dogEarlyGrowthEndDays": 98,
+    "adultDays": 365,
+    "verificationStatus": "VERIFIED",
+    "source": "docs/standards-validation.md 각주와 비율 조건: 개 14주 미만 초기 성장기, 14주 이상 1년 미만 후기 성장기(2026-10-01 대조)."
+  },
+  "energy": {
+    "exponent": {
+      "dog": 0.75,
+      "cat": 0.67
+    },
+    "dogAdultK": 95,
+    "catAdultK": 75,
+    "catGrowthK": 100,
+    "puppyIntercept": 254.1,
+    "puppySlope": 135,
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "리팩터링 전 Java 코드(NutritionService.energy). app/engine.py 주석은 FEDIAF 2025 Table VII-8b를 가리키나 docs/standards-validation.md에서 대조하지 않음."
+  },
+  "largeBreedCalcium": {
+    "expectedAdultWeightAboveKg": 15,
+    "ageBelowDays": 182.625,
+    "verificationStatus": "VERIFIED",
+    "source": "docs/standards-validation.md: Table III-3 각주 b, 예상 성체 15 kg 초과·생후 6개월 미만(6 × 30.4375일)(2026-10-01 대조)."
+  },
+  "cautionRatio": {
+    "ratio": {
+      "dog": 1.5,
+      "cat": 0.5
+    },
+    "verificationStatus": "VERIFIED",
+    "source": "docs/standards-validation.md 서비스 주의선 정책(서비스 내부 정책, FEDIAF 공식값 아님)."
+  },
+  "calciumPhosphorus": {
+    "minimum": 1,
+    "dogEarlyGrowthMaximum": 1.6,
+    "dogLateGrowthMaximum": 1.8,
+    "dogLateGrowthLargeBreedMaximum": 1.6,
+    "dogAdultMaximum": 2,
+    "verificationStatus": "VERIFIED",
+    "source": "docs/standards-validation.md 각주와 비율 조건: Ca:P 상한 1.6/1.8/1.6(각주 b)/2(2026-10-01 대조). 하한 1은 리팩터링 전 Java 코드."
+  },
+  "feedEstimate": {
+    "feedFactor": 1,
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "리팩터링 전 Java 코드: 상세 성분이 없는 완전사료는 최소 권장량 그대로(×1) 추정."
+  },
+  "recommendation": {
+    "w2": 10,
+    "w3": 0,
+    "w4": 1,
+    "topN": 3,
+    "note": "현재 Java 동작 보존용: Java 추천식(10 × 보완 수 − 중복 수)에는 안전 여유 항이 없어 w3를 0으로 둔다. Python 기준 구현은 w3 = 5를 쓴다.",
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "리팩터링 전 Java 코드(NutritionService.recommend, RecommendationRequest.requestedMaxItems)."
+  }
+}

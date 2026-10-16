@@ -70,3 +70,37 @@ FEDIAF 표는 최소 권장량과 최대치를 제공하며 별도의 `주의선
 - 백엔드: `pytest -q` — 17개 테스트 통과
 - 프론트엔드: `npm run build` — TypeScript 검사 및 Vite 프로덕션 빌드 통과
 - 결론: F-12의 공식 기준 대조, 서비스 주의선 구분, 정적 웹·백엔드 일치 및 실행 검증 완료
+
+## Java 기준 데이터 파일 (Issue #1)
+
+- `spring-backend/src/main/resources/standards/fediaf-2025/nutrients.json`은 리팩터링 전 Java 기준값 표(`NutritionService.standards()`)에서 일회성으로 옮겼고, 이제 이 JSON이 원본이다. 값이 같다는 근거는 FEDIAF 골든 테스트(`FediafGoldenTest`) 25/25 통과다. 이 파일을 다시 만드는 생성기는 저장소에 두지 않는다.
+- 위 표에서 대조된 값만 `VERIFIED`(verifiedAt 2026-10-01)로 두고, 빈칸은 `value: null`, `NOT_APPLICABLE`, table `N/A`로 보존한다.
+
+### 기준 프로필 구조
+
+| 프로필 | standardVersion | 기준값 | 매개변수 |
+| --- | --- | --- | --- |
+| `FEDIAF_2025` (기본) | `FEDIAF-2025.09` | `standards/fediaf-2025/nutrients.json` 6개 성분 | `standards/fediaf-2025/parameters.json` (리팩터링 전 Java 상수) |
+| `NIAS_V3` | `NIAS-v3` | `standards/nias-v3/nutrients.json` 44개 성분(1차 구현 18개) | `standards/nias-v3/parameters.json` (`docs/v3` 매개변수표) |
+
+- 영양소 마스터는 `standards/nutrients-master.json` 하나다. 성분 ID 1~44와 순서는 `docs/v3/기준값표_매개변수표_v3.xlsx`를 따르며, 상세설계 보고서 부록 B의 번호(예: 칼슘 19, 타우린 44)와 다르다.
+- 기존 키 CALCIUM(20), PHOSPHORUS(21), ZINC(31), VITAMIN_D(33), VITAMIN_E(34)는 유지한다. OMEGA3는 FEDIAF 전용 키로 성분 ID가 없고, ALA(18)·EPA+DHA(19)로 자동 매핑하지 않는다.
+- 레코드마다 `value`, `unit`, `basis`(per_1000kcal_ME), `sourceDocument`, `table`, `sourceYear`, `verificationStatus`, `verifiedAt`, `valueType`(LITERATURE/POLICY), `note`를 둔다.
+
+### 검증 상태 정책
+
+- `VERIFIED`: 이 문서로 원문과 대조한 값. 현재 FEDIAF 기준값(Ca, P, 비타민 D, 아연)과 FEDIAF 매개변수 중 생애주기 경계·대형견 칼슘 조건·주의 비율·Ca:P 상한이 해당한다.
+- `PENDING_VERIFICATION`: 원문 대조 전. NIAS xlsx 값, EU 법정 주의값, AAFCO 주의값은 전부 이 상태다. 표 번호를 확인할 수 없으면 `table: "UNCONFIRMED"`이고, 그 레코드는 반드시 이 상태다(무결성 테스트로 강제).
+- `NOT_APPLICABLE`: 빈칸(기준 없음). `value: null`, `table: "N/A"`, 사유는 `note`에 적는다.
+- `PENDING_VERIFICATION` 값은 판정·추천에 쓰지 않는다. 해당 성분은 `UNVERIFIED_STANDARD` 상태와 경고로 응답하며 기준값을 공식 기준처럼 노출하지 않는다. `wooaeyoung.standards.allow-unverified=true`는 `test` 프로필에서만 허용되고, 켜면 응답에 표시된다.
+
+### 검증 대기(PENDING_VERIFICATION) 목록
+
+| 항목 | 위치 | 확인할 것 |
+| --- | --- | --- |
+| NIAS 최소·최대 전 성분 | `nias-v3/nutrients.json` (표 2-17c·d·g·h) | 원문 표의 수치·단위, NIAS 발행 연도(`sourceYear`가 현재 `null`) |
+| 개 비타민 A 예외 주의값 62,500 IU | AAFCO Dog and Cat Food Nutrient Profiles (2014) | 표 이름(`table: UNCONFIRMED`) |
+| EU 법정 주의값: 구리·아연·철·망간(개·고양이), 셀레늄(고양이) | FEDIAF Nutritional Guidelines 2021 | 건물 100 g당 원값과 표 번호(`table: UNCONFIRMED`) |
+| NIAS 매개변수 전체 | `nias-v3/parameters.json` | 표 2-5·2-7a·2-7b·2-8·2-9·2-17c 각주 d 대조 |
+| FEDIAF 매개변수: 8주 하한·월 환산(30.4375일), 열량 계수(95/75/100, 254.1/135, 지수), 사료 추정 배수, 추천 가중치 | `fediaf-2025/parameters.json` | 이 문서에 대조 기록 없음. 계산 동작은 바꾸지 않고 응답 `parameterVerification`에만 표시 |
+| 1차 구현 18개 목록 | `nias-v3/nutrients.json` `implemented` | 팀 확정(현재는 xlsx "제안") |

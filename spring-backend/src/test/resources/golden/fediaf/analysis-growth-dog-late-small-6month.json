@@ -1,0 +1,112 @@
+{
+  "status" : 200,
+  "body" : {
+    "traceId" : "<masked>",
+    "standardVersion" : "FEDIAF-2025.09",
+    "standardSource" : "FEDIAF Nutritional Guidelines 2025, life-stage values per 1000 kcal ME",
+    "cautionPolicy" : "서비스 조기 경고 기준: 공식 상한의 75%부터 주의",
+    "lifeStage" : "GROWTH_LATE",
+    "referenceEnergyKcal" : 567.509741310616,
+    "usesEstimatedFeed" : false,
+    "summary" : {
+      "deficient" : 2,
+      "adequate" : 2,
+      "caution" : 0,
+      "excess" : 0,
+      "noStandard" : 2
+    },
+    "nutrients" : [ {
+      "nutrientId" : "CALCIUM",
+      "name" : "칼슘",
+      "unit" : "MG",
+      "fromFeed" : 1080.0,
+      "fromSupplements" : 0.0,
+      "source" : "ACTUAL",
+      "total" : 1080.0,
+      "minimum" : 1135.019482621232,
+      "caution" : 1915.3453769233292,
+      "upper" : 2553.793835897772,
+      "status" : "DEFICIENT"
+    }, {
+      "nutrientId" : "PHOSPHORUS",
+      "name" : "인",
+      "unit" : "MG",
+      "fromFeed" : 864.0,
+      "fromSupplements" : 0.0,
+      "source" : "ACTUAL",
+      "total" : 864.0,
+      "minimum" : 993.1420472935781,
+      "caution" : null,
+      "upper" : null,
+      "status" : "DEFICIENT"
+    }, {
+      "nutrientId" : "VITAMIN_D",
+      "name" : "비타민 D",
+      "unit" : "UG",
+      "fromFeed" : 7.199999999999999,
+      "fromSupplements" : 0.0,
+      "source" : "ACTUAL",
+      "total" : 7.199999999999999,
+      "minimum" : 1.7734679415956751,
+      "caution" : 8.512646119659241,
+      "upper" : 11.35019482621232,
+      "status" : "ADEQUATE"
+    }, {
+      "nutrientId" : "VITAMIN_E",
+      "name" : "비타민 E",
+      "unit" : "MG",
+      "fromFeed" : 12.0,
+      "fromSupplements" : 0.0,
+      "source" : "ACTUAL",
+      "total" : 12.0,
+      "minimum" : null,
+      "caution" : null,
+      "upper" : null,
+      "status" : "NO_STANDARD"
+    }, {
+      "nutrientId" : "OMEGA3",
+      "name" : "오메가3",
+      "unit" : "MG",
+      "fromFeed" : 216.0,
+      "fromSupplements" : 0.0,
+      "source" : "ACTUAL",
+      "total" : 216.0,
+      "minimum" : null,
+      "caution" : null,
+      "upper" : null,
+      "status" : "NO_STANDARD"
+    }, {
+      "nutrientId" : "ZINC",
+      "name" : "아연",
+      "unit" : "MG",
+      "fromFeed" : 14.399999999999999,
+      "fromSupplements" : 0.0,
+      "source" : "ACTUAL",
+      "total" : 14.399999999999999,
+      "minimum" : 14.187743532765401,
+      "caution" : null,
+      "upper" : null,
+      "status" : "ADEQUATE_NO_UPPER_LIMIT"
+    } ],
+    "contributions" : [ {
+      "name" : "데일리 밸런스 독",
+      "type" : "FEED",
+      "source" : "ACTUAL",
+      "nutrients" : {
+        "CALCIUM" : 1080.0,
+        "PHOSPHORUS" : 864.0,
+        "VITAMIN_D" : 7.199999999999999,
+        "VITAMIN_E" : 12.0,
+        "OMEGA3" : 216.0,
+        "ZINC" : 14.399999999999999
+      }
+    } ],
+    "ratios" : {
+      "calciumPhosphorus" : {
+        "status" : "ADEQUATE",
+        "value" : 1.25
+      }
+    },
+    "warnings" : [ "비타민 E와 오메가3는 현재 제품 단위가 공식 기준과 달라 기준 없음으로 표시하며 추천 점수에서 제외합니다.", "상한이 없는 성분은 안전하다는 뜻이 아니라 비교 가능한 공식 상한을 적용하지 않았다는 뜻입니다." ]
+  }
+}

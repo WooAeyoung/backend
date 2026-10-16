@@ -1,0 +1,60 @@
+{
+  "status" : 200,
+  "body" : {
+    "traceId" : "<masked>",
+    "standardVersion" : "FEDIAF-2025.09",
+    "message" : "적용 가능한 기준에서 주의·과다가 검출되지 않은 후보입니다.",
+    "items" : [ {
+      "productId" : "supp-omega",
+      "unit" : "CAPSULE",
+      "dailyAmount" : 1.0,
+      "name" : "오메가 밸런스",
+      "fixedNutrients" : 0,
+      "projectedStatuses" : {
+        "CALCIUM" : "ADEQUATE",
+        "PHOSPHORUS" : "ADEQUATE",
+        "VITAMIN_D" : "ADEQUATE",
+        "VITAMIN_E" : "NO_STANDARD",
+        "OMEGA3" : "NO_STANDARD",
+        "ZINC" : "ADEQUATE_NO_UPPER_LIMIT"
+      },
+      "score" : 0.0
+    }, {
+      "productId" : "supp-zinc",
+      "unit" : "TABLET",
+      "dailyAmount" : 1.0,
+      "name" : "아연 케어",
+      "fixedNutrients" : 0,
+      "projectedStatuses" : {
+        "CALCIUM" : "ADEQUATE",
+        "PHOSPHORUS" : "ADEQUATE",
+        "VITAMIN_D" : "ADEQUATE",
+        "VITAMIN_E" : "NO_STANDARD",
+        "OMEGA3" : "NO_STANDARD",
+        "ZINC" : "ADEQUATE_NO_UPPER_LIMIT"
+      },
+      "score" : -1.0
+    }, {
+      "productId" : "supp-multi",
+      "unit" : "TABLET",
+      "dailyAmount" : 1.0,
+      "name" : "데일리 멀티",
+      "fixedNutrients" : 0,
+      "projectedStatuses" : {
+        "CALCIUM" : "ADEQUATE",
+        "PHOSPHORUS" : "ADEQUATE",
+        "VITAMIN_D" : "ADEQUATE",
+        "VITAMIN_E" : "NO_STANDARD",
+        "OMEGA3" : "NO_STANDARD",
+        "ZINC" : "ADEQUATE_NO_UPPER_LIMIT"
+      },
+      "score" : -2.0
+    } ],
+    "excluded" : [ {
+      "productId" : "supp-calcium",
+      "name" : "칼슘 플러스",
+      "reason" : "추가 후 기준 이탈 예상: 칼슘:인 비율"
+    } ],
+    "usesEstimatedFeed" : true
+  }
+}

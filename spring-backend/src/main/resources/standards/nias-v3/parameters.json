@@ -1,0 +1,101 @@
+{
+  "profile": "NIAS_V3",
+  "parameterVersion": "NIAS-v3+params.2026-09-27",
+  "description": "scripts/convert_nias_v3_standards.py가 매개변수표 시트에서 변환했다. 모든 섹션은 원문 대조 전이다.",
+  "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx",
+  "age": {
+    "weeksPerMonth": 4.345,
+    "dogMinimumWeeks": 8,
+    "catMinimumWeeks": 8,
+    "dogEarlyGrowthEndWeeks": 14,
+    "catStage1EndMonths": 4,
+    "catStage2EndMonths": 9,
+    "adultMonths": 12,
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "docs/v3/기준값표_매개변수표_v3.xlsx 매개변수표: weeks_per_month=4.345 (365.25 ÷ 12 ÷ 7); min_week_dog=8 (표 2-7a·b가 8주(이유)부터 정의); min_week_cat=8 (개 값 준용(가정). 2개월령 미만 판매 금지(동물보호법, 조문 확인 필요). 확정); pup_early_week=14 (표 2-17a·c 각주); cat_stage1_month=4 (표 2-9); cat_stage2_month=9 (표 2-9); adult_month=12 (확정)"
+  },
+  "energy": {
+    "exponent": {
+      "dog": 0.75,
+      "cat": 0.67
+    },
+    "dogAdultK": 110,
+    "catAdultK": 100,
+    "puppyIntercept": 254.1,
+    "puppySlope": 135,
+    "catStage1Multiplier": 2.25,
+    "catStage2Multiplier": 1.875,
+    "catStage3Multiplier": 1.5,
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "docs/v3/기준값표_매개변수표_v3.xlsx 매개변수표: exp_dog=0.75 (영양표준 2장 (NRC 2006)); exp_cat=0.67 (영양표준 2장 (Heusner 1991, NRC 2006b)); k_dog_adult=110 (표 2-5 (3~7세). 노령도 동일); k_cat_adult=100 (표 2-8 (활동적인 고양이)); k_pup_a=254.1 (표 2-7b); k_pup_b=135 (표 2-7b); cat_mult_1=2.25 (표 2-9 범위 2.0~2.5의 중간값 (확정)); cat_mult_2=1.875 (표 2-9 범위 1.75~2.0의 중간값 (확정)); cat_mult_3=1.5 (표 2-9)"
+  },
+  "growthCurve": {
+    "sizeClasses": {
+      "S": {
+        "a": 36.92,
+        "b": 43.57,
+        "lowerKg": 0,
+        "upperKg": 7
+      },
+      "M": {
+        "a": 36.86,
+        "b": 48.22,
+        "lowerKg": 7,
+        "upperKg": 15
+      },
+      "L": {
+        "a": 39.88,
+        "b": 60.7,
+        "lowerKg": 15,
+        "upperKg": 27.5
+      },
+      "XL": {
+        "a": 36.96,
+        "b": 56.18,
+        "lowerKg": 27.5,
+        "upperKg": 47.5
+      },
+      "XXL": {
+        "a": 36.61,
+        "b": 62.39,
+        "lowerKg": 47.5,
+        "upperKg": null
+      }
+    },
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "docs/v3/기준값표_매개변수표_v3.xlsx 매개변수표: 개 성장곡선 (표 2-7a): 성체 체중 대비 비율(%) = a × ln(주령) − b.  비율은 100을 넘지 않게 절단. 예상 성체 체중 = 현재 체중 ÷ (비율 ÷ 100) → 절단 범위 안으로 자름. 벗어나면 \"체급 또는 체중을 확인하세요\" 표시."
+  },
+  "largeBreedCalcium": {
+    "expectedAdultWeightAtLeastKg": 31.75,
+    "dogGrowthCalciumMaximum": 4.5,
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "docs/v3/기준값표_매개변수표_v3.xlsx 매개변수표: ca_large_kg=31.75 (표 2-17c 각주 d); ca_max_large=4.5 (표 2-17c 각주 d)"
+  },
+  "cautionRatio": {
+    "ratio": {
+      "dog": 0.75,
+      "cat": 0.5
+    },
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "docs/v3/기준값표_매개변수표_v3.xlsx 매개변수표: caution_dog=0.75 (저활동 95÷110 = 0.86, 노령 하한 80÷110 = 0.73 (표 2-5, 2-6). 확정); caution_cat=0.5 (실내·중성화 52~75÷100 = 0.52~0.75 (표 2-8). 확정)"
+  },
+  "calciumPhosphorus": {
+    "minimum": 1,
+    "maximum": 2,
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "docs/v3/기준값표_매개변수표_v3.xlsx 매개변수표: ca_p_min=1 (표 2-17c·d); ca_p_max=2 (표 2-17c·d)"
+  },
+  "feedEstimate": {
+    "feedFactor": 1,
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "docs/v3/기준값표_매개변수표_v3.xlsx 매개변수표: feed_factor=1 (확정. 표 2-13a 사료 실제는 1.7~5.8배 (한계))"
+  },
+  "recommendation": {
+    "w2": 10,
+    "w3": 5,
+    "w4": 1,
+    "topN": 3,
+    "verificationStatus": "PENDING_VERIFICATION",
+    "source": "docs/v3/기준값표_매개변수표_v3.xlsx 매개변수표: w2=10 (A안 확정. 우선순위 1); w3=5 (A안 확정. 보완 1개(10점)를 넘지 않게); w4=1 (A안 확정. 동점 구분용); top_n=3 (확정)"
+  }
+}

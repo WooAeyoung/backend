@@ -1,0 +1,1019 @@
+{
+  "profile": "NIAS_V3",
+  "basis": "per_1000kcal_ME",
+  "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx 기준값표",
+  "nutrients": [
+    {
+      "key": "PROTEIN",
+      "unit": "g",
+      "implemented": false,
+      "note": "고양이 성장기는 성장 기준값(번식 75.0 미사용).",
+      "minimum": {
+        "dog_early": {"value": 56.3, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D6"},
+        "dog_late": {"value": 50, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E6"},
+        "dog_adult": {"value": 45, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F6"},
+        "cat_growth": {"value": 70, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G6"},
+        "cat_adult": {"value": 62.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H6"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I6 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J6 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K6 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L6 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M6 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N6 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "ARGININE",
+      "unit": "g",
+      "implemented": false,
+      "note": "고양이 성장기는 성장 기준값(번식 2.78 미사용).",
+      "minimum": {
+        "dog_early": {"value": 2.04, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D7"},
+        "dog_late": {"value": 1.84, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E7"},
+        "dog_adult": {"value": 1.28, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F7"},
+        "cat_growth": {"value": 2.68, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G7"},
+        "cat_adult": {"value": 2.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H7"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I7 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J7 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K7 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L7 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M7 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N7 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "HISTIDINE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 0.98, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D8"},
+        "dog_late": {"value": 0.63, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E8"},
+        "dog_adult": {"value": 0.48, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F8"},
+        "cat_growth": {"value": 0.83, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G8"},
+        "cat_adult": {"value": 0.65, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H8"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I8 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J8 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K8 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L8 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M8 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N8 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "ISOLEUCINE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 1.63, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D9"},
+        "dog_late": {"value": 1.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E9"},
+        "dog_adult": {"value": 0.95, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F9"},
+        "cat_growth": {"value": 1.35, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G9"},
+        "cat_adult": {"value": 1.08, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H9"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I9 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J9 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K9 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L9 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M9 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N9 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "LEUCINE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 3.23, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D10"},
+        "dog_late": {"value": 2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E10"},
+        "dog_adult": {"value": 1.7, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F10"},
+        "cat_growth": {"value": 3.2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G10"},
+        "cat_adult": {"value": 2.55, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H10"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I10 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J10 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K10 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L10 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M10 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N10 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "LYSINE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 2.2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D11"},
+        "dog_late": {"value": 1.75, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E11"},
+        "dog_adult": {"value": 1.05, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F11"},
+        "cat_growth": {"value": 2.13, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G11"},
+        "cat_adult": {"value": 0.85, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H11"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I11 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J11 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K11 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L11 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M11 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N11 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "METHIONINE",
+      "unit": "g",
+      "implemented": false,
+      "note": "고양이 성장기에만 NIAS 최대.",
+      "minimum": {
+        "dog_early": {"value": 0.88, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D12"},
+        "dog_late": {"value": 0.65, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E12"},
+        "dog_adult": {"value": 0.83, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F12"},
+        "cat_growth": {"value": 1.1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G12"},
+        "cat_adult": {"value": 0.43, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H12"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I12 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J12 빈칸) → 기준 없음"},
+        "cat_growth": {"value": 3.75, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!K12"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L12 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M12 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N12 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "METHIONINE_CYSTINE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 1.75, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D13"},
+        "dog_late": {"value": 1.33, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E13"},
+        "dog_adult": {"value": 1.63, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F13"},
+        "cat_growth": {"value": 2.2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G13"},
+        "cat_adult": {"value": 0.85, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H13"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I13 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J13 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K13 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L13 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M13 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N13 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "PHENYLALANINE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 1.63, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D14"},
+        "dog_late": {"value": 1.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E14"},
+        "dog_adult": {"value": 1.13, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F14"},
+        "cat_growth": {"value": 1.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G14"},
+        "cat_adult": {"value": 1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H14"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I14 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J14 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K14 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L14 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M14 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N14 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "PHENYLALANINE_TYROSINE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 3.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D15"},
+        "dog_late": {"value": 2.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E15"},
+        "dog_adult": {"value": 1.85, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F15"},
+        "cat_growth": {"value": 4.78, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G15"},
+        "cat_adult": {"value": 3.83, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H15"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I15 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J15 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K15 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L15 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M15 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N15 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "THREONINE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 2.03, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D16"},
+        "dog_late": {"value": 1.6, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E16"},
+        "dog_adult": {"value": 1.2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F16"},
+        "cat_growth": {"value": 1.63, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G16"},
+        "cat_adult": {"value": 1.3, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H16"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I16 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J16 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K16 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L16 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M16 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N16 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "TRYPTOPHAN",
+      "unit": "g",
+      "implemented": false,
+      "note": "고양이 성장기에만 NIAS 최대.",
+      "minimum": {
+        "dog_early": {"value": 0.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D17"},
+        "dog_late": {"value": 0.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E17"},
+        "dog_adult": {"value": 0.4, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F17"},
+        "cat_growth": {"value": 0.4, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G17"},
+        "cat_adult": {"value": 0.33, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H17"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I17 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J17 빈칸) → 기준 없음"},
+        "cat_growth": {"value": 4.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!K17"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L17 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M17 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N17 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VALINE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 1.7, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D18"},
+        "dog_late": {"value": 1.4, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E18"},
+        "dog_adult": {"value": 1.23, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F18"},
+        "cat_growth": {"value": 1.55, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G18"},
+        "cat_adult": {"value": 1.28, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H18"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I18 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J18 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K18 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L18 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M18 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N18 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "TAURINE",
+      "unit": "g",
+      "implemented": true,
+      "note": "통조림 사료 최소는 0.50 g. 건사료 값으로 통일.",
+      "minimum": {
+        "dog_early": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!D19 빈칸) → 기준 없음"},
+        "dog_late": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!E19 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!F19 빈칸) → 기준 없음"},
+        "cat_growth": {"value": 0.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G19"},
+        "cat_adult": {"value": 0.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H19"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I19 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J19 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K19 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L19 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M19 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N19 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "FAT",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 21.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D20"},
+        "dog_late": {"value": 21.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E20"},
+        "dog_adult": {"value": 13.75, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F20"},
+        "cat_growth": {"value": 22.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G20"},
+        "cat_adult": {"value": 22.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H20"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I20 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J20 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K20 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L20 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M20 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N20 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "LINOLEIC_ACID",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 3.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D21"},
+        "dog_late": {"value": 3.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E21"},
+        "dog_adult": {"value": 2.8, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F21"},
+        "cat_growth": {"value": 1.38, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G21"},
+        "cat_adult": {"value": 1.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H21"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I21 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J21 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K21 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L21 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M21 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N21 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "ARACHIDONIC_ACID",
+      "unit": "mg",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!D22 빈칸) → 기준 없음"},
+        "dog_late": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!E22 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!F22 빈칸) → 기준 없음"},
+        "cat_growth": {"value": 50, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G22"},
+        "cat_adult": {"value": 15, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H22"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I22 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J22 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K22 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L22 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M22 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N22 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "ALPHA_LINOLENIC_ACID",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 0.2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D23"},
+        "dog_late": {"value": 0.2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E23"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!F23 빈칸) → 기준 없음"},
+        "cat_growth": {"value": 0.05, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G23"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!H23 빈칸) → 기준 없음"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I23 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J23 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K23 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L23 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M23 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N23 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "EPA_DHA",
+      "unit": "g",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 0.1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D24"},
+        "dog_late": {"value": 0.1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E24"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!F24 빈칸) → 기준 없음"},
+        "cat_growth": {"value": 0.03, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G24"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!H24 빈칸) → 기준 없음"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I24 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J24 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K24 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L24 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M24 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N24 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "CALCIUM",
+      "unit": "g",
+      "implemented": true,
+      "note": "개 성장기: 예상 성체 체중(체급 범위로 절단) 31.75 kg 이상이면 최대 4.5 적용(표 2-17c 각주 d) — 매개변수표 참조. 개는 칼슘:인 비율 1~2도 판정.",
+      "minimum": {
+        "dog_early": {"value": 2.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D25"},
+        "dog_late": {"value": 2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E25"},
+        "dog_adult": {"value": 1.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F25"},
+        "cat_growth": {"value": 2.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G25"},
+        "cat_adult": {"value": 1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H25"}
+      },
+      "maximum": {
+        "dog_growth": {"value": 6.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!I25; 예상 성체 31.75 kg 이상은 4.5 적용(표 2-17c 각주 d, parameters.json largeBreedCalcium)"},
+        "dog_adult": {"value": 6.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!J25"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K25 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L25 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M25 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N25 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "PHOSPHORUS",
+      "unit": "g",
+      "implemented": true,
+      "note": "개 성장기의 최대는 1000 kcal당 표에서 빈칸 → 상한 없음.",
+      "minimum": {
+        "dog_early": {"value": 2.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D26"},
+        "dog_late": {"value": 1.75, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E26"},
+        "dog_adult": {"value": 1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F26"},
+        "cat_growth": {"value": 2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G26"},
+        "cat_adult": {"value": 0.64, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H26"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I26 빈칸) → 기준 없음"},
+        "dog_adult": {"value": 4, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!J26"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K26 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L26 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M26 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N26 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "POTASSIUM",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 1.1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D27"},
+        "dog_late": {"value": 1.1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E27"},
+        "dog_adult": {"value": 1.25, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F27"},
+        "cat_growth": {"value": 1.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G27"},
+        "cat_adult": {"value": 1.5, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H27"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I27 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J27 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K27 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L27 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M27 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N27 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "SODIUM",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 0.55, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D28"},
+        "dog_late": {"value": 0.55, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E28"},
+        "dog_adult": {"value": 0.2, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F28"},
+        "cat_growth": {"value": 0.4, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G28"},
+        "cat_adult": {"value": 0.19, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H28"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I28 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J28 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K28 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L28 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M28 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N28 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "CHLORIDE",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 0.83, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D29"},
+        "dog_late": {"value": 0.83, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E29"},
+        "dog_adult": {"value": 0.3, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F29"},
+        "cat_growth": {"value": 0.6, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G29"},
+        "cat_adult": {"value": 0.29, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H29"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I29 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J29 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K29 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L29 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M29 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N29 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "MAGNESIUM",
+      "unit": "g",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 0.1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D30"},
+        "dog_late": {"value": 0.1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E30"},
+        "dog_adult": {"value": 0.15, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F30"},
+        "cat_growth": {"value": 0.13, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G30"},
+        "cat_adult": {"value": 0.1, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H30"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I30 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J30 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K30 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L30 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M30 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "g", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N30 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "COPPER",
+      "unit": "mg",
+      "implemented": true,
+      "note": "NIAS 최대 없음. EU 법정값(2.8 mg/건물 100 g × 2.5)을 주의선으로만 사용, 과다 상태 없음.",
+      "minimum": {
+        "dog_early": {"value": 2.75, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D31"},
+        "dog_late": {"value": 2.75, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E31"},
+        "dog_adult": {"value": 1.8, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F31"},
+        "cat_growth": {"value": 2.5, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G31"},
+        "cat_adult": {"value": 1.25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H31"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I31 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J31 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K31 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L31 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": 7, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)", "table": "UNCONFIRMED", "sourceYear": 2021, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!M31; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: NIAS 최대 없음. EU 법정값(2.8 mg/건물 100 g × 2.5)을 주의선으로만 사용, 과다 상태 없음."},
+        "cat": {"value": 7, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)", "table": "UNCONFIRMED", "sourceYear": 2021, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!N31; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: NIAS 최대 없음. EU 법정값(2.8 mg/건물 100 g × 2.5)을 주의선으로만 사용, 과다 상태 없음."}
+      }
+    },
+    {
+      "key": "IODINE",
+      "unit": "mg",
+      "implemented": true,
+      "note": "고양이 2.25는 표 2-17g·h 값. 건물 100 g당 표(1.10 × 2.5 = 2.75)와 불일치하나 1000 kcal당 표를 채택.",
+      "minimum": {
+        "dog_early": {"value": 0.25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D32"},
+        "dog_late": {"value": 0.25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E32"},
+        "dog_adult": {"value": 0.25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F32"},
+        "cat_growth": {"value": 0.45, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G32"},
+        "cat_adult": {"value": 0.15, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H32"}
+      },
+      "maximum": {
+        "dog_growth": {"value": 2.75, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!I32"},
+        "dog_adult": {"value": 2.75, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!J32"},
+        "cat_growth": {"value": 2.25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!K32"},
+        "cat_adult": {"value": 2.25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!L32"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M32 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N32 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "IRON",
+      "unit": "mg",
+      "implemented": true,
+      "note": "NIAS 최대 없음. EU 법정값(68.18 × 2.5)을 주의선으로만 사용.",
+      "minimum": {
+        "dog_early": {"value": 22, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D33"},
+        "dog_late": {"value": 22, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E33"},
+        "dog_adult": {"value": 9, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F33"},
+        "cat_growth": {"value": 20, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G33"},
+        "cat_adult": {"value": 20, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H33"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I33 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J33 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K33 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L33 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": 170.45, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)", "table": "UNCONFIRMED", "sourceYear": 2021, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!M33; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: NIAS 최대 없음. EU 법정값(68.18 × 2.5)을 주의선으로만 사용."},
+        "cat": {"value": 170.45, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)", "table": "UNCONFIRMED", "sourceYear": 2021, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!N33; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: NIAS 최대 없음. EU 법정값(68.18 × 2.5)을 주의선으로만 사용."}
+      }
+    },
+    {
+      "key": "MANGANESE",
+      "unit": "mg",
+      "implemented": true,
+      "note": "NIAS 최대 없음. EU 법정값(17 × 2.5)을 주의선으로만 사용.",
+      "minimum": {
+        "dog_early": {"value": 1.4, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D34"},
+        "dog_late": {"value": 1.4, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E34"},
+        "dog_adult": {"value": 1.25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F34"},
+        "cat_growth": {"value": 1.9, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G34"},
+        "cat_adult": {"value": 1.25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H34"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I34 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J34 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K34 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L34 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": 42.5, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)", "table": "UNCONFIRMED", "sourceYear": 2021, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!M34; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: NIAS 최대 없음. EU 법정값(17 × 2.5)을 주의선으로만 사용."},
+        "cat": {"value": 42.5, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)", "table": "UNCONFIRMED", "sourceYear": 2021, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!N34; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: NIAS 최대 없음. EU 법정값(17 × 2.5)을 주의선으로만 사용."}
+      }
+    },
+    {
+      "key": "SELENIUM",
+      "unit": "µg",
+      "implemented": true,
+      "note": "개: NIAS 최대 500. 고양이: NIAS 최대 없음 → EU 법정값(56.8 µg × 2.5)을 주의선으로만 사용.",
+      "minimum": {
+        "dog_early": {"value": 90, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D35"},
+        "dog_late": {"value": 90, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E35"},
+        "dog_adult": {"value": 45, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F35"},
+        "cat_growth": {"value": 75, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G35"},
+        "cat_adult": {"value": 52.5, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H35"}
+      },
+      "maximum": {
+        "dog_growth": {"value": 500, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!I35"},
+        "dog_adult": {"value": 500, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!J35"},
+        "cat_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K35 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L35 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M35 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": 142, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)", "table": "UNCONFIRMED", "sourceYear": 2021, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!N35; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: 개: NIAS 최대 500. 고양이: NIAS 최대 없음 → EU 법정값(56.8 µg × 2.5)을 주의선으로만 사용."}
+      }
+    },
+    {
+      "key": "ZINC",
+      "unit": "mg",
+      "implemented": true,
+      "note": "NIAS 최대 없음. EU 법정값(22.7 × 2.5). 최소와 주의선 간격이 좁음(성견 3.2배, 강아지 2.3배).",
+      "minimum": {
+        "dog_early": {"value": 25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D36"},
+        "dog_late": {"value": 25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E36"},
+        "dog_adult": {"value": 18, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F36"},
+        "cat_growth": {"value": 18.8, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G36"},
+        "cat_adult": {"value": 18.8, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H36"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I36 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J36 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K36 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L36 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": 56.75, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)", "table": "UNCONFIRMED", "sourceYear": 2021, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!M36; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: NIAS 최대 없음. EU 법정값(22.7 × 2.5). 최소와 주의선 간격이 좁음(성견 3.2배, 강아지 2.3배)."},
+        "cat": {"value": 56.75, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)", "table": "UNCONFIRMED", "sourceYear": 2021, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!N36; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: NIAS 최대 없음. EU 법정값(22.7 × 2.5). 최소와 주의선 간격이 좁음(성견 3.2배, 강아지 2.3배)."}
+      }
+    },
+    {
+      "key": "VITAMIN_A",
+      "unit": "IU",
+      "implemented": true,
+      "note": "개: AAFCO 상한을 주의 시작으로 사용(NIAS 최대 100,000의 75% = 75,000이 AAFCO 상한보다 높음). 상한은 NIAS 최대 그대로.",
+      "minimum": {
+        "dog_early": {"value": 1250, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D37"},
+        "dog_late": {"value": 1250, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E37"},
+        "dog_adult": {"value": 1250, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F37"},
+        "cat_growth": {"value": 1667, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G37"},
+        "cat_adult": {"value": 833, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H37"}
+      },
+      "maximum": {
+        "dog_growth": {"value": 100000, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!I37"},
+        "dog_adult": {"value": 100000, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!J37"},
+        "cat_growth": {"value": 100000, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!K37"},
+        "cat_adult": {"value": 100000, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!L37"}
+      },
+      "caution": {
+        "dog": {"value": 62500, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "AAFCO Dog and Cat Food Nutrient Profiles (2014 revised final)", "table": "UNCONFIRMED", "sourceYear": 2014, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!M37; 250,000 IU/kg 건물 ÷ 4 = 62,500 IU/1000 kcal(안내 A15)"},
+        "cat": {"value": null, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N37 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_D",
+      "unit": "IU",
+      "implemented": true,
+      "note": "단위 IU. 1 µg = 40 IU (표 7-5).",
+      "minimum": {
+        "dog_early": {"value": 125, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D38"},
+        "dog_late": {"value": 125, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E38"},
+        "dog_adult": {"value": 125, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F38"},
+        "cat_growth": {"value": 70, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G38"},
+        "cat_adult": {"value": 62.5, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H38"}
+      },
+      "maximum": {
+        "dog_growth": {"value": 800, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!I38"},
+        "dog_adult": {"value": 800, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!J38"},
+        "cat_growth": {"value": 7520, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!K38"},
+        "cat_adult": {"value": 7520, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!L38"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M38 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N38 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_E",
+      "unit": "IU",
+      "implemented": true,
+      "note": "dl-알파-토코페롤 아세테이트 1 mg = 1 IU (표 7-5).",
+      "minimum": {
+        "dog_early": {"value": 12.5, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D39"},
+        "dog_late": {"value": 12.5, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E39"},
+        "dog_adult": {"value": 9, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F39"},
+        "cat_growth": {"value": 9.5, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G39"},
+        "cat_adult": {"value": 9.5, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H39"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I39 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J39 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K39 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L39 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M39 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "IU", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N39 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_B1",
+      "unit": "mg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 0.45, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D40"},
+        "dog_late": {"value": 0.45, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E40"},
+        "dog_adult": {"value": 0.54, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F40"},
+        "cat_growth": {"value": 1.4, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G40"},
+        "cat_adult": {"value": 1.1, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H40"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I40 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J40 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K40 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L40 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M40 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N40 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_B2",
+      "unit": "mg",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 1.05, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D41"},
+        "dog_late": {"value": 1.05, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E41"},
+        "dog_adult": {"value": 1.3, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F41"},
+        "cat_growth": {"value": 0.8, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G41"},
+        "cat_adult": {"value": 0.8, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H41"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I41 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J41 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K41 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L41 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M41 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N41 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_B5",
+      "unit": "mg",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 3, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D42"},
+        "dog_late": {"value": 3, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E42"},
+        "dog_adult": {"value": 3, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F42"},
+        "cat_growth": {"value": 1.43, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G42"},
+        "cat_adult": {"value": 1.44, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H42"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I42 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J42 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K42 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L42 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M42 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N42 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_B6",
+      "unit": "mg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 0.3, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D43"},
+        "dog_late": {"value": 0.3, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E43"},
+        "dog_adult": {"value": 0.36, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F43"},
+        "cat_growth": {"value": 0.63, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G43"},
+        "cat_adult": {"value": 0.63, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H43"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I43 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J43 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K43 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L43 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M43 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N43 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_B12",
+      "unit": "µg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 7, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D44"},
+        "dog_late": {"value": 7, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E44"},
+        "dog_adult": {"value": 7, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F44"},
+        "cat_growth": {"value": 4.5, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G44"},
+        "cat_adult": {"value": 4.4, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H44"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I44 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J44 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K44 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L44 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M44 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N44 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_B3",
+      "unit": "mg",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 3.4, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D45"},
+        "dog_late": {"value": 3.4, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E45"},
+        "dog_adult": {"value": 3.4, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F45"},
+        "cat_growth": {"value": 8, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G45"},
+        "cat_adult": {"value": 8, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H45"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I45 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J45 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K45 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L45 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M45 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N45 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_B9",
+      "unit": "µg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 54, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D46"},
+        "dog_late": {"value": 54, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E46"},
+        "dog_adult": {"value": 54, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F46"},
+        "cat_growth": {"value": 188, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G46"},
+        "cat_adult": {"value": 188, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H46"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I46 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J46 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K46 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L46 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M46 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N46 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_B7",
+      "unit": "µg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!D47 빈칸) → 기준 없음"},
+        "dog_late": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!E47 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!F47 빈칸) → 기준 없음"},
+        "cat_growth": {"value": 17.5, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G47"},
+        "cat_adult": {"value": 15, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H47"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I47 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J47 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K47 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L47 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M47 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N47 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "CHOLINE",
+      "unit": "mg",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 340, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!D48"},
+        "dog_late": {"value": 340, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17c", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!E48"},
+        "dog_adult": {"value": 340, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17d", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!F48"},
+        "cat_growth": {"value": 600, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17g", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!G48"},
+        "cat_adult": {"value": 600, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "2-17h", "sourceYear": null, "verificationStatus": "PENDING_VERIFICATION", "verifiedAt": null, "valueType": "LITERATURE", "note": "기준값표!H48"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I48 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J48 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K48 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L48 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M48 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N48 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    },
+    {
+      "key": "VITAMIN_K",
+      "unit": "µg",
+      "implemented": false,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!D49 빈칸) → 기준 없음"},
+        "dog_late": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!E49 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!F49 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!G49 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!H49 빈칸) → 기준 없음"}
+      },
+      "maximum": {
+        "dog_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17c에 값 없음(기준값표!I49 빈칸) → 기준 없음"},
+        "dog_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17d에 값 없음(기준값표!J49 빈칸) → 기준 없음"},
+        "cat_growth": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17g에 값 없음(기준값표!K49 빈칸) → 기준 없음"},
+        "cat_adult": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "표 2-17h에 값 없음(기준값표!L49 빈칸) → 기준 없음"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!M49 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"},
+        "cat": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx", "table": "N/A", "sourceYear": null, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "예외 주의값 없음(기준값표!N49 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음"}
+      }
+    }
+  ]
+}

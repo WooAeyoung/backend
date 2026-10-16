@@ -14,6 +14,10 @@ public class CatalogService {
                           double servingAmount, String servingUnit, String dataQuality,
                           Map<String, Double> nutrients, Double recommendedDailyAmount) {}
 
+    /** products.json의 nutrients 값 단위(기존 FEDIAF 응답 단위). 제품 데이터에 단위 필드가 없어 여기서 고정한다. */
+    public static final Map<String, String> NUTRIENT_UNITS = Map.of(
+            "CALCIUM", "MG", "PHOSPHORUS", "MG", "VITAMIN_D", "UG", "VITAMIN_E", "MG", "OMEGA3", "MG", "ZINC", "MG");
+
     private final List<Product> products;
     private final Map<String, Product> productsById;
 

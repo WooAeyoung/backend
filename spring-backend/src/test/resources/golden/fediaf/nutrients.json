@@ -1,0 +1,30 @@
+{
+  "status" : 200,
+  "body" : {
+    "items" : [ {
+      "id" : "CALCIUM",
+      "unit" : "MG",
+      "name" : "칼슘"
+    }, {
+      "id" : "PHOSPHORUS",
+      "unit" : "MG",
+      "name" : "인"
+    }, {
+      "id" : "VITAMIN_D",
+      "unit" : "UG",
+      "name" : "비타민 D"
+    }, {
+      "id" : "VITAMIN_E",
+      "unit" : "MG",
+      "name" : "비타민 E"
+    }, {
+      "id" : "OMEGA3",
+      "unit" : "MG",
+      "name" : "오메가3"
+    }, {
+      "id" : "ZINC",
+      "unit" : "MG",
+      "name" : "아연"
+    } ]
+  }
+}

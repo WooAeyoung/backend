@@ -1,0 +1,314 @@
+{
+  "description": "영양소 마스터(NIAS 성분 ID 1~44). 프로필은 key로 참조한다.",
+  "sourceDocument": "docs/v3/기준값표_매개변수표_v3.xlsx 기준값표",
+  "nutrients": [
+    {
+      "id": 1,
+      "key": "PROTEIN",
+      "name": "단백질",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 2,
+      "key": "ARGININE",
+      "name": "아르지닌",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 3,
+      "key": "HISTIDINE",
+      "name": "히스티딘",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 4,
+      "key": "ISOLEUCINE",
+      "name": "이소루신",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 5,
+      "key": "LEUCINE",
+      "name": "류신",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 6,
+      "key": "LYSINE",
+      "name": "라이신",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 7,
+      "key": "METHIONINE",
+      "name": "메치오닌",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 8,
+      "key": "METHIONINE_CYSTINE",
+      "name": "메치오닌+시스틴",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 9,
+      "key": "PHENYLALANINE",
+      "name": "페닐알라닌",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 10,
+      "key": "PHENYLALANINE_TYROSINE",
+      "name": "페닐알라닌+티로신",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 11,
+      "key": "THREONINE",
+      "name": "트레오닌",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 12,
+      "key": "TRYPTOPHAN",
+      "name": "트립토판",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 13,
+      "key": "VALINE",
+      "name": "발린",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 14,
+      "key": "TAURINE",
+      "name": "타우린 (건사료)",
+      "category": "단백질·아미노산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 15,
+      "key": "FAT",
+      "name": "지방",
+      "category": "지방·지방산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 16,
+      "key": "LINOLEIC_ACID",
+      "name": "리놀레산 (오메가-6)",
+      "category": "지방·지방산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 17,
+      "key": "ARACHIDONIC_ACID",
+      "name": "아라키돈산 (오메가-6)",
+      "category": "지방·지방산",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 18,
+      "key": "ALPHA_LINOLENIC_ACID",
+      "name": "알파-리놀렌산 (오메가-3)",
+      "category": "지방·지방산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 19,
+      "key": "EPA_DHA",
+      "name": "EPA+DHA (오메가-3)",
+      "category": "지방·지방산",
+      "baseUnit": "g"
+    },
+    {
+      "id": 20,
+      "key": "CALCIUM",
+      "name": "칼슘",
+      "category": "미네랄",
+      "baseUnit": "g"
+    },
+    {
+      "id": 21,
+      "key": "PHOSPHORUS",
+      "name": "인",
+      "category": "미네랄",
+      "baseUnit": "g"
+    },
+    {
+      "id": 22,
+      "key": "POTASSIUM",
+      "name": "칼륨",
+      "category": "미네랄",
+      "baseUnit": "g"
+    },
+    {
+      "id": 23,
+      "key": "SODIUM",
+      "name": "나트륨",
+      "category": "미네랄",
+      "baseUnit": "g"
+    },
+    {
+      "id": 24,
+      "key": "CHLORIDE",
+      "name": "염소",
+      "category": "미네랄",
+      "baseUnit": "g"
+    },
+    {
+      "id": 25,
+      "key": "MAGNESIUM",
+      "name": "마그네슘",
+      "category": "미네랄",
+      "baseUnit": "g"
+    },
+    {
+      "id": 26,
+      "key": "COPPER",
+      "name": "구리 (건사료)",
+      "category": "미량 원소",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 27,
+      "key": "IODINE",
+      "name": "요오드",
+      "category": "미량 원소",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 28,
+      "key": "IRON",
+      "name": "철",
+      "category": "미량 원소",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 29,
+      "key": "MANGANESE",
+      "name": "망간",
+      "category": "미량 원소",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 30,
+      "key": "SELENIUM",
+      "name": "셀레늄",
+      "category": "미량 원소",
+      "baseUnit": "µg"
+    },
+    {
+      "id": 31,
+      "key": "ZINC",
+      "name": "아연",
+      "category": "미량 원소",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 32,
+      "key": "VITAMIN_A",
+      "name": "비타민 A",
+      "category": "비타민·기타",
+      "baseUnit": "IU"
+    },
+    {
+      "id": 33,
+      "key": "VITAMIN_D",
+      "name": "비타민 D",
+      "category": "비타민·기타",
+      "baseUnit": "IU"
+    },
+    {
+      "id": 34,
+      "key": "VITAMIN_E",
+      "name": "비타민 E",
+      "category": "비타민·기타",
+      "baseUnit": "IU"
+    },
+    {
+      "id": 35,
+      "key": "VITAMIN_B1",
+      "name": "비타민 B1 (티아민)",
+      "category": "비타민·기타",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 36,
+      "key": "VITAMIN_B2",
+      "name": "비타민 B2 (리보플라빈)",
+      "category": "비타민·기타",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 37,
+      "key": "VITAMIN_B5",
+      "name": "비타민 B5 (판토텐산)",
+      "category": "비타민·기타",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 38,
+      "key": "VITAMIN_B6",
+      "name": "비타민 B6 (피리독신)",
+      "category": "비타민·기타",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 39,
+      "key": "VITAMIN_B12",
+      "name": "비타민 B12 (시아노코발아민)",
+      "category": "비타민·기타",
+      "baseUnit": "µg"
+    },
+    {
+      "id": 40,
+      "key": "VITAMIN_B3",
+      "name": "비타민 B3 (니아신)",
+      "category": "비타민·기타",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 41,
+      "key": "VITAMIN_B9",
+      "name": "비타민 B9 (엽산)",
+      "category": "비타민·기타",
+      "baseUnit": "µg"
+    },
+    {
+      "id": 42,
+      "key": "VITAMIN_B7",
+      "name": "비타민 B7 (비오틴)",
+      "category": "비타민·기타",
+      "baseUnit": "µg"
+    },
+    {
+      "id": 43,
+      "key": "CHOLINE",
+      "name": "콜린",
+      "category": "비타민·기타",
+      "baseUnit": "mg"
+    },
+    {
+      "id": 44,
+      "key": "VITAMIN_K",
+      "name": "비타민 K",
+      "category": "비타민·기타",
+      "baseUnit": "µg"
+    }
+  ]
+}
