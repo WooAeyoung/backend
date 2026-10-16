@@ -11,6 +11,8 @@ Python·FastAPI 계산 기준·데이터 검증
 ```
 
 > 제품 수치는 기능 검증용 데모이며, 영양 기준선은 FEDIAF Nutritional Guidelines 2025를 적용합니다. 이 서비스는 실제 급여 판단이나 수의학적 처방을 대신하지 않습니다.
+>
+> 요청에 `standardProfile: "NIAS_V3"`를 주면 농촌진흥청 국립축산과학원 『반려동물 사료 영양표준』 기반 NIAS v3 프로필(검증 대기)로 계산합니다. NIAS 기준값은 원문 대조 전(`PENDING_VERIFICATION`)이라 판정에 쓰지 않고 "기준 미검증"으로 표시하며, 공식 기준이 아닙니다. 지정하지 않으면 기존과 같이 FEDIAF 2025를 씁니다.
 
 ## Java 운영 서버 실행
 
