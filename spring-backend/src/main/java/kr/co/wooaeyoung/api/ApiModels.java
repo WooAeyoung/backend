@@ -2,6 +2,8 @@ package kr.co.wooaeyoung.api;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import kr.co.wooaeyoung.standards.StandardProfile;
+
 import java.util.List;
 
 public final class ApiModels {
@@ -11,9 +13,7 @@ public final class ApiModels {
     public enum ProductType { FEED, SUPPLEMENT }
     public enum AgeUnit { WEEK, MONTH }
 
-    public record Age(@Positive double value, @NotNull AgeUnit unit) {
-        public double days() { return value * (unit == AgeUnit.WEEK ? 7 : 30.4375); }
-    }
+    public record Age(@Positive double value, @NotNull AgeUnit unit) {}
 
     public record Profile(
             @NotBlank @Size(max = 30) String name,
@@ -39,17 +39,21 @@ public final class ApiModels {
     public record AnalysisRequest(
             @Valid @NotNull Profile profile,
             List<@Valid FeedingItem> items,
-            List<@Valid ManualItem> manualItems) {
+            List<@Valid ManualItem> manualItems,
+            StandardProfile standardProfile) {
         public List<FeedingItem> safeItems() { return items == null ? List.of() : items; }
         public List<ManualItem> safeManualItems() { return manualItems == null ? List.of() : manualItems; }
+        /** 미지정이면 기존 운영 기준(FEDIAF_2025). */
+        public StandardProfile standardProfileOrDefault() { return standardProfile == null ? StandardProfile.DEFAULT : standardProfile; }
     }
 
     public record RecommendationRequest(
             @Valid @NotNull Profile profile,
             List<@Valid FeedingItem> items,
             List<@Valid ManualItem> manualItems,
-            @Min(1) @Max(3) Integer maxItems) {
-        public AnalysisRequest analysisRequest() { return new AnalysisRequest(profile, items, manualItems); }
-        public int requestedMaxItems() { return maxItems == null ? 3 : maxItems; }
+            @Min(1) @Max(3) Integer maxItems,
+            StandardProfile standardProfile) {
+        public AnalysisRequest analysisRequest() { return new AnalysisRequest(profile, items, manualItems, standardProfile); }
+        public int requestedMaxItems(int defaultMaxItems) { return maxItems == null ? defaultMaxItems : maxItems; }
     }
 }

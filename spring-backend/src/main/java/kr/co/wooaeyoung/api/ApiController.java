@@ -3,6 +3,7 @@ package kr.co.wooaeyoung.api;
 import jakarta.validation.Valid;
 import kr.co.wooaeyoung.domain.CatalogService;
 import kr.co.wooaeyoung.domain.NutritionService;
+import kr.co.wooaeyoung.standards.StandardProfile;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -19,7 +20,7 @@ public class ApiController {
 
     @GetMapping("/health")
     public Map<String, String> health() {
-        return Map.of("status", "ok", "standardVersion", NutritionService.STANDARD_VERSION);
+        return Map.of("status", "ok", "standardVersion", StandardProfile.DEFAULT.version());
     }
 
     @GetMapping("/api/v1/products")

@@ -6,3 +6,7 @@ app:
   kakao-allowed-user-ids: ${KAKAO_ALLOWED_USER_IDS:}
   public-base-url: ${PUBLIC_BASE_URL:https://wooaeyoung-backend.onrender.com}
   kakao-oauth-base-url: ${KAKAO_OAUTH_BASE_URL:https://wooaeyoung-backend.onrender.com}
+wooaeyoung:
+  standards:
+    # 검증 대기(PENDING_VERIFICATION) 기준값을 판정·추천에 쓸지 여부. test 프로필이 아니면 true일 때 시작이 실패한다.
+    allow-unverified: false

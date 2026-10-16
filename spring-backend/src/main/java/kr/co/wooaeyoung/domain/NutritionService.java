@@ -1,6 +1,10 @@
 package kr.co.wooaeyoung.domain;
 
 import kr.co.wooaeyoung.api.ApiModels.*;
+import kr.co.wooaeyoung.standards.Limit;
+import kr.co.wooaeyoung.standards.NutrientMeta;
+import kr.co.wooaeyoung.standards.NutritionStandardStrategy;
+import kr.co.wooaeyoung.standards.StandardProfile;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -10,33 +14,36 @@ import java.util.*;
 
 @Service
 public class NutritionService {
-    public static final String STANDARD_VERSION = "FEDIAF-2025.09";
-    private static final List<String> IDS = List.of("CALCIUM", "PHOSPHORUS", "VITAMIN_D", "VITAMIN_E", "OMEGA3", "ZINC");
-    private static final Map<String, Map<String, String>> META = Map.of(
-            "CALCIUM", Map.of("name", "칼슘", "unit", "MG"),
-            "PHOSPHORUS", Map.of("name", "인", "unit", "MG"),
-            "VITAMIN_D", Map.of("name", "비타민 D", "unit", "UG"),
-            "VITAMIN_E", Map.of("name", "비타민 E", "unit", "MG"),
-            "OMEGA3", Map.of("name", "오메가3", "unit", "MG"),
-            "ZINC", Map.of("name", "아연", "unit", "MG"));
     private static final Map<String, Double> UNIT = Map.of("UG", .001, "MG", 1d, "G", 1000d);
-    private static final Map<String, Map<String, Map<String, Standard>>> STANDARDS = standards();
 
     private final CatalogService catalog;
-    public NutritionService(CatalogService catalog) { this.catalog = catalog; }
+    private final Map<StandardProfile, NutritionStandardStrategy> strategies;
+
+    public NutritionService(CatalogService catalog, List<NutritionStandardStrategy> strategies) {
+        this.catalog = catalog;
+        Map<StandardProfile, NutritionStandardStrategy> byProfile = new EnumMap<>(StandardProfile.class);
+        for (NutritionStandardStrategy strategy : strategies)
+            if (byProfile.put(strategy.profile(), strategy) != null) throw new IllegalStateException("기준 프로필 전략이 중복되었습니다: " + strategy.profile());
+        for (StandardProfile profile : StandardProfile.values())
+            if (!byProfile.containsKey(profile)) throw new IllegalStateException("기준 프로필 전략이 없습니다: " + profile);
+        this.strategies = Map.copyOf(byProfile);
+    }
 
     public Map<String, Object> analyze(AnalysisRequest request) {
-        validate(request);
-        String stage = lifeStage(request);
-        double kcal = energy(request, stage);
-        Map<String, Limit> limits = thresholds(request, stage, kcal);
-        Aggregate aggregate = aggregate(request, limits);
+        NutritionStandardStrategy strategy = strategy(request.standardProfileOrDefault());
+        Map<String, NutrientMeta> meta = meta(strategy);
+        validate(request, strategy);
+        Profile profile = request.profile();
+        String stage = strategy.lifeStage(profile);
+        Double kcal = strategy.energy(profile, stage);
+        Map<String, Limit> limits = strategy.thresholds(profile, stage, kcal);
+        Aggregate aggregate = aggregate(request, limits, meta, strategy.feedFactor());
         List<Map<String, Object>> nutrients = new ArrayList<>();
         Map<String, Integer> summary = new LinkedHashMap<>();
         summary.put("deficient", 0); summary.put("adequate", 0); summary.put("caution", 0);
         summary.put("excess", 0); summary.put("noStandard", 0);
         Map<String, Double> current = new LinkedHashMap<>();
-        for (String id : IDS) {
+        for (String id : meta.keySet()) {
             Total total = aggregate.totals().get(id);
             double value = total.feed + total.supplement;
             current.put(id, value);
@@ -48,35 +55,50 @@ public class NutritionService {
             };
             summary.put(bucket, summary.get(bucket) + 1);
             Map<String, Object> row = new LinkedHashMap<>();
-            row.put("nutrientId", id); row.put("name", META.get(id).get("name")); row.put("unit", META.get(id).get("unit"));
+            row.put("nutrientId", id); row.put("name", meta.get(id).name()); row.put("unit", meta.get(id).unit());
             row.put("fromFeed", total.feed); row.put("fromSupplements", total.supplement); row.put("source", total.source);
-            row.put("total", value); row.put("minimum", line.minimum); row.put("caution", line.caution); row.put("upper", line.upper); row.put("status", status);
+            row.put("total", value); row.put("minimum", line.minimum()); row.put("caution", line.caution()); row.put("upper", line.upper()); row.put("status", status);
             nutrients.add(row);
         }
         Map<String, Object> ratios = new LinkedHashMap<>();
-        if (request.profile().species() == Species.DOG) {
+        boolean calciumPhosphorusAvailable = current.containsKey("CALCIUM") && current.containsKey("PHOSPHORUS");
+        // 기존 ratios는 고양이에서 빈 객체로 유지하고(하위 호환), 적용 여부는 새 필드로 알린다.
+        String calciumPhosphorusApplicability = profile.species() != Species.DOG ? "NOT_APPLICABLE" : calciumPhosphorusAvailable ? "APPLICABLE" : "UNAVAILABLE";
+        if (profile.species() == Species.DOG && calciumPhosphorusAvailable) {
             double phosphorus = current.get("PHOSPHORUS");
             Double ratio = phosphorus == 0 ? null : current.get("CALCIUM") / phosphorus;
             ratios.put("calciumPhosphorus", Map.of("value", ratio == null ? 0d : ratio,
-                    "status", calciumPhosphorusStatus(request, current.get("CALCIUM"), phosphorus)));
+                    "status", strategy.calciumPhosphorusStatus(profile, current.get("CALCIUM"), phosphorus)));
         }
         List<String> warnings = new ArrayList<>(aggregate.warnings());
-        warnings.add("비타민 E와 오메가3는 현재 제품 단위가 공식 기준과 달라 기준 없음으로 표시하며 추천 점수에서 제외합니다.");
-        warnings.add("상한이 없는 성분은 안전하다는 뜻이 아니라 비교 가능한 공식 상한을 적용하지 않았다는 뜻입니다.");
+        warnings.addAll(strategy.analysisWarnings(profile, stage));
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("traceId", fingerprint(request) + "-" + UUID.randomUUID().toString().substring(0, 8));
-        result.put("standardVersion", STANDARD_VERSION);
-        result.put("standardSource", "FEDIAF Nutritional Guidelines 2025, life-stage values per 1000 kcal ME");
-        result.put("cautionPolicy", "서비스 조기 경고 기준: 공식 상한의 " + (request.profile().species() == Species.DOG ? 75 : 50) + "%부터 주의");
+        result.put("standardVersion", strategy.profile().version());
+        result.put("standardSource", strategy.standardSource());
+        result.put("cautionPolicy", strategy.cautionPolicy(profile.species()));
         result.put("lifeStage", stage); result.put("referenceEnergyKcal", kcal); result.put("usesEstimatedFeed", aggregate.estimated());
         result.put("summary", summary); result.put("nutrients", nutrients); result.put("contributions", aggregate.contributions());
         result.put("ratios", ratios); result.put("warnings", warnings);
+        putProfileFields(result, strategy);
+        result.put("ratioApplicability", Map.of("calciumPhosphorus", calciumPhosphorusApplicability));
         return result;
     }
 
     public Map<String, Object> recommend(RecommendationRequest request) {
         AnalysisRequest analysisRequest = request.analysisRequest();
+        NutritionStandardStrategy strategy = strategy(analysisRequest.standardProfileOrDefault());
+        Map<String, NutrientMeta> meta = meta(strategy);
         Map<String, Object> base = analyze(analysisRequest);
+        String unsupported = strategy.recommendationUnsupportedReason();
+        if (unsupported != null) {
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("traceId", base.get("traceId")); result.put("standardVersion", strategy.profile().version());
+            result.put("message", "현재 기준 프로필에서는 추천 후보를 계산하지 않습니다.");
+            result.put("items", List.of()); result.put("excluded", List.of()); result.put("usesEstimatedFeed", base.get("usesEstimatedFeed"));
+            putProfileFields(result, strategy); result.put("warnings", List.of(unsupported));
+            return result;
+        }
         @SuppressWarnings("unchecked") List<Map<String, Object>> nutrientRows = (List<Map<String, Object>>) base.get("nutrients");
         Map<String, Double> current = new LinkedHashMap<>();
         Map<String, Limit> limits = new LinkedHashMap<>();
@@ -91,7 +113,7 @@ public class NutritionService {
         Map<String, Map<String, Object>> excluded = new LinkedHashMap<>();
         List<CatalogService.Product> remaining = new ArrayList<>(catalog.all().stream()
                 .filter(product -> product.type().equals("SUPPLEMENT") && product.recommendedDailyAmount() != null).toList());
-        for (int round = 0; round < request.requestedMaxItems(); round++) {
+        for (int round = 0; round < request.requestedMaxItems(strategy.defaultMaxItems()); round++) {
             Map<String, String> roundOriginal = original;
             Candidate best = null;
             for (CatalogService.Product product : remaining) {
@@ -101,11 +123,11 @@ public class NutritionService {
                 Map<String, String> statuses = new LinkedHashMap<>();
                 projected.forEach((id, value) -> statuses.put(id, classify(value, limits.get(id))));
                 List<String> harmful = product.nutrients().keySet().stream()
-                        .filter(id -> Set.of("CAUTION", "EXCESS").contains(statuses.get(id))).map(id -> META.get(id).get("name")).toList();
+                        .filter(id -> Set.of("CAUTION", "EXCESS").contains(statuses.get(id))).map(id -> meta.get(id).name()).toList();
                 List<String> reasons = new ArrayList<>(harmful);
                 if (analysisRequest.profile().species() == Species.DOG &&
                         (!Collections.disjoint(product.nutrients().keySet(), Set.of("CALCIUM", "PHOSPHORUS")))) {
-                    String ratioStatus = calciumPhosphorusStatus(analysisRequest, projected.get("CALCIUM"), projected.get("PHOSPHORUS"));
+                    String ratioStatus = strategy.calciumPhosphorusStatus(analysisRequest.profile(), projected.get("CALCIUM"), projected.get("PHOSPHORUS"));
                     if (Set.of("LOW", "HIGH").contains(ratioStatus)) reasons.add("칼슘:인 비율");
                 }
                 if (!reasons.isEmpty()) {
@@ -114,7 +136,7 @@ public class NutritionService {
                 }
                 long fixed = roundOriginal.entrySet().stream().filter(entry -> entry.getValue().equals("DEFICIENT") && !statuses.get(entry.getKey()).equals("DEFICIENT")).count();
                 long overlap = product.nutrients().keySet().stream().filter(id -> !Set.of("DEFICIENT", "NO_STANDARD").contains(roundOriginal.get(id))).count();
-                double score = 10 * fixed - overlap;
+                double score = strategy.recommendationScore(fixed, overlap);
                 Candidate candidate = new Candidate(score, fixed, product, projected, statuses);
                 if (best == null || candidate.compareTo(best) > 0) best = candidate;
             }
@@ -127,29 +149,40 @@ public class NutritionService {
         }
         @SuppressWarnings("unchecked") Map<String, Integer> summary = (Map<String, Integer>) base.get("summary");
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("traceId", base.get("traceId")); result.put("standardVersion", STANDARD_VERSION);
+        result.put("traceId", base.get("traceId")); result.put("standardVersion", strategy.profile().version());
         result.put("message", summary.get("deficient") == 0 ? "적용 가능한 기준에서 주의·과다가 검출되지 않은 후보입니다." : "부족 성분, 기준선까지의 여유, 중복 성분을 함께 고려했습니다.");
         result.put("items", selected); result.put("excluded", new ArrayList<>(excluded.values())); result.put("usesEstimatedFeed", base.get("usesEstimatedFeed"));
+        putProfileFields(result, strategy); result.put("warnings", List.of());
         return result;
     }
 
     public List<Map<String, String>> nutrients() {
-        return IDS.stream().map(id -> Map.of("id", id, "name", META.get(id).get("name"), "unit", META.get(id).get("unit"))).toList();
+        return strategy(StandardProfile.DEFAULT).nutrients().stream().map(n -> Map.of("id", n.id(), "name", n.name(), "unit", n.unit())).toList();
     }
 
-    private void validate(AnalysisRequest request) {
+    private NutritionStandardStrategy strategy(StandardProfile profile) { return strategies.get(profile); }
+
+    private static Map<String, NutrientMeta> meta(NutritionStandardStrategy strategy) {
+        Map<String, NutrientMeta> meta = new LinkedHashMap<>();
+        strategy.nutrients().forEach(nutrient -> meta.put(nutrient.id(), nutrient));
+        return meta;
+    }
+
+    private static void putProfileFields(Map<String, Object> result, NutritionStandardStrategy strategy) {
+        result.put("standardProfile", strategy.profile().name());
+        result.put("parameterVersion", strategy.parameterVersion());
+        result.put("parameterVerification", strategy.parameterVerification());
+    }
+
+    private static void validate(AnalysisRequest request, NutritionStandardStrategy strategy) {
         int count = request.safeItems().size() + request.safeManualItems().size();
         if (count == 0) throw new AnalysisException("분석할 사료 또는 영양제를 하나 이상 추가해주세요.");
         if (count > 20) throw new AnalysisException("제품은 최대 20개까지 분석할 수 있습니다.");
-        Profile profile = request.profile();
-        if (profile.age().days() < 56) throw new AnalysisException("8주 미만 개체는 현재 지원하지 않습니다.");
-        if (profile.species() == Species.DOG && profile.age().days() < 365 &&
-                (profile.expectedAdultWeightKg() == null || profile.expectedAdultWeightKg() < profile.weightKg()))
-            throw new AnalysisException("12개월 미만 개는 현재 체중 이상인 예상 성체 체중이 필요합니다.");
+        strategy.validate(request.profile());
     }
 
-    private Aggregate aggregate(AnalysisRequest request, Map<String, Limit> limits) {
-        Map<String, Total> totals = new LinkedHashMap<>(); IDS.forEach(id -> totals.put(id, new Total()));
+    private Aggregate aggregate(AnalysisRequest request, Map<String, Limit> limits, Map<String, NutrientMeta> meta, double feedFactor) {
+        Map<String, Total> totals = new LinkedHashMap<>(); meta.keySet().forEach(id -> totals.put(id, new Total()));
         boolean estimated = false; List<String> warnings = new ArrayList<>(); List<Map<String, Object>> contributions = new ArrayList<>();
         for (FeedingItem item : request.safeItems()) {
             CatalogService.Product product = catalog.require(item.productId());
@@ -157,7 +190,7 @@ public class NutritionService {
             double ratio = item.dailyAmount() / product.servingAmount(); Map<String, Double> values = new LinkedHashMap<>();
             if (product.type().equals("FEED") && product.nutrients().isEmpty() && request.profile().usesCompleteFeed()) {
                 estimated = true;
-                for (String id : IDS) if (limits.get(id).minimum != null) { totals.get(id).feed += limits.get(id).minimum; totals.get(id).source = "ESTIMATED"; values.put(id, limits.get(id).minimum); }
+                for (String id : meta.keySet()) if (limits.get(id).minimum() != null) { double assumed = limits.get(id).minimum() * feedFactor; totals.get(id).feed += assumed; totals.get(id).source = "ESTIMATED"; values.put(id, assumed); }
                 warnings.add("사료 상세 성분이 없어 최소 권장량으로 추정했습니다.");
             } else {
                 product.nutrients().forEach((id, amount) -> { if (totals.containsKey(id)) { double applied = amount * ratio; totals.get(id).add(product.type(), applied); values.put(id, applied); } });
@@ -169,8 +202,8 @@ public class NutritionService {
             double ratio = item.dailyAmount() / item.servingAmount(); Set<String> seen = new HashSet<>(); Map<String, Double> values = new LinkedHashMap<>();
             for (ManualNutrient nutrient : item.nutrients()) {
                 if (!seen.add(nutrient.nutrientId())) throw new AnalysisException("중복 성분입니다: " + nutrient.nutrientId());
-                if (!META.containsKey(nutrient.nutrientId())) throw new AnalysisException("지원하지 않는 성분입니다: " + nutrient.nutrientId());
-                double applied = convert(nutrient.amount(), nutrient.unit(), META.get(nutrient.nutrientId()).get("unit")) * ratio;
+                if (!meta.containsKey(nutrient.nutrientId())) throw new AnalysisException("지원하지 않는 성분입니다: " + nutrient.nutrientId());
+                double applied = convert(nutrient.amount(), nutrient.unit(), meta.get(nutrient.nutrientId()).unit()) * ratio;
                 totals.get(nutrient.nutrientId()).add(item.type().name(), applied); values.put(nutrient.nutrientId(), applied);
             }
             contributions.add(contribution(item.name(), item.type().name(), "ACTUAL", values));
@@ -186,61 +219,18 @@ public class NutritionService {
         if (from == null || to == null) throw new AnalysisException("변환할 수 없는 단위입니다: " + source + " → " + target);
         return value * from / to;
     }
-    private static String lifeStage(AnalysisRequest request) {
-        double days = request.profile().age().days();
-        if (request.profile().species() == Species.CAT) return days < 365 ? "GROWTH" : "ADULT";
-        if (days < 98) return "GROWTH_EARLY";
-        return days < 365 ? "GROWTH_LATE" : "ADULT";
-    }
-    private static double energy(AnalysisRequest request, String stage) {
-        Profile profile = request.profile(); double factor;
-        if (profile.species() == Species.DOG && !stage.equals("ADULT")) factor = 254.1 - 135 * (profile.weightKg() / profile.expectedAdultWeightKg());
-        else factor = profile.species() == Species.DOG ? 95 : stage.equals("ADULT") ? 75 : 100;
-        return factor * Math.pow(profile.weightKg(), profile.species() == Species.DOG ? .75 : .67);
-    }
-    private static Map<String, Limit> thresholds(AnalysisRequest request, String stage, double kcal) {
-        Map<String, Standard> standards = new LinkedHashMap<>(STANDARDS.get(request.profile().species().name()).get(stage));
-        if (request.profile().species() == Species.DOG && stage.equals("GROWTH_LATE") && request.profile().expectedAdultWeightKg() > 15 && request.profile().age().days() < 182.625)
-            standards.put("CALCIUM", new Standard(2500d, 4500d));
-        double cautionRatio = request.profile().species() == Species.DOG ? .75 : .5; Map<String, Limit> result = new LinkedHashMap<>();
-        standards.forEach((id, standard) -> { Double min = scale(standard.minimum, kcal), upper = scale(standard.upper, kcal); result.put(id, new Limit(min, upper == null ? null : upper * cautionRatio, upper)); });
-        return result;
-    }
-    private static Double scale(Double value, double kcal) { return value == null ? null : kcal / 1000 * value; }
     private static String classify(double total, Limit line) {
-        if (line.minimum == null && line.upper == null) return "NO_STANDARD";
-        if (line.minimum != null && total < line.minimum) return "DEFICIENT";
-        if (line.upper != null && total > line.upper) return "EXCESS";
-        if (line.caution != null && total >= line.caution) return "CAUTION";
-        return line.upper != null ? "ADEQUATE" : "ADEQUATE_NO_UPPER_LIMIT";
-    }
-    private static String calciumPhosphorusStatus(AnalysisRequest request, double calcium, double phosphorus) {
-        if (phosphorus == 0) return "UNAVAILABLE"; double value = calcium / phosphorus; String stage = lifeStage(request); double upper;
-        if (stage.equals("GROWTH_EARLY")) upper = 1.6;
-        else if (stage.equals("GROWTH_LATE")) upper = request.profile().expectedAdultWeightKg() <= 15 || request.profile().age().days() >= 182.625 ? 1.8 : 1.6;
-        else upper = 2;
-        return value < 1 ? "LOW" : value > upper ? "HIGH" : "ADEQUATE";
+        if (line.minimum() == null && line.upper() == null) return "NO_STANDARD";
+        if (line.minimum() != null && total < line.minimum()) return "DEFICIENT";
+        if (line.upper() != null && total > line.upper()) return "EXCESS";
+        if (line.caution() != null && total >= line.caution()) return "CAUTION";
+        return line.upper() != null ? "ADEQUATE" : "ADEQUATE_NO_UPPER_LIMIT";
     }
     private static String fingerprint(Object request) {
         try { byte[] digest = MessageDigest.getInstance("SHA-256").digest(request.toString().getBytes(StandardCharsets.UTF_8)); return HexFormat.of().formatHex(digest, 0, 8); }
         catch (NoSuchAlgorithmException error) { throw new IllegalStateException(error); }
     }
     private static Double asDouble(Object value) { return value == null ? null : ((Number) value).doubleValue(); }
-    private static Map<String, Map<String, Map<String, Standard>>> standards() {
-        Map<String, Map<String, Standard>> dog = new LinkedHashMap<>(), cat = new LinkedHashMap<>();
-        dog.put("ADULT", lines(1450d,6250d,1160d,4000d,3.975,20d,20.8));
-        dog.put("GROWTH_EARLY", lines(2500d,4000d,2250d,null,3.45,20d,25d));
-        dog.put("GROWTH_LATE", lines(2000d,4500d,1750d,null,3.125,20d,25d));
-        cat.put("ADULT", lines(1330d,null,850d,null,2.0825,187.5,25d));
-        cat.put("GROWTH", lines(2500d,null,2100d,null,1.75,187.5,18.8));
-        return Map.of("DOG", dog, "CAT", cat);
-    }
-    private static Map<String, Standard> lines(Double caMin, Double caUpper, Double pMin, Double pUpper, Double dMin, Double dUpper, Double zincMin) {
-        Map<String, Standard> result = new LinkedHashMap<>(); result.put("CALCIUM", new Standard(caMin, caUpper)); result.put("PHOSPHORUS", new Standard(pMin, pUpper));
-        result.put("VITAMIN_D", new Standard(dMin, dUpper)); result.put("VITAMIN_E", new Standard(null, null)); result.put("OMEGA3", new Standard(null, null)); result.put("ZINC", new Standard(zincMin, null)); return result;
-    }
-    private record Standard(Double minimum, Double upper) {}
-    private record Limit(Double minimum, Double caution, Double upper) {}
     private static final class Total { double feed; double supplement; String source = "ACTUAL"; void add(String type, double value) { if (type.equals("FEED")) feed += value; else supplement += value; } }
     private record Aggregate(Map<String, Total> totals, boolean estimated, List<String> warnings, List<Map<String, Object>> contributions) {}
     private record Candidate(double score, long fixed, CatalogService.Product product, Map<String, Double> projected, Map<String, String> statuses) implements Comparable<Candidate> {
