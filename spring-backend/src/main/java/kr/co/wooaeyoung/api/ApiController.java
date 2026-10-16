@@ -40,7 +40,11 @@ public class ApiController {
     }
 
     @GetMapping("/api/v1/nutrients")
-    public Map<String, Object> nutrients() { return Map.of("items", nutrition.nutrients()); }
+    public Map<String, Object> nutrients(@RequestParam(required = false) StandardProfile standardProfile) {
+        // 쿼리 미지정이면 기존 응답(FEDIAF 6개, id·name·unit)을 그대로 준다.
+        if (standardProfile == null) return Map.of("items", nutrition.nutrients());
+        return nutrition.nutrientCatalog(standardProfile);
+    }
 
     @PostMapping("/api/v1/analyses")
     public Map<String, Object> analyses(@Valid @RequestBody ApiModels.AnalysisRequest request) {

@@ -14,13 +14,18 @@ public interface NutritionStandardStrategy {
     Map<String, VerificationStatus> parameterVerification();
     /** 분석 대상 성분(응답 순서). */
     List<NutrientMeta> nutrients();
+    /** GET /api/v1/nutrients?standardProfile= 의 전체 성분 목록(분석 대상이 아닌 성분 포함). */
+    List<Map<String, Object>> nutrientCatalog();
 
     /** 개체 입력이 이 기준으로 계산 가능한지 검사한다. 불가능하면 AnalysisException. */
     void validate(Profile profile);
     String lifeStage(Profile profile);
     /** 하루 기준 열량(kcal). 이 프로필에서 계산하지 않는 생애주기는 null. */
     Double energy(Profile profile, String stage);
-    Map<String, Limit> thresholds(Profile profile, String stage, Double kcal);
+    /** 분석 대상 성분별 기준선과 근거. */
+    Map<String, NutrientLine> lines(Profile profile, String stage, Double kcal);
+    /** 개의 Ca:P를 판정하지 않는 이유(UNSUPPORTED, UNVERIFIED_STANDARD). 판정하면 null. */
+    String calciumPhosphorusBlockedStatus(String stage);
     String calciumPhosphorusStatus(Profile profile, double calcium, double phosphorus);
 
     String standardSource();

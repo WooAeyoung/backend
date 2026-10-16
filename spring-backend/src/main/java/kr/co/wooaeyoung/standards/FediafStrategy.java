@@ -10,24 +10,30 @@ import java.util.*;
 
 @Component
 public class FediafStrategy implements NutritionStandardStrategy {
-    private static final double KCAL_BASIS = 1000;
-    private static final List<NutrientMeta> NUTRIENTS = List.of(
-            new NutrientMeta("CALCIUM", "칼슘", "MG"),
-            new NutrientMeta("PHOSPHORUS", "인", "MG"),
-            new NutrientMeta("VITAMIN_D", "비타민 D", "UG"),
-            new NutrientMeta("VITAMIN_E", "비타민 E", "MG"),
-            new NutrientMeta("OMEGA3", "오메가3", "MG"),
-            new NutrientMeta("ZINC", "아연", "MG"));
-    // FEDIAF 2025 Table III-3b·III-4b, 1000 kcal ME당 값(docs/standards-validation.md). 3단계에서 standards/fediaf-2025/nutrients.json으로 옮긴다.
-    private static final Map<String, Map<String, Map<String, Standard>>> STANDARDS = standards();
-    private static final Standard LARGE_BREED_CALCIUM = new Standard(2500d, 4500d);
+    private static final String LARGE_BREED_COLUMN = "dog_late_large_breed";
+    private static final Set<String> STAGE_COLUMNS = Set.of("dog_early", "dog_late", "dog_adult", "cat_growth", "cat_adult");
 
     private final FediafParameters parameters;
+    private final ProfileNutrients standards;
+    private final NutrientMaster master;
+    private final boolean allowUnverified;
+    private final List<NutrientMeta> nutrients;
 
-    public FediafStrategy(StandardParametersLoader loader) {
+    public FediafStrategy(StandardParametersLoader loader, NutrientMaster master, StandardsProperties properties) {
         this.parameters = loader.load(StandardProfile.FEDIAF_2025, FediafParameters.class);
         if (parameters.profile() != StandardProfile.FEDIAF_2025)
             throw new IllegalStateException("fediaf-2025/parameters.json의 profile이 FEDIAF_2025가 아닙니다: " + parameters.profile());
+        this.standards = ProfileNutrients.load(loader, StandardProfile.FEDIAF_2025);
+        standards.check(master, STAGE_COLUMNS, STAGE_COLUMNS, Set.of("dog", "cat"), List.of(
+                new ProfileNutrients.StageColumns("dog_early", "dog_early", "dog"),
+                new ProfileNutrients.StageColumns("dog_late", "dog_late", "dog"),
+                new ProfileNutrients.StageColumns("dog_adult", "dog_adult", "dog"),
+                new ProfileNutrients.StageColumns("cat_growth", "cat_growth", "cat"),
+                new ProfileNutrients.StageColumns("cat_adult", "cat_adult", "cat"),
+                new ProfileNutrients.StageColumns(LARGE_BREED_COLUMN, LARGE_BREED_COLUMN, "dog")), false);
+        this.master = master;
+        this.allowUnverified = properties.allowUnverified();
+        this.nutrients = standards.analysisNutrients(master);
     }
 
     @Override public StandardProfile profile() { return StandardProfile.FEDIAF_2025; }
@@ -46,7 +52,8 @@ public class FediafStrategy implements NutritionStandardStrategy {
         return Collections.unmodifiableMap(result);
     }
 
-    @Override public List<NutrientMeta> nutrients() { return NUTRIENTS; }
+    @Override public List<NutrientMeta> nutrients() { return nutrients; }
+    @Override public List<Map<String, Object>> nutrientCatalog() { return standards.catalogView(master); }
 
     @Override public void validate(Profile profile) {
         double days = days(profile);
@@ -71,14 +78,26 @@ public class FediafStrategy implements NutritionStandardStrategy {
         return factor * Math.pow(profile.weightKg(), energy.exponent().of(profile.species()));
     }
 
-    @Override public Map<String, Limit> thresholds(Profile profile, String stage, Double kcal) {
-        Map<String, Standard> standards = new LinkedHashMap<>(STANDARDS.get(profile.species().name()).get(stage));
-        if (profile.species() == Species.DOG && stage.equals("GROWTH_LATE") && isLargeBreedBeforeCutoff(profile))
-            standards.put("CALCIUM", LARGE_BREED_CALCIUM);
-        double cautionRatio = parameters.cautionRatio().ratio().of(profile.species()); Map<String, Limit> result = new LinkedHashMap<>();
-        standards.forEach((id, standard) -> { Double min = scale(standard.minimum, kcal), upper = scale(standard.upper, kcal); result.put(id, new Limit(min, upper == null ? null : upper * cautionRatio, upper)); });
+    @Override public Map<String, NutrientLine> lines(Profile profile, String stage, Double kcal) {
+        String column = column(profile.species(), stage), species = profile.species() == Species.DOG ? "dog" : "cat";
+        boolean largeBreed = profile.species() == Species.DOG && stage.equals("GROWTH_LATE") && isLargeBreedBeforeCutoff(profile);
+        double cautionRatio = parameters.cautionRatio().ratio().of(profile.species());
+        StandardReference derivedCaution = new StandardReference("docs/standards-validation.md 서비스 주의선 정책", StandardValue.TABLE_NOT_APPLICABLE, null,
+                parameters.cautionRatio().verificationStatus(), ValueType.POLICY, null, standards.basis(),
+                "공식 상한 × " + cautionRatio + " (FEDIAF 공식값 아님)");
+        Map<String, NutrientLine> result = new LinkedHashMap<>();
+        for (NutrientMeta meta : nutrients) {
+            ProfileNutrients.Nutrient nutrient = standards.nutrient(meta.id());
+            String stageColumn = largeBreed && nutrient.minimum().containsKey(LARGE_BREED_COLUMN) ? LARGE_BREED_COLUMN : column;
+            StandardValue maximum = nutrient.maximum().get(stageColumn);
+            StandardReference caution = new StandardReference(derivedCaution.sourceDocument(), derivedCaution.table(), null, derivedCaution.verificationStatus(),
+                    derivedCaution.valueType(), maximum.unit(), derivedCaution.basis(), derivedCaution.note());
+            result.put(meta.id(), NutrientLine.build(nutrient.minimum().get(stageColumn), maximum, nutrient.caution().get(species), caution, cautionRatio, kcal, allowUnverified));
+        }
         return result;
     }
+
+    @Override public String calciumPhosphorusBlockedStatus(String stage) { return null; }
 
     @Override public String calciumPhosphorusStatus(Profile profile, double calcium, double phosphorus) {
         if (phosphorus == 0) return "UNAVAILABLE"; double value = calcium / phosphorus; String stage = lifeStage(profile); double upper;
@@ -109,6 +128,11 @@ public class FediafStrategy implements NutritionStandardStrategy {
 
     @Override public String recommendationUnsupportedReason() { return null; }
 
+    private static String column(Species species, String stage) {
+        if (species == Species.CAT) return stage.equals("ADULT") ? "cat_adult" : "cat_growth";
+        return switch (stage) { case "GROWTH_EARLY" -> "dog_early"; case "GROWTH_LATE" -> "dog_late"; default -> "dog_adult"; };
+    }
+
     private double days(Profile profile) {
         FediafParameters.Age age = parameters.age();
         return profile.age().value() * (profile.age().unit() == AgeUnit.WEEK ? age.daysPerWeek() : age.daysPerMonth());
@@ -118,21 +142,4 @@ public class FediafStrategy implements NutritionStandardStrategy {
         FediafParameters.LargeBreedCalcium largeBreed = parameters.largeBreedCalcium();
         return profile.expectedAdultWeightKg() > largeBreed.expectedAdultWeightAboveKg() && days(profile) < largeBreed.ageBelowDays();
     }
-
-    private static Double scale(Double value, Double kcal) { return value == null ? null : kcal / KCAL_BASIS * value; }
-
-    private static Map<String, Map<String, Map<String, Standard>>> standards() {
-        Map<String, Map<String, Standard>> dog = new LinkedHashMap<>(), cat = new LinkedHashMap<>();
-        dog.put("ADULT", lines(1450d,6250d,1160d,4000d,3.975,20d,20.8));
-        dog.put("GROWTH_EARLY", lines(2500d,4000d,2250d,null,3.45,20d,25d));
-        dog.put("GROWTH_LATE", lines(2000d,4500d,1750d,null,3.125,20d,25d));
-        cat.put("ADULT", lines(1330d,null,850d,null,2.0825,187.5,25d));
-        cat.put("GROWTH", lines(2500d,null,2100d,null,1.75,187.5,18.8));
-        return Map.of("DOG", dog, "CAT", cat);
-    }
-    private static Map<String, Standard> lines(Double caMin, Double caUpper, Double pMin, Double pUpper, Double dMin, Double dUpper, Double zincMin) {
-        Map<String, Standard> result = new LinkedHashMap<>(); result.put("CALCIUM", new Standard(caMin, caUpper)); result.put("PHOSPHORUS", new Standard(pMin, pUpper));
-        result.put("VITAMIN_D", new Standard(dMin, dUpper)); result.put("VITAMIN_E", new Standard(null, null)); result.put("OMEGA3", new Standard(null, null)); result.put("ZINC", new Standard(zincMin, null)); return result;
-    }
-    private record Standard(Double minimum, Double upper) {}
 }

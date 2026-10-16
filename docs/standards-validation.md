@@ -70,3 +70,8 @@ FEDIAF 표는 최소 권장량과 최대치를 제공하며 별도의 `주의선
 - 백엔드: `pytest -q` — 17개 테스트 통과
 - 프론트엔드: `npm run build` — TypeScript 검사 및 Vite 프로덕션 빌드 통과
 - 결론: F-12의 공식 기준 대조, 서비스 주의선 구분, 정적 웹·백엔드 일치 및 실행 검증 완료
+
+## Java 기준 데이터 파일 (Issue #1)
+
+- `spring-backend/src/main/resources/standards/fediaf-2025/nutrients.json`은 리팩터링 전 Java 기준값 표(`NutritionService.standards()`)에서 일회성으로 옮겼고, 이제 이 JSON이 원본이다. 값이 같다는 근거는 FEDIAF 골든 테스트(`FediafGoldenTest`) 25/25 통과다. 이 파일을 다시 만드는 생성기는 저장소에 두지 않는다.
+- 위 표에서 대조된 값만 `VERIFIED`(verifiedAt 2026-10-01)로 두고, 빈칸은 `value: null`, `NOT_APPLICABLE`, table `N/A`로 보존한다.

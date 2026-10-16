@@ -1,0 +1,154 @@
+{
+  "profile": "FEDIAF_2025",
+  "basis": "per_1000kcal_ME",
+  "sourceDocument": "FEDIAF Nutritional Guidelines 2025 Table III-3b·III-4b (docs/standards-validation.md, 2026-10-01 대조)",
+  "nutrients": [
+    {
+      "key": "CALCIUM",
+      "unit": "mg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 2500, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_late": {"value": 2000, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_adult": {"value": 1450, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_growth": {"value": 2500, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_adult": {"value": 1330, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_late_large_breed": {"value": 2500, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3 각주 b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "예상 성체 15 kg 초과·생후 6개월 미만 후기 성장기 칼슘 최소 2.50 g/1000 kcal ME × 1000 (docs/standards-validation.md)"}
+      },
+      "maximum": {
+        "dog_early": {"value": 4000, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_late": {"value": 4500, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_adult": {"value": 6250, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_growth: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_adult: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"},
+        "dog_late_large_breed": {"value": 4500, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3 각주 b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "각주 b 적용 시 후기 성장기 상한 4.50 g/1000 kcal ME × 1000 유지 (docs/standards-validation.md)"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"}
+      }
+    },
+    {
+      "key": "PHOSPHORUS",
+      "unit": "mg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 2250, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_late": {"value": 1750, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_adult": {"value": 1160, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_growth": {"value": 2100, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_adult": {"value": 850, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"}
+      },
+      "maximum": {
+        "dog_early": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_early: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"},
+        "dog_late": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_late: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"},
+        "dog_adult": {"value": 4000, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 g/1000 kcal ME × 1000 → mg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_growth: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_adult: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"}
+      }
+    },
+    {
+      "key": "VITAMIN_D",
+      "unit": "µg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 3.45, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_late": {"value": 3.125, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_adult": {"value": 3.975, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_growth": {"value": 1.75, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_adult": {"value": 2.0825, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"}
+      },
+      "maximum": {
+        "dog_early": {"value": 20, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_late": {"value": 20, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"},
+        "dog_adult": {"value": 20, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_growth": {"value": 187.5, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"},
+        "cat_adult": {"value": 187.5, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 IU/1000 kcal ME ÷ 40 → µg (docs/standards-validation.md 코드 값 대조)"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"},
+        "cat": {"value": null, "unit": "µg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"}
+      }
+    },
+    {
+      "key": "VITAMIN_E",
+      "unit": "mg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum dog_early: 단위·성분 정의 불일치로 적용 안 함"},
+        "dog_late": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum dog_late: 단위·성분 정의 불일치로 적용 안 함"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum dog_adult: 단위·성분 정의 불일치로 적용 안 함"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum cat_growth: 단위·성분 정의 불일치로 적용 안 함"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum cat_adult: 단위·성분 정의 불일치로 적용 안 함"}
+      },
+      "maximum": {
+        "dog_early": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_early: 단위·성분 정의 불일치로 적용 안 함"},
+        "dog_late": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_late: 단위·성분 정의 불일치로 적용 안 함"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_adult: 단위·성분 정의 불일치로 적용 안 함"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_growth: 단위·성분 정의 불일치로 적용 안 함"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_adult: 단위·성분 정의 불일치로 적용 안 함"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"}
+      }
+    },
+    {
+      "key": "OMEGA3",
+      "name": "오메가3",
+      "unit": "mg",
+      "implemented": true,
+      "note": "제품 데이터의 총 오메가3. ALA·EPA+DHA로 자동 매핑하지 않는다.",
+      "minimum": {
+        "dog_early": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum dog_early: 단위·성분 정의 불일치로 적용 안 함"},
+        "dog_late": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum dog_late: 단위·성분 정의 불일치로 적용 안 함"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum dog_adult: 단위·성분 정의 불일치로 적용 안 함"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum cat_growth: 단위·성분 정의 불일치로 적용 안 함"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "minimum cat_adult: 단위·성분 정의 불일치로 적용 안 함"}
+      },
+      "maximum": {
+        "dog_early": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_early: 단위·성분 정의 불일치로 적용 안 함"},
+        "dog_late": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_late: 단위·성분 정의 불일치로 적용 안 함"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_adult: 단위·성분 정의 불일치로 적용 안 함"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_growth: 단위·성분 정의 불일치로 적용 안 함"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_adult: 단위·성분 정의 불일치로 적용 안 함"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"}
+      }
+    },
+    {
+      "key": "ZINC",
+      "unit": "mg",
+      "implemented": true,
+      "note": null,
+      "minimum": {
+        "dog_early": {"value": 25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 mg/1000 kcal ME 그대로 (docs/standards-validation.md 코드 값 대조)"},
+        "dog_late": {"value": 25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 mg/1000 kcal ME 그대로 (docs/standards-validation.md 코드 값 대조)"},
+        "dog_adult": {"value": 20.8, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-3b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 mg/1000 kcal ME 그대로 (docs/standards-validation.md 코드 값 대조)"},
+        "cat_growth": {"value": 18.8, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 mg/1000 kcal ME 그대로 (docs/standards-validation.md 코드 값 대조)"},
+        "cat_adult": {"value": 25, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "Table III-4b", "sourceYear": 2025, "verificationStatus": "VERIFIED", "verifiedAt": "2026-10-01", "valueType": "LITERATURE", "note": "원문 mg/1000 kcal ME 그대로 (docs/standards-validation.md 코드 값 대조)"}
+      },
+      "maximum": {
+        "dog_early": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_early: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"},
+        "dog_late": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_late: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"},
+        "dog_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum dog_adult: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"},
+        "cat_growth": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_growth: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"},
+        "cat_adult": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "maximum cat_adult: 1000 kcal ME 기준값 없음 또는 건물 기준 법정 최대치만 있어 변환하지 않음(docs/standards-validation.md)"}
+      },
+      "caution": {
+        "dog": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"},
+        "cat": {"value": null, "unit": "mg", "basis": "per_1000kcal_ME", "sourceDocument": "FEDIAF Nutritional Guidelines 2025", "table": "N/A", "sourceYear": 2025, "verificationStatus": "NOT_APPLICABLE", "verifiedAt": null, "valueType": "LITERATURE", "note": "FEDIAF는 별도 주의값이 없음 → 공식 상한 × 서비스 주의 비율(parameters.json cautionRatio)"}
+      }
+    }
+  ]
+}

@@ -26,6 +26,31 @@ PARAMETERS_SHEET = "매개변수표"
 SOURCE_DOCUMENT = "docs/v3/기준값표_매개변수표_v3.xlsx"
 PARAMETER_VERSION = "NIAS-v3+params.2026-09-27"  # 안내 시트 A2의 작성일
 PENDING = "PENDING_VERIFICATION"
+NOT_APPLICABLE = "NOT_APPLICABLE"
+UNCONFIRMED = "UNCONFIRMED"  # 원문에서 표 번호를 확인할 수 없음
+STANDARDS_SHEET = "기준값표"
+MASTER_FILE = OUTPUT_DIR.parent / "nutrients-master.json"
+BASIS = "per_1000kcal_ME"
+NIAS_DOCUMENT = "농촌진흥청 국립축산과학원 「반려동물 사료 영양표준」"
+AAFCO_DOCUMENT = "AAFCO Dog and Cat Food Nutrient Profiles (2014 revised final)"
+EU_DOCUMENT = "FEDIAF Nutritional Guidelines 2021 (EU legal maximum)"
+ALLOWED_UNITS = {"g", "mg", "µg", "IU"}
+
+# 성분 ID → 문자열 키. 2026-10-16 사용자 승인 목록. 기존 6개 키(CALCIUM, PHOSPHORUS, VITAMIN_D, VITAMIN_E, ZINC; OMEGA3는 FEDIAF 전용)는 바꾸지 않는다.
+KEYS = {
+    1: "PROTEIN", 2: "ARGININE", 3: "HISTIDINE", 4: "ISOLEUCINE", 5: "LEUCINE", 6: "LYSINE", 7: "METHIONINE",
+    8: "METHIONINE_CYSTINE", 9: "PHENYLALANINE", 10: "PHENYLALANINE_TYROSINE", 11: "THREONINE", 12: "TRYPTOPHAN",
+    13: "VALINE", 14: "TAURINE", 15: "FAT", 16: "LINOLEIC_ACID", 17: "ARACHIDONIC_ACID", 18: "ALPHA_LINOLENIC_ACID",
+    19: "EPA_DHA", 20: "CALCIUM", 21: "PHOSPHORUS", 22: "POTASSIUM", 23: "SODIUM", 24: "CHLORIDE", 25: "MAGNESIUM",
+    26: "COPPER", 27: "IODINE", 28: "IRON", 29: "MANGANESE", 30: "SELENIUM", 31: "ZINC", 32: "VITAMIN_A",
+    33: "VITAMIN_D", 34: "VITAMIN_E", 35: "VITAMIN_B1", 36: "VITAMIN_B2", 37: "VITAMIN_B5", 38: "VITAMIN_B6",
+    39: "VITAMIN_B12", 40: "VITAMIN_B3", 41: "VITAMIN_B9", 42: "VITAMIN_B7", 43: "CHOLINE", 44: "VITAMIN_K",
+}
+# 기준값표 열 → (구분, 생애주기 열, 원문 표). 표 번호는 안내 시트 A14의 열별 출처.
+MINIMUM_COLUMNS = {"D": "dog_early", "E": "dog_late", "F": "dog_adult", "G": "cat_growth", "H": "cat_adult"}
+MAXIMUM_COLUMNS = {"I": "dog_growth", "J": "dog_adult", "K": "cat_growth", "L": "cat_adult"}
+CAUTION_COLUMNS = {"M": "dog", "N": "cat"}
+TABLES = {"dog_early": "2-17c", "dog_late": "2-17c", "dog_growth": "2-17c", "dog_adult": "2-17d", "cat_growth": "2-17g", "cat_adult": "2-17h"}
 
 NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
 REL_ID = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id"
@@ -129,15 +154,100 @@ def parameters(cells: dict[str, str]) -> dict:
 GROWTH_CLASSES = ["S", "M", "L", "XL", "XXL"]
 
 
+def record(value, unit: str, *, document: str, table: str, year: int | None, status: str, value_type: str, note: str) -> dict:
+    return {"value": value, "unit": unit, "basis": BASIS, "sourceDocument": document, "table": table, "sourceYear": year,
+            "verificationStatus": status, "verifiedAt": None, "valueType": value_type, "note": note}
+
+
+def nutrient_rows(cells: dict[str, str]) -> list[dict[str, str]]:
+    by_row = rows(cells)
+    result = []
+    for number_, row in sorted(by_row.items()):
+        if row.get("A", "").isdigit():
+            row = {**row, "_row": str(number_)}
+            result.append(row)
+    ids = [int(row["A"]) for row in result]
+    if ids != list(range(1, 45)):
+        raise SystemExit(f"기준값표 성분 ID가 1~44 연속이 아닙니다: {ids}")
+    return result
+
+
+def standard_value(row: dict[str, str], column: str, stage: str, unit: str) -> dict:
+    cell = f"{STANDARDS_SHEET}!{column}{row['_row']}"
+    text = row.get(column)
+    if text is None:
+        return record(None, unit, document=NIAS_DOCUMENT, table="N/A", year=None, status=NOT_APPLICABLE, value_type="LITERATURE",
+                      note=f"표 {TABLES[stage]}에 값 없음({cell} 빈칸) → 기준 없음")
+    table = TABLES[stage]
+    note = cell
+    if KEYS[int(row["A"])] == "CALCIUM" and stage == "dog_growth":
+        note += "; 예상 성체 31.75 kg 이상은 4.5 적용(표 2-17c 각주 d, parameters.json largeBreedCalcium)"
+    return record(number(text), unit, document=NIAS_DOCUMENT, table=table, year=None, status=PENDING, value_type="LITERATURE", note=note)
+
+
+def caution_value(row: dict[str, str], column: str, species: str, unit: str) -> dict:
+    cell = f"{STANDARDS_SHEET}!{column}{row['_row']}"
+    text = row.get(column)
+    if text is None:
+        return record(None, unit, document=SOURCE_DOCUMENT, table="N/A", year=None, status=NOT_APPLICABLE, value_type="LITERATURE",
+                      note=f"예외 주의값 없음({cell} 빈칸) → NIAS 최대 × 주의 비율, 최대도 없으면 주의선 없음")
+    key = KEYS[int(row["A"])]
+    if key == "VITAMIN_A" and species == "dog":
+        return record(number(text), unit, document=AAFCO_DOCUMENT, table=UNCONFIRMED, year=2014, status=PENDING, value_type="LITERATURE",
+                      note=f"{cell}; 250,000 IU/kg 건물 ÷ 4 = 62,500 IU/1000 kcal(안내 A15)")
+    return record(number(text), unit, document=EU_DOCUMENT, table=UNCONFIRMED, year=2021, status=PENDING, value_type="LITERATURE",
+                  note=f"{cell}; EU 법정값(건물 100 g당) × 2.5(영양표준 표 2-15 환산). 건물 100 g당 원값은 FEDIAF 원문 대조 필요. 비고: {row.get('Q', '')}")
+
+
+def nutrients(cells: dict[str, str]) -> tuple[dict, dict]:
+    master, profile = [], []
+    for row in nutrient_rows(cells):
+        identifier, unit = int(row["A"]), row["C"]
+        if unit not in ALLOWED_UNITS:
+            raise SystemExit(f"허용하지 않는 단위: {unit} (ID {identifier})")
+        key = KEYS[identifier]
+        master.append({"id": identifier, "key": key, "name": row["B"], "category": row["P"], "baseUnit": unit})
+        profile.append({
+            "key": key,
+            "unit": unit,
+            "implemented": row.get("O") == "예",
+            "note": row.get("Q"),
+            "minimum": {stage: standard_value(row, column, stage, unit) for column, stage in MINIMUM_COLUMNS.items()},
+            "maximum": {stage: standard_value(row, column, stage, unit) for column, stage in MAXIMUM_COLUMNS.items()},
+            "caution": {species: caution_value(row, column, species, unit) for column, species in CAUTION_COLUMNS.items()},
+        })
+    master_file = {"description": "영양소 마스터(NIAS 성분 ID 1~44). 프로필은 key로 참조한다.", "sourceDocument": f"{SOURCE_DOCUMENT} {STANDARDS_SHEET}",
+                   "nutrients": master}
+    profile_file = {"profile": "NIAS_V3", "basis": BASIS, "sourceDocument": f"{SOURCE_DOCUMENT} {STANDARDS_SHEET}", "nutrients": profile}
+    return master_file, profile_file
+
+
 def render(data: dict) -> str:
-    return json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+    """Pretty JSON, but each standard value record stays on one line for review."""
+    def write(value, indent: int) -> str:
+        pad, inner = " " * indent, " " * (indent + 2)
+        if isinstance(value, dict) and "verificationStatus" in value and "basis" in value:
+            return json.dumps(value, ensure_ascii=False)
+        if isinstance(value, dict):
+            if not value:
+                return "{}"
+            return "{\n" + ",\n".join(f"{inner}{json.dumps(k, ensure_ascii=False)}: {write(v, indent + 2)}" for k, v in value.items()) + f"\n{pad}}}"
+        if isinstance(value, list):
+            if not value:
+                return "[]"
+            return "[\n" + ",\n".join(f"{inner}{write(v, indent + 2)}" for v in value) + f"\n{pad}]"
+        return json.dumps(value, ensure_ascii=False)
+    return write(data, 0) + "\n"
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--check", action="store_true", help="커밋된 JSON이 xlsx 변환 결과와 같은지만 확인한다")
     args = parser.parse_args()
-    outputs = {OUTPUT_DIR / "parameters.json": render(parameters(read_sheet(WORKBOOK, PARAMETERS_SHEET)))}
+    master, profile = nutrients(read_sheet(WORKBOOK, STANDARDS_SHEET))
+    outputs = {OUTPUT_DIR / "parameters.json": render(parameters(read_sheet(WORKBOOK, PARAMETERS_SHEET))),
+               MASTER_FILE: render(master),
+               OUTPUT_DIR / "nutrients.json": render(profile)}
     if args.check:
         stale = [str(path.relative_to(ROOT)) for path, text in outputs.items()
                  if not path.exists() or path.read_text(encoding="utf-8").replace("\r\n", "\n") != text]

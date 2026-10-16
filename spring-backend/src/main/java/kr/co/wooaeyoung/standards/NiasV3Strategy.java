@@ -9,17 +9,36 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 /**
- * NIAS_V3 기준. 매개변수는 모두 원문 대조 전(PENDING_VERIFICATION)이다.
+ * NIAS_V3 기준. 기준값·매개변수는 모두 원문 대조 전(PENDING_VERIFICATION)이라 allow-unverified=false에서는 판정에 쓰지 않는다.
  * 성장기 계산(성장곡선, 고양이 3단계)은 BE-V3-005~007, 추천식은 BE-V3-012~013 범위라 아직 계산하지 않는다.
  */
 @Component
 public class NiasV3Strategy implements NutritionStandardStrategy {
-    private final NiasV3Parameters parameters;
+    private static final Set<String> MINIMUM_COLUMNS = Set.of("dog_early", "dog_late", "dog_adult", "cat_growth", "cat_adult");
+    private static final Set<String> MAXIMUM_COLUMNS = Set.of("dog_growth", "dog_adult", "cat_growth", "cat_adult");
 
-    public NiasV3Strategy(StandardParametersLoader loader) {
+    private final NiasV3Parameters parameters;
+    private final ProfileNutrients standards;
+    private final NutrientMaster master;
+    private final boolean allowUnverified;
+    private final List<NutrientMeta> nutrients;
+
+    public NiasV3Strategy(StandardParametersLoader loader, NutrientMaster master, StandardsProperties properties) {
         this.parameters = loader.load(StandardProfile.NIAS_V3, NiasV3Parameters.class);
         if (parameters.profile() != StandardProfile.NIAS_V3)
             throw new IllegalStateException("nias-v3/parameters.json의 profile이 NIAS_V3가 아닙니다: " + parameters.profile());
+        this.standards = ProfileNutrients.load(loader, StandardProfile.NIAS_V3);
+        standards.check(master, MINIMUM_COLUMNS, MAXIMUM_COLUMNS, Set.of("dog", "cat"), List.of(
+                new ProfileNutrients.StageColumns("dog_early", "dog_growth", "dog"),
+                new ProfileNutrients.StageColumns("dog_late", "dog_growth", "dog"),
+                new ProfileNutrients.StageColumns("dog_adult", "dog_adult", "dog"),
+                new ProfileNutrients.StageColumns("cat_growth", "cat_growth", "cat"),
+                new ProfileNutrients.StageColumns("cat_adult", "cat_adult", "cat")), true);
+        if (standards.nutrients().size() != master.entries().size())
+            throw new IllegalStateException("nias-v3/nutrients.json 성분 수가 마스터와 다릅니다: " + standards.nutrients().size());
+        this.master = master;
+        this.allowUnverified = properties.allowUnverified();
+        this.nutrients = standards.analysisNutrients(master);
     }
 
     @Override public StandardProfile profile() { return StandardProfile.NIAS_V3; }
@@ -38,8 +57,8 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         return Collections.unmodifiableMap(result);
     }
 
-    // 영양소 기준값은 3단계(BE-V3-003)에서 standards/nias-v3/nutrients.json으로 적재한다.
-    @Override public List<NutrientMeta> nutrients() { return List.of(); }
+    @Override public List<NutrientMeta> nutrients() { return nutrients; }
+    @Override public List<Map<String, Object>> nutrientCatalog() { return standards.catalogView(master); }
 
     @Override public void validate(Profile profile) {
         NiasV3Parameters.Age age = parameters.age();
@@ -62,7 +81,30 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         return k * Math.pow(profile.weightKg(), energy.exponent().of(profile.species()));
     }
 
-    @Override public Map<String, Limit> thresholds(Profile profile, String stage, Double kcal) { return Map.of(); }
+    @Override public Map<String, NutrientLine> lines(Profile profile, String stage, Double kcal) {
+        boolean dog = profile.species() == Species.DOG;
+        String minimumColumn = dog ? switch (stage) { case "GROWTH_EARLY" -> "dog_early"; case "GROWTH_LATE" -> "dog_late"; default -> "dog_adult"; }
+                : stage.equals("ADULT") ? "cat_adult" : "cat_growth";
+        String maximumColumn = dog ? (stage.equals("ADULT") ? "dog_adult" : "dog_growth") : minimumColumn;
+        double cautionRatio = parameters.cautionRatio().ratio().of(profile.species());
+        Map<String, NutrientLine> result = new LinkedHashMap<>();
+        for (NutrientMeta meta : nutrients) {
+            ProfileNutrients.Nutrient nutrient = standards.nutrient(meta.id());
+            StandardValue maximum = nutrient.maximum().get(maximumColumn);
+            StandardReference derivedCaution = new StandardReference(parameters.sourceDocument() + " 매개변수표 caution_" + (dog ? "dog" : "cat"),
+                    StandardValue.TABLE_NOT_APPLICABLE, null, parameters.cautionRatio().verificationStatus(), ValueType.POLICY, maximum.unit(), standards.basis(),
+                    "예외 주의값 없음 → NIAS 최대 × " + cautionRatio);
+            result.put(meta.id(), NutrientLine.build(nutrient.minimum().get(minimumColumn), maximum, nutrient.caution().get(dog ? "dog" : "cat"),
+                    derivedCaution, cautionRatio, kcal, allowUnverified));
+        }
+        return result;
+    }
+
+    @Override public String calciumPhosphorusBlockedStatus(String stage) {
+        if (!stage.equals("ADULT")) return NutrientLine.UNSUPPORTED;
+        if (parameters.calciumPhosphorus().verificationStatus() == VerificationStatus.PENDING_VERIFICATION && !allowUnverified) return NutrientLine.UNVERIFIED_STANDARD;
+        return null;
+    }
 
     @Override public String calciumPhosphorusStatus(Profile profile, double calcium, double phosphorus) {
         if (phosphorus == 0) return "UNAVAILABLE"; double value = calcium / phosphorus;
@@ -84,7 +126,6 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
             warnings.add("매개변수 미검증: NIAS-v3 매개변수(" + parameters.parameterVersion() + ")는 원문 대조 전이라 기준 열량은 참고값입니다.");
         if (!stage.equals("ADULT"))
             warnings.add("NIAS_V3 성장기 계산(성장곡선·고양이 3단계)은 BE-V3-005~007 미구현으로 지원하지 않습니다.");
-        warnings.add("NIAS_V3 영양소 기준값은 아직 적재되지 않았습니다(BE-V3-003 진행 중).");
         return List.copyOf(warnings);
     }
 

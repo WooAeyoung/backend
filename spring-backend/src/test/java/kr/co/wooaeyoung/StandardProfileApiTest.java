@@ -35,7 +35,8 @@ class StandardProfileApiTest {
                 .andExpect(jsonPath("$.standardVersion").value("NIAS-v3"))
                 .andExpect(jsonPath("$.parameterVersion").value("NIAS-v3+params.2026-09-27"))
                 .andExpect(jsonPath("$.parameterVerification.energy").value("PENDING_VERIFICATION"))
-                .andExpect(jsonPath("$.warnings", hasItem(startsWith("매개변수 미검증"))));
+                .andExpect(jsonPath("$.warnings", hasItem(startsWith("매개변수 미검증"))))
+                .andExpect(jsonPath("$.warnings", hasItem("총 오메가3 값은 EPA+DHA로 환산하지 않아 NIAS 분석에서 제외했습니다.")));
     }
 
     @Test void invalidStandardProfileUsesExistingBadRequestFormat() throws Exception {
