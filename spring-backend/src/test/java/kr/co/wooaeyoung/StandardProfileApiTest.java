@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,6 +43,18 @@ class StandardProfileApiTest {
     @Test void invalidStandardProfileUsesExistingBadRequestFormat() throws Exception {
         mvc.perform(post("/api/v1/analyses").contentType(MediaType.APPLICATION_JSON).content(request("DOG", 10, "feed-balanced-dog", 150, "NOPE")))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test void v2StandardAndParameterCatalogsExposeProfileVersions() throws Exception {
+        mvc.perform(get("/api/v2/standards/NIAS_V3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.standardVersion").value("NIAS-v3"))
+                .andExpect(jsonPath("$.items", hasSize(44)))
+                .andExpect(jsonPath("$.items[0].implemented").exists());
+        mvc.perform(get("/api/v2/parameters/NIAS_V3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.parameterVersion").value("NIAS-v3+params.2026-09-27"))
+                .andExpect(jsonPath("$.verification.energy").value("PENDING_VERIFICATION"));
     }
 
     @Test void calciumPhosphorusIsNotApplicableToCatsInBothProfiles() throws Exception {

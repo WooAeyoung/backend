@@ -240,6 +240,17 @@ public class NutritionService {
         return result;
     }
 
+    public Map<String, Object> parameterCatalog(StandardProfile profile) {
+        NutritionStandardStrategy selected = strategy(profile);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("standardProfile", selected.profile().name());
+        result.put("standardVersion", selected.profile().version());
+        result.put("parameterVersion", selected.parameterVersion());
+        result.put("verification", selected.parameterVerification());
+        result.put("allowUnverified", properties.allowUnverified());
+        return result;
+    }
+
     private NutritionStandardStrategy strategy(StandardProfile profile) { return strategies.get(profile); }
 
     private static Map<String, NutrientMeta> meta(NutritionStandardStrategy strategy) {

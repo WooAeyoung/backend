@@ -55,4 +55,14 @@ public class ApiController {
     public Map<String, Object> recommendations(@Valid @RequestBody ApiModels.RecommendationRequest request) {
         return nutrition.recommend(request);
     }
+
+    @GetMapping("/api/v2/standards/{profile}")
+    public Map<String, Object> standard(@PathVariable StandardProfile profile) {
+        return nutrition.nutrientCatalog(profile);
+    }
+
+    @GetMapping("/api/v2/parameters/{profile}")
+    public Map<String, Object> parameters(@PathVariable StandardProfile profile) {
+        return nutrition.parameterCatalog(profile);
+    }
 }
