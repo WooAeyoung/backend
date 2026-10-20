@@ -11,9 +11,22 @@ import java.util.*;
 
 @Service
 public class CatalogService {
+    public record DoseBand(Double maxKg, double dose) {}
     public record Product(String id, String barcode, String name, String brand, String type,
                           double servingAmount, String servingUnit, String dataQuality,
-                          Map<String, Double> nutrients, Double recommendedDailyAmount) {}
+                          Map<String, Double> nutrients, Double recommendedDailyAmount,
+                          List<DoseBand> doseByWeight) {
+        public double doseForWeight(double weightKg) {
+            if (doseByWeight != null && !doseByWeight.isEmpty()) {
+                return doseByWeight.stream()
+                        .filter(band -> band.maxKg() == null || weightKg <= band.maxKg())
+                        .findFirst().map(DoseBand::dose)
+                        .orElse(doseByWeight.get(doseByWeight.size() - 1).dose());
+            }
+            if (recommendedDailyAmount == null) throw new IllegalStateException("제품 권장량이 없습니다: " + id);
+            return recommendedDailyAmount;
+        }
+    }
 
     /** products.json의 nutrients 값 단위(기존 FEDIAF 응답 단위). 제품 데이터에 단위 필드가 없어 여기서 고정한다. */
     public static final Map<String, String> NUTRIENT_UNITS = Map.of(
@@ -25,7 +38,11 @@ public class CatalogService {
     public CatalogService(ObjectMapper mapper) throws IOException {
         Map<String, List<Product>> root = mapper.readValue(
                 new ClassPathResource("products.json").getInputStream(), new TypeReference<>() {});
-        products = List.copyOf(root.getOrDefault("products", List.of()));
+        products = root.getOrDefault("products", List.of()).stream().map(product -> new Product(
+                product.id(), product.barcode(), product.name(), product.brand(), product.type(),
+                product.servingAmount(), product.servingUnit(), product.dataQuality(), product.nutrients(),
+                product.recommendedDailyAmount(), product.doseByWeight() == null ? List.of() : product.doseByWeight()))
+                .toList();
         HashTable<String, Product> indexed = new HashTable<>();
         products.forEach(product -> indexed.put(product.id(), product));
         productsById = indexed;

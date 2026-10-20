@@ -155,13 +155,22 @@ public class NutritionService {
         }
         List<Map<String, Object>> selected = new ArrayList<>();
         Map<String, Map<String, Object>> excluded = new LinkedHashMap<>();
+        Set<String> alreadyFedSupplementNutrients = new HashSet<>();
+        analysisRequest.safeItems().forEach(item -> {
+            CatalogService.Product product = catalog.require(item.productId());
+            if (product.type().equals("SUPPLEMENT")) alreadyFedSupplementNutrients.addAll(product.nutrients().keySet());
+        });
         List<CatalogService.Product> remaining = new ArrayList<>(catalog.all().stream()
-                .filter(product -> product.type().equals("SUPPLEMENT") && product.recommendedDailyAmount() != null).toList());
+                .filter(product -> product.type().equals("SUPPLEMENT")
+                        && (product.recommendedDailyAmount() != null || !product.doseByWeight().isEmpty())).toList());
         for (int round = 0; round < request.requestedMaxItems(strategy.defaultMaxItems()); round++) {
             Map<String, String> roundOriginal = original;
             MaxHeap<Candidate> candidates = new MaxHeap<>(Comparator.<Candidate>naturalOrder());
             for (CatalogService.Product product : remaining) {
-                double servingRatio = product.recommendedDailyAmount() / product.servingAmount();
+                double dailyAmount = strategy.profile() == StandardProfile.NIAS_V3
+                        ? product.doseForWeight(analysisRequest.profile().weightKg())
+                        : product.recommendedDailyAmount();
+                double servingRatio = dailyAmount / product.servingAmount();
                 Map<String, Double> projected = new LinkedHashMap<>(current);
                 product.nutrients().forEach((id, amount) -> projected.computeIfPresent(id, (key, value) -> value + amount * servingRatio));
                 Map<String, String> statuses = new LinkedHashMap<>();
@@ -181,19 +190,30 @@ public class NutritionService {
                 }
                 long fixed = roundOriginal.entrySet().stream()
                         .filter(entry -> "DEFICIENT".equals(entry.getValue()) && !"DEFICIENT".equals(statuses.get(entry.getKey()))).count();
-                long overlap = product.nutrients().keySet().stream()
-                        .filter(id -> roundOriginal.get(id) != null
-                                && !"DEFICIENT".equals(roundOriginal.get(id))
-                                && !"NO_STANDARD".equals(roundOriginal.get(id))).count();
+                long overlap = strategy.profile() == StandardProfile.NIAS_V3
+                        ? product.nutrients().keySet().stream().filter(alreadyFedSupplementNutrients::contains).count()
+                        : product.nutrients().keySet().stream()
+                                .filter(id -> roundOriginal.get(id) != null
+                                        && !"DEFICIENT".equals(roundOriginal.get(id))
+                                        && !"NO_STANDARD".equals(roundOriginal.get(id))).count();
+                double margin = safetyMargin(product, projected, limits, servingRatio);
                 double score = strategy.recommendationScore(fixed, overlap);
-                Candidate candidate = new Candidate(score, fixed, product, projected, statuses);
+                Candidate candidate = new Candidate(score, fixed, margin, overlap, product, dailyAmount, projected, statuses);
                 candidates.push(candidate);
             }
             Candidate best = candidates.pop();
             if (best == null) break;
             CatalogService.Product product = best.product;
-            selected.add(Map.of("productId", product.id(), "name", product.name(), "dailyAmount", product.recommendedDailyAmount(),
-                    "unit", product.servingUnit(), "score", best.score, "fixedNutrients", best.fixed, "projectedStatuses", best.statuses));
+            Map<String, Object> selectedItem = new LinkedHashMap<>();
+            selectedItem.put("productId", product.id()); selectedItem.put("name", product.name());
+            selectedItem.put("dailyAmount", best.dailyAmount); selectedItem.put("unit", product.servingUnit());
+            selectedItem.put("score", best.score); selectedItem.put("fixedNutrients", best.fixed);
+            if (strategy.profile() == StandardProfile.NIAS_V3) {
+                selectedItem.put("margin", best.margin); selectedItem.put("overlap", best.overlap);
+                selectedItem.put("scoreBreakdown", Map.of("fixedNutrients", best.fixed, "margin", best.margin, "overlap", best.overlap));
+            }
+            selectedItem.put("projectedStatuses", best.statuses);
+            selected.add(selectedItem);
             current = best.projected; original = best.statuses;
             remaining.removeIf(item -> item.id().equals(product.id()));
         }
@@ -311,9 +331,23 @@ public class NutritionService {
         catch (NoSuchAlgorithmException error) { throw new IllegalStateException(error); }
     }
     private static Double asDouble(Object value) { return value == null ? null : ((Number) value).doubleValue(); }
+    private static double safetyMargin(CatalogService.Product product, Map<String, Double> projected,
+                                       Map<String, Limit> limits, double servingRatio) {
+        double minimum = 1d;
+        boolean found = false;
+        for (String id : product.nutrients().keySet()) {
+            Limit limit = limits.get(id);
+            if (limit == null || limit.caution() == null || limit.minimum() == null || limit.caution() <= limit.minimum()) continue;
+            double trial = projected.getOrDefault(id, 0d);
+            minimum = Math.min(minimum, (limit.caution() - trial) / (limit.caution() - limit.minimum()));
+            found = true;
+        }
+        return found ? minimum : 1d;
+    }
     private static final class Total { double feed; double supplement; boolean unconvertible; String source = "ACTUAL"; void add(String type, double value) { if (type.equals("FEED")) feed += value; else supplement += value; } }
     private record Aggregate(Map<String, Total> totals, boolean estimated, List<String> warnings, List<Map<String, Object>> contributions) {}
-    private record Candidate(double score, long fixed, CatalogService.Product product, Map<String, Double> projected, Map<String, String> statuses) implements Comparable<Candidate> {
+    private record Candidate(double score, long fixed, double margin, long overlap, CatalogService.Product product,
+                             double dailyAmount, Map<String, Double> projected, Map<String, String> statuses) implements Comparable<Candidate> {
         public int compareTo(Candidate other) { int scoreResult = Double.compare(score, other.score); return scoreResult != 0 ? scoreResult : other.product.name().compareTo(product.name()); }
     }
 }
