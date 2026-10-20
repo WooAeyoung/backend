@@ -145,7 +145,11 @@ public class NutritionService {
         Map<String, String> original = new LinkedHashMap<>();
         for (Map<String, Object> row : nutrientRows) {
             String id = row.get("nutrientId").toString();
-            current.put(id, ((Number) row.get("total")).doubleValue());
+            // 단위 환산 불가 성분(IU 등)은 분석 합계가 null일 수 있다.
+            // 추천 후보 계산에서 0으로 오인해 부족 성분을 보완하려 하지 않도록
+            // 기준값이 실제로 존재하는 성분만 점수 대상이 되게 한다.
+            Double total = asDouble(row.get("total"));
+            current.put(id, total == null ? 0d : total);
             limits.put(id, new Limit(asDouble(row.get("minimum")), asDouble(row.get("caution")), asDouble(row.get("upper"))));
             original.put(id, row.get("status").toString());
         }
@@ -163,19 +167,24 @@ public class NutritionService {
                 Map<String, String> statuses = new LinkedHashMap<>();
                 projected.forEach((id, value) -> statuses.put(id, classify(value, limits.get(id))));
                 List<String> harmful = product.nutrients().keySet().stream()
-                        .filter(id -> Set.of("CAUTION", "EXCESS").contains(statuses.get(id))).map(id -> meta.get(id).name()).toList();
+                        .filter(id -> "CAUTION".equals(statuses.get(id)) || "EXCESS".equals(statuses.get(id)))
+                        .filter(meta::containsKey).map(id -> meta.get(id).name()).toList();
                 List<String> reasons = new ArrayList<>(harmful);
                 if (analysisRequest.profile().species() == Species.DOG &&
                         (!Collections.disjoint(product.nutrients().keySet(), Set.of("CALCIUM", "PHOSPHORUS")))) {
                     String ratioStatus = strategy.calciumPhosphorusStatus(analysisRequest.profile(), projected.get("CALCIUM"), projected.get("PHOSPHORUS"));
-                    if (Set.of("LOW", "HIGH").contains(ratioStatus)) reasons.add("칼슘:인 비율");
+                    if ("LOW".equals(ratioStatus) || "HIGH".equals(ratioStatus)) reasons.add("칼슘:인 비율");
                 }
                 if (!reasons.isEmpty()) {
                     excluded.put(product.id(), Map.of("productId", product.id(), "name", product.name(), "reason", "추가 후 기준 이탈 예상: " + String.join(", ", reasons)));
                     continue;
                 }
-                long fixed = roundOriginal.entrySet().stream().filter(entry -> entry.getValue().equals("DEFICIENT") && !statuses.get(entry.getKey()).equals("DEFICIENT")).count();
-                long overlap = product.nutrients().keySet().stream().filter(id -> !Set.of("DEFICIENT", "NO_STANDARD").contains(roundOriginal.get(id))).count();
+                long fixed = roundOriginal.entrySet().stream()
+                        .filter(entry -> "DEFICIENT".equals(entry.getValue()) && !"DEFICIENT".equals(statuses.get(entry.getKey()))).count();
+                long overlap = product.nutrients().keySet().stream()
+                        .filter(id -> roundOriginal.get(id) != null
+                                && !"DEFICIENT".equals(roundOriginal.get(id))
+                                && !"NO_STANDARD".equals(roundOriginal.get(id))).count();
                 double score = strategy.recommendationScore(fixed, overlap);
                 Candidate candidate = new Candidate(score, fixed, product, projected, statuses);
                 candidates.push(candidate);

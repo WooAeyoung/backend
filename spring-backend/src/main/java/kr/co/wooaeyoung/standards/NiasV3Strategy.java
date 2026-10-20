@@ -157,11 +157,16 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
     @Override public int defaultMaxItems() { return parameters.recommendation().topN(); }
 
     @Override public double recommendationScore(long fixed, long overlap) {
-        throw new IllegalStateException("NIAS_V3 추천 점수식은 BE-V3-013 범위입니다.");
+        // A안의 1차 점수: 부족 해소를 우선하고, 중복 성분은 감점한다.
+        // 기준값이 검증 대기인 운영 모드에서는 NutritionService가 후보를 만들지 않으므로
+        // 이 점수식은 allow-unverified 테스트/검증 모드에서만 실제 후보 순위에 사용된다.
+        return parameters.recommendation().w2() * fixed - parameters.recommendation().w4() * overlap;
     }
 
     @Override public String recommendationUnsupportedReason() {
-        return "NIAS_V3 추천은 계산하지 않았습니다: 추천 점수식(BE-V3-012~013) 미구현이며, 판정 가능한 검증 완료 기준값이 없습니다.";
+        if (!allowUnverified && parameterVerification().containsValue(VerificationStatus.PENDING_VERIFICATION))
+            return "NIAS_V3 추천은 기준 매개변수 원문 대조가 끝난 뒤 제공됩니다.";
+        return null;
     }
 
     private double weeks(Profile profile) {

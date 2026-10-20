@@ -63,7 +63,7 @@ class StandardProfileApiTest {
                 .andExpect(jsonPath("$.standardVersion").value("NIAS-v3"))
                 .andExpect(jsonPath("$.items", hasSize(0)))
                 .andExpect(jsonPath("$.warnings", hasSize(1)))
-                .andExpect(jsonPath("$.warnings[0]", containsString("BE-V3-012~013")));
+                .andExpect(jsonPath("$.warnings[0]", containsString("원문 대조")));
         mvc.perform(post("/api/v1/recommendations").contentType(MediaType.APPLICATION_JSON).content(request("DOG", 10, "feed-balanced-dog", 150, null)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.standardProfile").value("FEDIAF_2025"))
