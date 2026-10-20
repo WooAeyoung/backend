@@ -1,0 +1,9 @@
+[
+  {
+    "id": "health",
+    "method": "GET",
+    "path": "/health",
+    "status": 200,
+    "response": {"status": "ok"}
+  }
+]

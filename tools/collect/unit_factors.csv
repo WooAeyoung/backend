@@ -1,0 +1,7 @@
+unit,factor_to_mg
+MG,1
+G,1000
+UG,0.001
+IU,1
+µG,0.001
+μG,0.001

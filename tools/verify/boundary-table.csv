@@ -1,0 +1,18 @@
+kind,species,value,unit,note
+age,dog,7.9,WEEK,life-stage boundary
+age,dog,8,WEEK,life-stage boundary
+age,dog,13.9,WEEK,life-stage boundary
+age,dog,14,WEEK,life-stage boundary
+age,cat,4,MONTH,life-stage boundary
+age,cat,4.01,MONTH,life-stage boundary
+age,cat,9,MONTH,life-stage boundary
+age,cat,9.01,MONTH,life-stage boundary
+age,cat,11.99,MONTH,life-stage boundary
+age,cat,12,MONTH,life-stage boundary
+weight,dog,6.99,KG,size/large-breed boundary
+weight,dog,7,KG,size/large-breed boundary
+weight,dog,15,KG,size/large-breed boundary
+weight,dog,15.01,KG,size/large-breed boundary
+weight,dog,31.74,KG,size/large-breed boundary
+weight,dog,31.75,KG,size/large-breed boundary
+weight,dog,31.76,KG,size/large-breed boundary
