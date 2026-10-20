@@ -3,6 +3,7 @@ package kr.co.wooaeyoung.api;
 import jakarta.validation.Valid;
 import kr.co.wooaeyoung.domain.CatalogService;
 import kr.co.wooaeyoung.domain.NutritionService;
+import kr.co.wooaeyoung.domain.JarvisService;
 import kr.co.wooaeyoung.standards.StandardProfile;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +13,12 @@ import java.util.*;
 public class ApiController {
     private final CatalogService catalog;
     private final NutritionService nutrition;
+    private final JarvisService jarvis;
 
-    public ApiController(CatalogService catalog, NutritionService nutrition) {
+    public ApiController(CatalogService catalog, NutritionService nutrition, JarvisService jarvis) {
         this.catalog = catalog;
         this.nutrition = nutrition;
+        this.jarvis = jarvis;
     }
 
     @GetMapping("/health")
@@ -54,6 +57,11 @@ public class ApiController {
     @PostMapping("/api/v1/recommendations")
     public Map<String, Object> recommendations(@Valid @RequestBody ApiModels.RecommendationRequest request) {
         return nutrition.recommend(request);
+    }
+
+    @PostMapping("/api/v1/jarvis")
+    public Map<String, Object> jarvis(@Valid @RequestBody ApiModels.JarvisRequest request) {
+        return jarvis.answer(request);
     }
 
     @GetMapping("/api/v2/standards/{profile}")

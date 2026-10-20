@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import kr.co.wooaeyoung.standards.StandardProfile;
 
 import java.util.List;
+import java.util.Map;
 
 public final class ApiModels {
     private ApiModels() {}
@@ -56,4 +57,9 @@ public final class ApiModels {
         public AnalysisRequest analysisRequest() { return new AnalysisRequest(profile, items, manualItems, standardProfile); }
         public int requestedMaxItems(int defaultMaxItems) { return maxItems == null ? defaultMaxItems : maxItems; }
     }
+
+    /** 자비스는 분석 결과를 저장하지 않고, 현재 브라우저에서 전달한 결과만 요약한다. */
+    public record JarvisRequest(
+            @NotBlank @Size(max = 500) String message,
+            Map<String, Object> analysis) {}
 }

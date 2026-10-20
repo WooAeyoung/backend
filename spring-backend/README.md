@@ -18,6 +18,7 @@ cd spring-backend
 - `GET /api/v1/nutrients` (선택 쿼리 `standardProfile`)
 - `POST /api/v1/analyses`
 - `POST /api/v1/recommendations`
+- `POST /api/v1/jarvis` (현재 브라우저의 분석 결과를 포함한 자비스 명령)
 - `POST /api/v1/kakao/skill`
 
 ## 기준 프로필 (`standardProfile`)
