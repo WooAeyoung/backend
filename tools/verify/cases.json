@@ -5,5 +5,38 @@
     "path": "/health",
     "status": 200,
     "response": {"status": "ok"}
+  },
+  {
+    "id": "nias-adult-analysis-contract",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "request": {
+      "profile": {"name": "golden", "species": "DOG", "weightKg": 10, "age": {"value": 36, "unit": "MONTH"}, "completeFeed": true},
+      "items": [{"productId": "feed-balanced-dog", "dailyAmount": 150, "unit": "G"}],
+      "standardProfile": "NIAS_V3"
+    },
+    "response": {"standardProfile": "NIAS_V3", "standardVersion": "NIAS-v3", "lifeStage": "ADULT", "referenceEnergyKcal": null, "standardsVerification": {"allowUnverified": false}}
+  },
+  {
+    "id": "nias-cat-stage-two",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "request": {
+      "profile": {"name": "golden", "species": "CAT", "weightKg": 4, "age": {"value": 6, "unit": "MONTH"}, "completeFeed": true},
+      "items": [{"productId": "feed-balanced-cat", "dailyAmount": 60, "unit": "G"}],
+      "standardProfile": "NIAS_V3"
+    },
+    "response": {"standardProfile": "NIAS_V3", "lifeStage": "CAT_S2", "referenceEnergyKcal": null}
+  },
+  {
+    "id": "nias-recommendation-guard",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "request": {
+      "profile": {"name": "golden", "species": "DOG", "weightKg": 10, "age": {"value": 36, "unit": "MONTH"}, "completeFeed": true},
+      "items": [{"productId": "feed-balanced-dog", "dailyAmount": 150, "unit": "G"}],
+      "standardProfile": "NIAS_V3"
+    },
+    "response": {"standardProfile": "NIAS_V3", "items": [], "warnings": ["NIAS_V3 추천은 기준 매개변수 원문 대조가 끝난 뒤 제공됩니다."]}
   }
 ]
