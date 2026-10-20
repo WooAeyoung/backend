@@ -74,7 +74,7 @@ public class CatalogService {
     }
 
     public List<Product> search(String query, String type, int limit) {
-        String needle = query == null ? "" : query.strip().toLowerCase(Locale.ROOT);
+        String needle = normalize(query);
         if (needle.isBlank()) return products.stream()
                 .filter(product -> type == null || type.isBlank() || product.type().equalsIgnoreCase(type))
                 .limit(limit).toList();
@@ -83,10 +83,24 @@ public class CatalogService {
                 .filter(product -> type == null || type.isBlank() || product.type().equalsIgnoreCase(type))
                 .limit(limit).collect(java.util.stream.Collectors.toList());
         if (indexed.size() >= limit) return indexed;
-        return products.stream()
-                .filter(product -> product.barcode() != null && product.barcode().contains(needle))
+        List<Product> combined = new ArrayList<>(indexed);
+        products.stream()
+                // Trie는 접두어 검색을 빠르게 처리한다. 그 외 일반 검색어는 제품명·브랜드·ID의 부분 일치까지 지원한다.
+                .filter(product -> matches(product, needle))
                 .filter(product -> type == null || type.isBlank() || product.type().equalsIgnoreCase(type))
-                .filter(product -> !indexed.contains(product)).limit(limit - indexed.size())
-                .collect(java.util.stream.Collectors.collectingAndThen(java.util.stream.Collectors.toCollection(ArrayList::new), List::copyOf));
+                .filter(product -> !combined.contains(product)).limit(limit - combined.size())
+                .forEach(combined::add);
+        return List.copyOf(combined);
+    }
+
+    private static boolean matches(Product product, String needle) {
+        return normalize(product.id()).contains(needle)
+                || normalize(product.name()).contains(needle)
+                || normalize(product.brand()).contains(needle)
+                || (product.barcode() != null && product.barcode().contains(needle));
+    }
+
+    private static String normalize(String value) {
+        return value == null ? "" : value.replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
     }
 }

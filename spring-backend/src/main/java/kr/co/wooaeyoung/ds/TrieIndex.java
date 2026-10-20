@@ -34,7 +34,8 @@ public final class TrieIndex {
 
     private static String normalize(String value) { return value == null ? "" : value.replace(" ", "").toLowerCase(); }
     private static final class Node {
-        private final java.util.Map<Character, Node> children = new java.util.HashMap<>();
+        // 검색 결과는 등록 순서로 반환해야 UI와 API 응답이 실행 환경에 따라 바뀌지 않는다.
+        private final java.util.Map<Character, Node> children = new java.util.LinkedHashMap<>();
         private final Set<String> productIds = new LinkedHashSet<>();
     }
 }

@@ -24,7 +24,8 @@ class ApiCompatibilityTest {
 
     @Test void healthAndProductsMatchContract() throws Exception {
         mvc.perform(get("/health")).andExpect(status().isOk()).andExpect(jsonPath("$.standardVersion").value("FEDIAF-2025.09"));
-        mvc.perform(get("/api/v1/products").param("query", "칼슘"))
+        // Unicode escape keeps this HTTP-query contract portable across Windows code pages.
+        mvc.perform(get("/api/v1/products").param("query", "\uCE7C\uC298"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.items[0].id").value("supp-calcium"));
     }
 
