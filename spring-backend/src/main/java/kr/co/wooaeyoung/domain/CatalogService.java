@@ -2,6 +2,7 @@ package kr.co.wooaeyoung.domain;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.wooaeyoung.ds.HashTable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +20,15 @@ public class CatalogService {
             "CALCIUM", "MG", "PHOSPHORUS", "MG", "VITAMIN_D", "UG", "VITAMIN_E", "MG", "OMEGA3", "MG", "ZINC", "MG");
 
     private final List<Product> products;
-    private final Map<String, Product> productsById;
+    private final HashTable<String, Product> productsById;
 
     public CatalogService(ObjectMapper mapper) throws IOException {
         Map<String, List<Product>> root = mapper.readValue(
                 new ClassPathResource("products.json").getInputStream(), new TypeReference<>() {});
         products = List.copyOf(root.getOrDefault("products", List.of()));
-        Map<String, Product> indexed = new LinkedHashMap<>();
+        HashTable<String, Product> indexed = new HashTable<>();
         products.forEach(product -> indexed.put(product.id(), product));
-        productsById = Map.copyOf(indexed);
+        productsById = indexed;
     }
 
     public List<Product> all() { return products; }

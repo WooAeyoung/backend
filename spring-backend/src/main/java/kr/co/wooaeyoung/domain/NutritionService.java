@@ -1,6 +1,7 @@
 package kr.co.wooaeyoung.domain;
 
 import kr.co.wooaeyoung.api.ApiModels.*;
+import kr.co.wooaeyoung.ds.MaxHeap;
 import kr.co.wooaeyoung.standards.Limit;
 import kr.co.wooaeyoung.standards.NutrientLine;
 import kr.co.wooaeyoung.standards.NutrientMeta;
@@ -154,7 +155,7 @@ public class NutritionService {
                 .filter(product -> product.type().equals("SUPPLEMENT") && product.recommendedDailyAmount() != null).toList());
         for (int round = 0; round < request.requestedMaxItems(strategy.defaultMaxItems()); round++) {
             Map<String, String> roundOriginal = original;
-            Candidate best = null;
+            MaxHeap<Candidate> candidates = new MaxHeap<>(Comparator.<Candidate>naturalOrder());
             for (CatalogService.Product product : remaining) {
                 double servingRatio = product.recommendedDailyAmount() / product.servingAmount();
                 Map<String, Double> projected = new LinkedHashMap<>(current);
@@ -177,8 +178,9 @@ public class NutritionService {
                 long overlap = product.nutrients().keySet().stream().filter(id -> !Set.of("DEFICIENT", "NO_STANDARD").contains(roundOriginal.get(id))).count();
                 double score = strategy.recommendationScore(fixed, overlap);
                 Candidate candidate = new Candidate(score, fixed, product, projected, statuses);
-                if (best == null || candidate.compareTo(best) > 0) best = candidate;
+                candidates.push(candidate);
             }
+            Candidate best = candidates.pop();
             if (best == null) break;
             CatalogService.Product product = best.product;
             selected.add(Map.of("productId", product.id(), "name", product.name(), "dailyAmount", product.recommendedDailyAmount(),

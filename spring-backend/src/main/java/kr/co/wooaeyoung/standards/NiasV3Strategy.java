@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * NIAS_V3 기준. 기준값·매개변수는 모두 원문 대조 전(PENDING_VERIFICATION)이라 allow-unverified=false에서는 판정에 쓰지 않는다.
- * 성장기 계산(성장곡선, 고양이 3단계)은 BE-V3-005~007, 추천식은 BE-V3-012~013 범위라 아직 계산하지 않는다.
+ * 성장기 계산은 v3 매개변수표를 사용한다. 기준값이 PENDING이면 운영 판정은 계속 차단한다.
  */
 @Component
 public class NiasV3Strategy implements NutritionStandardStrategy {
@@ -64,21 +64,34 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         NiasV3Parameters.Age age = parameters.age();
         double minimumWeeks = profile.species() == Species.DOG ? age.dogMinimumWeeks() : age.catMinimumWeeks();
         if (weeks(profile) < minimumWeeks) throw new AnalysisException(Math.round(minimumWeeks) + "주 미만 개체는 현재 지원하지 않습니다.");
+        if (profile.species() == Species.DOG && weeks(profile) < age.adultMonths() * age.weeksPerMonth()
+                && (profile.adultSize() == null || profile.adultSize().isBlank()))
+            throw new AnalysisException("성장기 강아지는 체급 선택이 필요합니다.");
     }
 
     @Override public String lifeStage(Profile profile) {
         NiasV3Parameters.Age age = parameters.age();
         double weeks = weeks(profile), months = weeks / age.weeksPerMonth();
-        if (profile.species() == Species.CAT) return months < age.adultMonths() ? "GROWTH" : "ADULT";
+        if (profile.species() == Species.CAT) {
+            if (months <= age.catStage1EndMonths()) return "CAT_S1";
+            if (months <= age.catStage2EndMonths()) return "CAT_S2";
+            return months < age.adultMonths() ? "CAT_S3" : "ADULT";
+        }
         if (weeks < age.dogEarlyGrowthEndWeeks()) return "GROWTH_EARLY";
         return months < age.adultMonths() ? "GROWTH_LATE" : "ADULT";
     }
 
     @Override public Double energy(Profile profile, String stage) {
-        if (!stage.equals("ADULT")) return null;
         NiasV3Parameters.Energy energy = parameters.energy();
         if (energy.verificationStatus() == VerificationStatus.PENDING_VERIFICATION && !allowUnverified) return null;
-        double k = profile.species() == Species.DOG ? energy.dogAdultK() : energy.catAdultK();
+        double k;
+        if (stage.equals("GROWTH_EARLY") || stage.equals("GROWTH_LATE")) {
+            double pct = puppyPercent(profile);
+            k = energy.puppyIntercept() - energy.puppySlope() * (pct / 100.0);
+        } else if (stage.equals("CAT_S1")) k = energy.catAdultK() * energy.catStage1Multiplier();
+        else if (stage.equals("CAT_S2")) k = energy.catAdultK() * energy.catStage2Multiplier();
+        else if (stage.equals("CAT_S3")) k = energy.catAdultK() * energy.catStage3Multiplier();
+        else k = profile.species() == Species.DOG ? energy.dogAdultK() : energy.catAdultK();
         return k * Math.pow(profile.weightKg(), energy.exponent().of(profile.species()));
     }
 
@@ -92,12 +105,17 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         for (NutrientMeta meta : nutrients) {
             ProfileNutrients.Nutrient nutrient = standards.nutrient(meta.id());
             StandardValue maximum = nutrient.maximum().get(maximumColumn);
+            if (dog && (stage.equals("GROWTH_EARLY") || stage.equals("GROWTH_LATE"))
+                    && "CALCIUM".equals(meta.id()) && puppyAdultWeight(profile) >= parameters.largeBreedCalcium().expectedAdultWeightAtLeastKg()) {
+                maximum = new StandardValue(parameters.largeBreedCalcium().dogGrowthCalciumMaximum(), maximum.unit(), maximum.basis(),
+                        maximum.sourceDocument(), maximum.table(), maximum.sourceYear(), maximum.verificationStatus(), maximum.verifiedAt(), maximum.valueType(), "대형견 성장기 칼슘 상한 적용");
+            }
             StandardReference derivedCaution = new StandardReference(parameters.sourceDocument() + " 매개변수표 caution_" + (dog ? "dog" : "cat"),
                     StandardValue.TABLE_NOT_APPLICABLE, null, parameters.cautionRatio().verificationStatus(), ValueType.POLICY, maximum.unit(), standards.basis(),
                     "예외 주의값 없음 → NIAS 최대 × " + cautionRatio);
             result.put(meta.id(), NutrientLine.build(nutrient.minimum().get(minimumColumn), maximum, nutrient.caution().get(dog ? "dog" : "cat"),
                     derivedCaution, cautionRatio, kcal, allowUnverified,
-                    stage.equals("ADULT") ? NutrientLine.UNVERIFIED_STANDARD : NutrientLine.UNSUPPORTED));
+                    NutrientLine.UNVERIFIED_STANDARD));
         }
         return result;
     }
@@ -126,8 +144,12 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         List<String> warnings = new ArrayList<>();
         if (parameterVerification().containsValue(VerificationStatus.PENDING_VERIFICATION))
             warnings.add("매개변수 미검증: NIAS-v3 매개변수(" + parameters.parameterVersion() + ")는 원문 대조 전이라 기준 열량은 참고값입니다.");
-        if (!stage.equals("ADULT"))
-            warnings.add("NIAS_V3 성장기 계산(성장곡선·고양이 3단계)은 BE-V3-005~007 미구현으로 지원하지 않습니다.");
+        if (profile.weightKg() > (profile.species() == Species.DOG ? 100 : 15)) warnings.add("WEIGHT_UNUSUAL");
+        if (stage.equals("GROWTH_EARLY") || stage.equals("GROWTH_LATE")) {
+            double raw = puppyAdultWeightRaw(profile);
+            double clipped = puppyAdultWeight(profile);
+            if (Math.abs(raw - clipped) > 1e-9) warnings.add("WEIGHT_CLIPPED");
+        }
         return List.copyOf(warnings);
     }
 
@@ -144,5 +166,21 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
 
     private double weeks(Profile profile) {
         return profile.age().unit() == AgeUnit.WEEK ? profile.age().value() : profile.age().value() * parameters.age().weeksPerMonth();
+    }
+
+    private double puppyPercent(Profile profile) {
+        NiasV3Parameters.SizeClass size = parameters.growthCurve().sizeClasses().get(profile.adultSize());
+        if (size == null) throw new AnalysisException("지원하지 않는 체급입니다: " + profile.adultSize());
+        return Math.min(size.a() * Math.log(weeks(profile)) - size.b(), 100.0);
+    }
+
+    private double puppyAdultWeightRaw(Profile profile) {
+        return profile.weightKg() / (puppyPercent(profile) / 100.0);
+    }
+
+    private double puppyAdultWeight(Profile profile) {
+        NiasV3Parameters.SizeClass size = parameters.growthCurve().sizeClasses().get(profile.adultSize());
+        double value = Math.max(puppyAdultWeightRaw(profile), size.lowerKg());
+        return size.upperKg() == null ? value : Math.min(value, size.upperKg());
     }
 }

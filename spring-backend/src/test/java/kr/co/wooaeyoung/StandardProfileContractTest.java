@@ -152,12 +152,15 @@ class StandardProfileContractTest {
         assertEquals("FEDIAF-2025.09", call("/api/v1/analyses", ADULT_DOG).get("standardVersion").asText());
     }
 
-    @Test void niasGrowthIsUnsupportedWithExplicitWarning() throws Exception {
+    @Test void niasGrowthUsesV3StageAndKeepsPendingStandardsBlocked() throws Exception {
         JsonNode puppy = call("/api/v1/analyses", request("DOG", 3, 12, "WEEK", ",\"adultSize\":\"S\"", DOG_FEED, "NIAS_V3"));
         assertEquals("GROWTH_EARLY", puppy.get("lifeStage").asText());
         assertTrue(puppy.get("referenceEnergyKcal").isNull());
-        for (JsonNode row : puppy.get("nutrients")) assertEquals("UNSUPPORTED", row.get("status").asText(), row.get("nutrientId").asText());
-        assertTrue(puppy.get("warnings").toString().contains("BE-V3-005~007 미구현"));
+        for (JsonNode row : puppy.get("nutrients")) {
+            String status = row.get("status").asText();
+            assertTrue(Set.of("UNVERIFIED_STANDARD", "NO_STANDARD", "UNIT_CONVERSION_UNSUPPORTED").contains(status), row.get("nutrientId").asText());
+        }
+        assertTrue(puppy.get("warnings").toString().contains("매개변수 미검증"));
         assertEquals("UNSUPPORTED", puppy.get("ratioApplicability").get("calciumPhosphorus").asText());
     }
 
