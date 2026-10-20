@@ -3,6 +3,7 @@ package kr.co.wooaeyoung.domain;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.wooaeyoung.ds.HashTable;
+import kr.co.wooaeyoung.ds.TrieIndex;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,8 @@ public class CatalogService {
 
     private final List<Product> products;
     private final HashTable<String, Product> productsById;
+    private final HashTable<String, Product> productsByBarcode;
+    private final TrieIndex searchIndex;
 
     public CatalogService(ObjectMapper mapper) throws IOException {
         Map<String, List<Product>> root = mapper.readValue(
@@ -44,8 +47,16 @@ public class CatalogService {
                 product.recommendedDailyAmount(), product.doseByWeight() == null ? List.of() : product.doseByWeight()))
                 .toList();
         HashTable<String, Product> indexed = new HashTable<>();
-        products.forEach(product -> indexed.put(product.id(), product));
+        HashTable<String, Product> barcodeIndex = new HashTable<>();
+        TrieIndex trie = new TrieIndex();
+        products.forEach(product -> {
+            indexed.put(product.id(), product);
+            if (product.barcode() != null && !product.barcode().isBlank()) barcodeIndex.put(product.barcode(), product);
+            trie.add(product.id(), product.id()); trie.add(product.name(), product.id()); trie.add(product.brand(), product.id());
+        });
         productsById = indexed;
+        productsByBarcode = barcodeIndex;
+        searchIndex = trie;
     }
 
     public List<Product> all() { return products; }
@@ -56,16 +67,26 @@ public class CatalogService {
         return product;
     }
 
+    public Product requireBarcode(String barcode) {
+        Product product = productsByBarcode.get(barcode);
+        if (product == null) throw new AnalysisException("바코드 제품을 찾을 수 없습니다: " + barcode);
+        return product;
+    }
+
     public List<Product> search(String query, String type, int limit) {
         String needle = query == null ? "" : query.strip().toLowerCase(Locale.ROOT);
-        return products.stream()
+        if (needle.isBlank()) return products.stream()
                 .filter(product -> type == null || type.isBlank() || product.type().equalsIgnoreCase(type))
-                .filter(product -> needle.isBlank()
-                        || product.id().toLowerCase(Locale.ROOT).contains(needle)
-                        || product.name().toLowerCase(Locale.ROOT).contains(needle)
-                        || product.brand().toLowerCase(Locale.ROOT).contains(needle)
-                        || (product.barcode() != null && product.barcode().contains(needle)))
-                .limit(limit)
-                .toList();
+                .limit(limit).toList();
+        List<Product> indexed = searchIndex.find(needle).stream().map(productsById::get)
+                .filter(Objects::nonNull)
+                .filter(product -> type == null || type.isBlank() || product.type().equalsIgnoreCase(type))
+                .limit(limit).collect(java.util.stream.Collectors.toList());
+        if (indexed.size() >= limit) return indexed;
+        return products.stream()
+                .filter(product -> product.barcode() != null && product.barcode().contains(needle))
+                .filter(product -> type == null || type.isBlank() || product.type().equalsIgnoreCase(type))
+                .filter(product -> !indexed.contains(product)).limit(limit - indexed.size())
+                .collect(java.util.stream.Collectors.collectingAndThen(java.util.stream.Collectors.toCollection(ArrayList::new), List::copyOf));
     }
 }
