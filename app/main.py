@@ -15,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .catalog import CATALOG, NUTRIENTS, STANDARD_VERSION
 from .engine import AnalysisError, analyze, recommend
 from .models import AnalysisRequest, RecommendationRequest
+from .vets import nearest_vets
 
 app = FastAPI(title="우애영 API", version="1.0.0")
 cors_origins = [
@@ -34,6 +35,17 @@ app.add_middleware(
 
 @app.get("/health")
 def health(): return {"status":"ok","standardVersion":STANDARD_VERSION}
+
+
+@app.get("/api/v1/vets/nearest")
+def nearest_vet_clinics(
+    lat: float = Query(..., ge=-90, le=90, description="사용자 위도"),
+    lon: float = Query(..., ge=-180, le=180, description="사용자 경도"),
+    limit: int = Query(5, ge=1, le=20),
+):
+    """현재 위치 기준 가까운 동물병원과 지도 링크를 반환합니다."""
+    clinics = nearest_vets(lat, lon, limit)
+    return {"origin": {"lat": lat, "lon": lon}, "clinics": clinics}
 
 
 GITHUB_REPOSITORIES = {
