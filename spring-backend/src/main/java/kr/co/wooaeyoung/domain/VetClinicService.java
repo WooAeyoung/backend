@@ -25,8 +25,8 @@ public class VetClinicService {
 
     public List<Map<String, Object>> nearest(double lat, double lon, int limit) {
         if (!kakaoKey.isBlank()) {
-            JsonNode body = http.get().uri(uri -> uri.scheme("https").host("dapi.kakao.com").path("/v2/local/search/category.json")
-                    .queryParam("category_group_code", "HP8").queryParam("x", lon).queryParam("y", lat)
+            JsonNode body = http.get().uri(uri -> uri.scheme("https").host("dapi.kakao.com").path("/v2/local/search/keyword.json")
+                    .queryParam("query", "동물병원").queryParam("x", lon).queryParam("y", lat)
                     .queryParam("radius", 20000).queryParam("sort", "distance").queryParam("size", limit).build())
                     .header("Authorization", "KakaoAK " + kakaoKey).retrieve().body(JsonNode.class);
             List<Map<String, Object>> results = new ArrayList<>();
