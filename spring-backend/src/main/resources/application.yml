@@ -1,11 +1,12 @@
 server:
   port: ${PORT:8080}
 app:
-  cors-origins: ${CORS_ORIGINS:http://localhost:5173,https://wooaeyoung.github.io}
+  cors-origins: ${CORS_ORIGINS:http://localhost:5173,https://wooaeyoung.github.io,https://wooaeyoung-pet-nutrition.vercel.app}
   github-token: ${GITHUB_TOKEN:}
   kakao-allowed-user-ids: ${KAKAO_ALLOWED_USER_IDS:}
   public-base-url: ${PUBLIC_BASE_URL:https://wooaeyoung-backend.onrender.com}
   kakao-oauth-base-url: ${KAKAO_OAUTH_BASE_URL:https://wooaeyoung-backend.onrender.com}
+  kakao-rest-api-key: ${KAKAO_REST_API_KEY:}
 wooaeyoung:
   standards:
     # 검증 대기(PENDING_VERIFICATION) 기준값을 판정·추천에 쓸지 여부. test 프로필이 아니면 true일 때 시작이 실패한다.

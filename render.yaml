@@ -9,7 +9,7 @@ services:
     autoDeploy: true
     envVars:
       - key: CORS_ORIGINS
-        value: https://wooaeyoung.github.io,http://localhost:5173
+        value: https://wooaeyoung.github.io,https://wooaeyoung-pet-nutrition.vercel.app,http://localhost:5173
       - key: PUBLIC_BASE_URL
         value: https://wooaeyoung-backend.onrender.com
       - key: KAKAO_OAUTH_BASE_URL

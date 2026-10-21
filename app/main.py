@@ -22,7 +22,7 @@ cors_origins = [
     origin.strip()
     for origin in os.getenv(
         "CORS_ORIGINS",
-        "http://localhost:5173,https://wooaeyoung.github.io",
+        "http://localhost:5173,https://wooaeyoung.github.io,https://wooaeyoung-pet-nutrition.vercel.app",
     ).split(",")
     if origin.strip()
 ]

@@ -1,11 +1,20 @@
 package kr.co.wooaeyoung.domain;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.client.RestClient;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.*;
 
 @Service
 public class VetClinicService {
+    private final String kakaoKey;
+    private final RestClient http = RestClient.create();
+
+    public VetClinicService(@Value("${app.kakao-rest-api-key:}") String kakaoKey) {
+        this.kakaoKey = kakaoKey == null ? "" : kakaoKey.trim();
+    }
     private record Clinic(String id, String name, String address, double lat, double lon, String phone) {}
 
     private static final List<Clinic> CLINICS = List.of(
@@ -15,6 +24,22 @@ public class VetClinicService {
     );
 
     public List<Map<String, Object>> nearest(double lat, double lon, int limit) {
+        if (!kakaoKey.isBlank()) {
+            JsonNode body = http.get().uri(uri -> uri.scheme("https").host("dapi.kakao.com").path("/v2/local/search/category.json")
+                    .queryParam("category_group_code", "HP8").queryParam("x", lon).queryParam("y", lat)
+                    .queryParam("radius", 20000).queryParam("sort", "distance").queryParam("size", limit).build())
+                    .header("Authorization", "KakaoAK " + kakaoKey).retrieve().body(JsonNode.class);
+            List<Map<String, Object>> results = new ArrayList<>();
+            if (body != null && body.has("documents")) for (JsonNode place : body.get("documents")) {
+                Map<String, Object> item = new LinkedHashMap<>();
+                item.put("id", place.path("id").asText()); item.put("name", place.path("place_name").asText());
+                item.put("address", place.path("road_address_name").asText(place.path("address_name").asText()));
+                item.put("lat", place.path("y").asDouble()); item.put("lon", place.path("x").asDouble());
+                item.put("phone", place.path("phone").asText()); item.put("distanceKm", Math.round(place.path("distance").asDouble() / 10.0) / 100.0);
+                item.put("mapUrl", place.path("place_url").asText("https://map.kakao.com/link/map/" + place.path("id").asText())); results.add(item);
+            }
+            return results;
+        }
         return CLINICS.stream().map(clinic -> {
             Map<String, Object> item = new LinkedHashMap<>();
             item.put("id", clinic.id()); item.put("name", clinic.name()); item.put("address", clinic.address());
