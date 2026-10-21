@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kr.co.wooaeyoung.domain.CatalogService;
 import kr.co.wooaeyoung.domain.NutritionService;
 import kr.co.wooaeyoung.domain.JarvisService;
+import kr.co.wooaeyoung.domain.VetClinicService;
 import kr.co.wooaeyoung.standards.StandardProfile;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +15,23 @@ public class ApiController {
     private final CatalogService catalog;
     private final NutritionService nutrition;
     private final JarvisService jarvis;
+    private final VetClinicService vets;
 
-    public ApiController(CatalogService catalog, NutritionService nutrition, JarvisService jarvis) {
+    public ApiController(CatalogService catalog, NutritionService nutrition, JarvisService jarvis, VetClinicService vets) {
         this.catalog = catalog;
         this.nutrition = nutrition;
         this.jarvis = jarvis;
+        this.vets = vets;
+    }
+
+    @GetMapping("/api/v1/vets/nearest")
+    public Map<String, Object> nearestVets(
+            @RequestParam double lat,
+            @RequestParam double lon,
+            @RequestParam(defaultValue = "5") int limit) {
+        if (lat < -90 || lat > 90 || lon < -180 || lon > 180) throw new IllegalArgumentException("위도 또는 경도 범위를 확인해주세요.");
+        int safeLimit = Math.max(1, Math.min(limit, 20));
+        return Map.of("origin", Map.of("lat", lat, "lon", lon), "clinics", vets.nearest(lat, lon, safeLimit));
     }
 
     @GetMapping("/health")
