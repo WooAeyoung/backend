@@ -104,3 +104,20 @@ FEDIAF 표는 최소 권장량과 최대치를 제공하며 별도의 `주의선
 | NIAS 매개변수 전체 | `nias-v3/parameters.json` | 표 2-5·2-7a·2-7b·2-8·2-9·2-17c 각주 d 대조 |
 | FEDIAF 매개변수: 8주 하한·월 환산(30.4375일), 열량 계수(95/75/100, 254.1/135, 지수), 사료 추정 배수, 추천 가중치 | `fediaf-2025/parameters.json` | 이 문서에 대조 기록 없음. 계산 동작은 바꾸지 않고 응답 `parameterVerification`에만 표시 |
 | 1차 구현 18개 목록 | `nias-v3/nutrients.json` `implemented` | 팀 확정(현재는 xlsx "제안") |
+
+## NIAS 성장기 계산 (Issue #2, BE-V3-005~008)
+
+계산 규칙은 `docs/v3/계산명세서_v3.md` 1~5장을 따른다. 값은 모두 `nias-v3/parameters.json`(변환 원본 `docs/v3/기준값표_매개변수표_v3.xlsx` 매개변수표)에서 읽고 코드에 상수로 두지 않는다. 아래 항목은 전부 `PENDING_VERIFICATION`이라 운영 설정(`allow-unverified=false`)에서는 열량·기준선을 계산하지 않는다. 응답 `energyBasis.blocked`와 `blockedReason`에 그 사실이 나온다.
+
+| 항목 | 값 | 출처(xlsx 매개변수표 기재) | parameters.json 섹션 | 상태 |
+| --- | --- | --- | --- | --- |
+| 나이 경계 | 8주(개·고양이), 개 초기 성장 14주, 고양이 4·9개월, 성체 12개월, 4.345주/개월 | 표 2-7a·b(8주), 표 2-17a·c 각주(14주), 표 2-9(4·9개월). 고양이 8주는 개 값 준용(가정) | `age` | PENDING |
+| 강아지 성장곡선 | 체급 S·M·L·XL·XXL별 a, b, 절단 범위 | 표 2-7a | `growthCurve` | PENDING |
+| 강아지 k | 254.1 − 135 × (pct ÷ 100) | 표 2-7b | `energy.puppyIntercept/puppySlope` | PENDING |
+| 성체 k·지수 | 개 110, 고양이 100, 지수 0.75 / 0.67 | 표 2-5, 표 2-8, 영양표준 2장 | `energy` | PENDING |
+| 고양이 성장 배수 | 2.25 / 1.875 / 1.5 | 표 2-9(2.0~2.5, 1.75~2.0 범위의 중간값과 1.5) | `energy.catStage{1,2,3}Multiplier` | PENDING |
+| 대형견 성장기 칼슘 | 예상 성체 ≥ 31.75 kg이면 최대 4.5 g/1000 kcal | 표 2-17c 각주 d | `largeBreedCalcium` | PENDING |
+
+- 검산: T1~T8(계산명세서 11장)을 `NiasV3CalculationCasesTest`(test 프로필)로 고정했다. Java 결과는 `docs/v3/계산_참조구현_v3.py` 출력과 상대 차이 0으로 같다(2026-10-22 대조).
+- 원문 대조할 것: 표 2-7a 체급별 계수와 절단 범위, 표 2-7b 강아지 k, 표 2-9 고양이 배수(중간값을 쓰기로 한 결정 포함), 표 2-17c 각주 d의 31.75 kg·4.5 g 조건(초과/이상, 초기·후기 성장 모두 적용 여부).
+- 대형견 칼슘을 적용하면 응답 `reference.upper`는 `table: "2-17c 각주 d"`, `verificationStatus`는 `largeBreedCalcium` 섹션 상태다. 대체 전 값(6.25)과 적용 근거는 `note`에 남긴다.
