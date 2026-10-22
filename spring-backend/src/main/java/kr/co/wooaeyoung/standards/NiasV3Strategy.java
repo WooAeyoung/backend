@@ -16,6 +16,8 @@ import java.util.*;
 public class NiasV3Strategy implements NutritionStandardStrategy {
     private static final Set<String> MINIMUM_COLUMNS = Set.of("dog_early", "dog_late", "dog_adult", "cat_growth", "cat_adult");
     private static final Set<String> MAXIMUM_COLUMNS = Set.of("dog_growth", "dog_adult", "cat_growth", "cat_adult");
+    /** 대형견 성장기 칼슘 최대의 원문 위치(nutrients.json 표 표기와 같은 형식). */
+    private static final String LARGE_BREED_CALCIUM_TABLE = "2-17c 각주 d";
 
     private final NiasV3Parameters parameters;
     private final ProfileNutrients standards;
@@ -92,9 +94,65 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         return k(profile, stage) * Math.pow(profile.weightKg(), parameters.energy().exponent().of(profile.species()));
     }
 
+    /**
+     * 기준 열량의 계산 근거. 운영 설정에서 열량이 차단되면(blocked) 미검증 매개변수에서 나온 숫자는 모두 null로 두고
+     * 생애주기·k 근거·차단 이유·검증 상태만 보여 준다.
+     */
+    @Override public Map<String, Object> energyBasis(Profile profile, String stage, Double kcal) {
+        boolean dog = profile.species() == Species.DOG, dogGrowth = dog && isDogGrowth(stage), catGrowth = !dog && !stage.equals("ADULT");
+        boolean blocked = energyBlocked(stage);
+        Map<String, VerificationStatus> used = energyParameterStatus(stage);
+        if (dogGrowth) used.put("largeBreedCalcium", parameters.largeBreedCalcium().verificationStatus());
+        NiasV3Parameters.Energy energy = parameters.energy();
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("lifeStage", stage);
+        result.put("kSource", dogGrowth ? "PUPPY_GROWTH_CURVE" : catGrowth ? "CAT_GROWTH_MULTIPLIER" : "ADULT_K");
+        result.put("k", blocked ? null : k(profile, stage));
+        result.put("exponent", blocked ? null : energy.exponent().of(profile.species()));
+        result.put("referenceEnergyKcal", kcal);
+        result.put("blocked", blocked);
+        result.put("blockedReason", blocked ? "매개변수 미검증: " + String.join(", ", energyParameterStatus(stage).entrySet().stream()
+                .filter(entry -> entry.getValue() == VerificationStatus.PENDING_VERIFICATION).map(Map.Entry::getKey).toList())
+                + " 섹션이 원문 대조 전(PENDING_VERIFICATION)이라 기준 열량을 계산하지 않았습니다." : null);
+        result.put("parameterVerification", used);
+        result.put("adultK", blocked || dogGrowth ? null : dog ? energy.dogAdultK() : energy.catAdultK());
+        result.put("catGrowthMultiplier", blocked || !catGrowth ? null : catMultiplier(stage));
+        result.put("puppyGrowth", dogGrowth ? puppyGrowthBasis(profile, blocked ? null : puppyGrowth(profile)) : null);
+        return result;
+    }
+
+    private Map<String, Object> puppyGrowthBasis(Profile profile, PuppyGrowth growth) {
+        boolean shown = growth != null;
+        NiasV3Parameters.Energy energy = parameters.energy();
+        NiasV3Parameters.LargeBreedCalcium largeBreed = parameters.largeBreedCalcium();
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("sizeClass", profile.adultSize());
+        result.put("a", shown ? growth.curve().a() : null);
+        result.put("b", shown ? growth.curve().b() : null);
+        result.put("ageWeeks", shown ? weeks(profile) : null);
+        result.put("percentOfAdultWeight", shown ? growth.percent() : null);
+        result.put("expectedAdultWeightRawKg", shown ? growth.adultRawKg() : null);
+        result.put("expectedAdultWeightKg", shown ? growth.adultKg() : null);
+        result.put("clipped", shown ? growth.clipped() : null);
+        Map<String, Object> range = null;
+        if (shown) { range = new LinkedHashMap<>(); range.put("lowerKg", growth.curve().lowerKg()); range.put("upperKg", growth.curve().upperKg()); }
+        result.put("sizeRange", range);
+        result.put("puppyIntercept", shown ? energy.puppyIntercept() : null);
+        result.put("puppySlope", shown ? energy.puppySlope() : null);
+        Map<String, Object> calcium = null;
+        if (shown) {
+            calcium = new LinkedHashMap<>();
+            calcium.put("applied", growth.largeBreedCalcium());
+            calcium.put("thresholdKg", largeBreed.expectedAdultWeightAtLeastKg());
+            calcium.put("calciumMaximum", largeBreed.dogGrowthCalciumMaximum());
+        }
+        result.put("largeBreedCalcium", calcium);
+        return result;
+    }
+
     @Override public Map<String, NutrientLine> lines(Profile profile, String stage, Double kcal) {
         boolean dog = profile.species() == Species.DOG;
-        boolean largeBreedCalcium = dog && isDogGrowth(stage) && puppyGrowth(profile).largeBreedCalcium();
+        PuppyGrowth growth = dog && isDogGrowth(stage) ? puppyGrowth(profile) : null;
         String minimumColumn = dog ? switch (stage) { case "GROWTH_EARLY" -> "dog_early"; case "GROWTH_LATE" -> "dog_late"; default -> "dog_adult"; }
                 : stage.equals("ADULT") ? "cat_adult" : "cat_growth";
         String maximumColumn = dog ? (stage.equals("ADULT") ? "dog_adult" : "dog_growth") : minimumColumn;
@@ -103,10 +161,7 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         for (NutrientMeta meta : nutrients) {
             ProfileNutrients.Nutrient nutrient = standards.nutrient(meta.id());
             StandardValue maximum = nutrient.maximum().get(maximumColumn);
-            if (largeBreedCalcium && "CALCIUM".equals(meta.id())) {
-                maximum = new StandardValue(parameters.largeBreedCalcium().dogGrowthCalciumMaximum(), maximum.unit(), maximum.basis(),
-                        maximum.sourceDocument(), maximum.table(), maximum.sourceYear(), maximum.verificationStatus(), maximum.verifiedAt(), maximum.valueType(), "대형견 성장기 칼슘 상한 적용");
-            }
+            if (growth != null && growth.largeBreedCalcium() && "CALCIUM".equals(meta.id())) maximum = largeBreedCalciumMaximum(maximum, growth);
             StandardReference derivedCaution = new StandardReference(parameters.sourceDocument() + " 매개변수표 caution_" + (dog ? "dog" : "cat"),
                     StandardValue.TABLE_NOT_APPLICABLE, null, parameters.cautionRatio().verificationStatus(), ValueType.POLICY, maximum.unit(), standards.basis(),
                     "예외 주의값 없음 → NIAS 최대 × " + cautionRatio);
@@ -192,10 +247,18 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         NiasV3Parameters.Energy energy = parameters.energy();
         return switch (stage) {
             case "GROWTH_EARLY", "GROWTH_LATE" -> puppyGrowth(profile).k();
-            case "CAT_S1" -> energy.catAdultK() * energy.catStage1Multiplier();
-            case "CAT_S2" -> energy.catAdultK() * energy.catStage2Multiplier();
-            case "CAT_S3" -> energy.catAdultK() * energy.catStage3Multiplier();
+            case "CAT_S1", "CAT_S2", "CAT_S3" -> energy.catAdultK() * catMultiplier(stage);
             default -> profile.species() == Species.DOG ? energy.dogAdultK() : energy.catAdultK();
+        };
+    }
+
+    private double catMultiplier(String stage) {
+        NiasV3Parameters.Energy energy = parameters.energy();
+        return switch (stage) {
+            case "CAT_S1" -> energy.catStage1Multiplier();
+            case "CAT_S2" -> energy.catStage2Multiplier();
+            case "CAT_S3" -> energy.catStage3Multiplier();
+            default -> throw new IllegalArgumentException("고양이 성장 단계가 아닙니다: " + stage);
         };
     }
 
@@ -233,6 +296,18 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         double k = energy.puppyIntercept() - energy.puppySlope() * (percent / 100.0);
         return new PuppyGrowth(profile.adultSize(), curve, percent, adultRaw, adult, clipped, k,
                 adult >= parameters.largeBreedCalcium().expectedAdultWeightAtLeastKg());
+    }
+
+    /**
+     * 대형견 성장기 칼슘 최대(계산명세서 5장). 값과 검증 상태는 parameters.json largeBreedCalcium에서,
+     * 원문 위치는 표 2-17c 각주 d로 보여 준다. 대체 전 값(dog_growth)은 note에 남긴다.
+     */
+    private StandardValue largeBreedCalciumMaximum(StandardValue original, PuppyGrowth growth) {
+        NiasV3Parameters.LargeBreedCalcium largeBreed = parameters.largeBreedCalcium();
+        String note = "대형견 성장기 칼슘 최대: 예상 성체 " + kg(growth.adultKg()) + " kg ≥ " + kg(largeBreed.expectedAdultWeightAtLeastKg())
+                + " kg → " + kg(original.value()) + " 대신 " + kg(largeBreed.dogGrowthCalciumMaximum()) + " 적용 (parameters.json largeBreedCalcium)";
+        return new StandardValue(largeBreed.dogGrowthCalciumMaximum(), original.unit(), original.basis(), original.sourceDocument(),
+                LARGE_BREED_CALCIUM_TABLE, original.sourceYear(), largeBreed.verificationStatus(), null, original.valueType(), note);
     }
 
     private static String range(NiasV3Parameters.SizeClass curve) {
