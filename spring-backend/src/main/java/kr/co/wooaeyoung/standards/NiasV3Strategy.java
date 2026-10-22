@@ -63,15 +63,20 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
     @Override public void validate(Profile profile) {
         NiasV3Parameters.Age age = parameters.age();
         double minimumWeeks = profile.species() == Species.DOG ? age.dogMinimumWeeks() : age.catMinimumWeeks();
-        if (weeks(profile) < minimumWeeks) throw new AnalysisException(Math.round(minimumWeeks) + "주 미만 개체는 현재 지원하지 않습니다.");
-        if (profile.species() == Species.DOG && weeks(profile) < age.adultMonths() * age.weeksPerMonth()
-                && (profile.adultSize() == null || profile.adultSize().isBlank()))
-            throw new AnalysisException("성장기 강아지는 체급 선택이 필요합니다.");
+        if (age(profile).weeks() < minimumWeeks) throw new AnalysisException(Math.round(minimumWeeks) + "주 미만 개체는 현재 지원하지 않습니다.");
+        if (profile.species() != Species.DOG || !isDogGrowth(lifeStage(profile))) return;
+        String sizes = String.join(", ", sizeClassNames());
+        if (profile.adultSize() == null || profile.adultSize().isBlank())
+            throw new AnalysisException("체급 선택 필요: 성장기 강아지는 체급(adultSize: " + sizes + ") 선택이 필요합니다.");
+        if (!parameters.growthCurve().sizeClasses().containsKey(profile.adultSize()))
+            throw new AnalysisException("지원하지 않는 체급입니다: " + profile.adultSize() + " (" + sizes + ")");
     }
 
+    /** 주 경계(8·14주)는 주로, 개월 경계(4·9·12개월)는 개월로 비교한다. 입력 단위의 값은 환산하지 않고 그대로 쓴다. */
     @Override public String lifeStage(Profile profile) {
         NiasV3Parameters.Age age = parameters.age();
-        double weeks = weeks(profile), months = weeks / age.weeksPerMonth();
+        AgeNorm normalized = age(profile);
+        double weeks = normalized.weeks(), months = normalized.months();
         if (profile.species() == Species.CAT) {
             if (months <= age.catStage1EndMonths()) return "CAT_S1";
             if (months <= age.catStage2EndMonths()) return "CAT_S2";
@@ -169,8 +174,21 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         return null;
     }
 
-    private double weeks(Profile profile) {
-        return profile.age().unit() == AgeUnit.WEEK ? profile.age().value() : profile.age().value() * parameters.age().weeksPerMonth();
+    /** 나이 정규화(계산명세서 1장). 주 입력이면 개월만, 개월 입력이면 주만 환산한다(주 → 개월 왕복 없음). */
+    private record AgeNorm(double weeks, double months) {}
+
+    private AgeNorm age(Profile profile) {
+        double value = profile.age().value(), weeksPerMonth = parameters.age().weeksPerMonth();
+        return profile.age().unit() == AgeUnit.WEEK ? new AgeNorm(value, value / weeksPerMonth) : new AgeNorm(value * weeksPerMonth, value);
+    }
+
+    private double weeks(Profile profile) { return age(profile).weeks(); }
+
+    private static boolean isDogGrowth(String stage) { return stage.equals("GROWTH_EARLY") || stage.equals("GROWTH_LATE"); }
+
+    private List<String> sizeClassNames() {
+        return parameters.growthCurve().sizeClasses().entrySet().stream()
+                .sorted(Comparator.comparingDouble(entry -> entry.getValue().lowerKg())).map(Map.Entry::getKey).toList();
     }
 
     private double puppyPercent(Profile profile) {
