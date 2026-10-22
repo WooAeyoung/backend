@@ -86,22 +86,15 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         return months < age.adultMonths() ? "GROWTH_LATE" : "ADULT";
     }
 
+    /** E = k × 체중^지수(계산명세서 4장). 운영 설정에서 쓰는 매개변수 섹션이 PENDING이면 null. */
     @Override public Double energy(Profile profile, String stage) {
-        NiasV3Parameters.Energy energy = parameters.energy();
-        if (energy.verificationStatus() == VerificationStatus.PENDING_VERIFICATION && !allowUnverified) return null;
-        double k;
-        if (stage.equals("GROWTH_EARLY") || stage.equals("GROWTH_LATE")) {
-            double pct = puppyPercent(profile);
-            k = energy.puppyIntercept() - energy.puppySlope() * (pct / 100.0);
-        } else if (stage.equals("CAT_S1")) k = energy.catAdultK() * energy.catStage1Multiplier();
-        else if (stage.equals("CAT_S2")) k = energy.catAdultK() * energy.catStage2Multiplier();
-        else if (stage.equals("CAT_S3")) k = energy.catAdultK() * energy.catStage3Multiplier();
-        else k = profile.species() == Species.DOG ? energy.dogAdultK() : energy.catAdultK();
-        return k * Math.pow(profile.weightKg(), energy.exponent().of(profile.species()));
+        if (energyBlocked(stage)) return null;
+        return k(profile, stage) * Math.pow(profile.weightKg(), parameters.energy().exponent().of(profile.species()));
     }
 
     @Override public Map<String, NutrientLine> lines(Profile profile, String stage, Double kcal) {
         boolean dog = profile.species() == Species.DOG;
+        boolean largeBreedCalcium = dog && isDogGrowth(stage) && puppyGrowth(profile).largeBreedCalcium();
         String minimumColumn = dog ? switch (stage) { case "GROWTH_EARLY" -> "dog_early"; case "GROWTH_LATE" -> "dog_late"; default -> "dog_adult"; }
                 : stage.equals("ADULT") ? "cat_adult" : "cat_growth";
         String maximumColumn = dog ? (stage.equals("ADULT") ? "dog_adult" : "dog_growth") : minimumColumn;
@@ -110,8 +103,7 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         for (NutrientMeta meta : nutrients) {
             ProfileNutrients.Nutrient nutrient = standards.nutrient(meta.id());
             StandardValue maximum = nutrient.maximum().get(maximumColumn);
-            if (dog && (stage.equals("GROWTH_EARLY") || stage.equals("GROWTH_LATE"))
-                    && "CALCIUM".equals(meta.id()) && puppyAdultWeight(profile) >= parameters.largeBreedCalcium().expectedAdultWeightAtLeastKg()) {
+            if (largeBreedCalcium && "CALCIUM".equals(meta.id())) {
                 maximum = new StandardValue(parameters.largeBreedCalcium().dogGrowthCalciumMaximum(), maximum.unit(), maximum.basis(),
                         maximum.sourceDocument(), maximum.table(), maximum.sourceYear(), maximum.verificationStatus(), maximum.verifiedAt(), maximum.valueType(), "대형견 성장기 칼슘 상한 적용");
             }
@@ -150,10 +142,14 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
         if (parameterVerification().containsValue(VerificationStatus.PENDING_VERIFICATION))
             warnings.add("매개변수 미검증: NIAS-v3 매개변수(" + parameters.parameterVersion() + ")는 원문 대조 전이라 기준 열량은 참고값입니다.");
         if (profile.weightKg() > (profile.species() == Species.DOG ? 100 : 15)) warnings.add("WEIGHT_UNUSUAL");
-        if (stage.equals("GROWTH_EARLY") || stage.equals("GROWTH_LATE")) {
-            double raw = puppyAdultWeightRaw(profile);
-            double clipped = puppyAdultWeight(profile);
-            if (Math.abs(raw - clipped) > 1e-9) warnings.add("WEIGHT_CLIPPED");
+        if (isDogGrowth(stage)) {
+            PuppyGrowth growth = puppyGrowth(profile);
+            if (growth.clipped()) {
+                // 기존 코드값은 유지하고, 계산명세서 3장의 안내 문구를 별도 경고로 더한다.
+                warnings.add("WEIGHT_CLIPPED");
+                warnings.add("체급 또는 체중을 확인하세요: 예상 성체 체중 " + kg(growth.adultRawKg()) + " kg이 " + growth.sizeClass()
+                        + " 범위(" + range(growth.curve()) + ")를 벗어나 " + kg(growth.adultKg()) + " kg으로 절단했습니다.");
+            }
         }
         return List.copyOf(warnings);
     }
@@ -191,19 +187,60 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
                 .sorted(Comparator.comparingDouble(entry -> entry.getValue().lowerKg())).map(Map.Entry::getKey).toList();
     }
 
-    private double puppyPercent(Profile profile) {
-        NiasV3Parameters.SizeClass size = parameters.growthCurve().sizeClasses().get(profile.adultSize());
-        if (size == null) throw new AnalysisException("지원하지 않는 체급입니다: " + profile.adultSize());
-        return Math.min(size.a() * Math.log(weeks(profile)) - size.b(), 100.0);
+    /** 계산명세서 4장의 k. 강아지 성장기는 성장곡선(3장)에서 구한다. */
+    private double k(Profile profile, String stage) {
+        NiasV3Parameters.Energy energy = parameters.energy();
+        return switch (stage) {
+            case "GROWTH_EARLY", "GROWTH_LATE" -> puppyGrowth(profile).k();
+            case "CAT_S1" -> energy.catAdultK() * energy.catStage1Multiplier();
+            case "CAT_S2" -> energy.catAdultK() * energy.catStage2Multiplier();
+            case "CAT_S3" -> energy.catAdultK() * energy.catStage3Multiplier();
+            default -> profile.species() == Species.DOG ? energy.dogAdultK() : energy.catAdultK();
+        };
     }
 
-    private double puppyAdultWeightRaw(Profile profile) {
-        return profile.weightKg() / (puppyPercent(profile) / 100.0);
+    /** 이 생애주기의 열량 계산에 쓰는 매개변수 섹션과 검증 상태. 강아지 성장기는 성장곡선도 쓴다. */
+    private Map<String, VerificationStatus> energyParameterStatus(String stage) {
+        Map<String, VerificationStatus> result = new LinkedHashMap<>();
+        result.put("energy", parameters.energy().verificationStatus());
+        if (isDogGrowth(stage)) result.put("growthCurve", parameters.growthCurve().verificationStatus());
+        return result;
     }
 
-    private double puppyAdultWeight(Profile profile) {
-        NiasV3Parameters.SizeClass size = parameters.growthCurve().sizeClasses().get(profile.adultSize());
-        double value = Math.max(puppyAdultWeightRaw(profile), size.lowerKg());
-        return size.upperKg() == null ? value : Math.min(value, size.upperKg());
+    private boolean energyBlocked(String stage) {
+        return !allowUnverified && energyParameterStatus(stage).containsValue(VerificationStatus.PENDING_VERIFICATION);
+    }
+
+    /**
+     * 강아지 성장 정보(계산명세서 3장).
+     * @param percent      성체 체중 대비 비율(%), 100에서 절단
+     * @param adultRawKg   예상 성체 체중 원값
+     * @param adultKg      체급 범위로 절단한 예상 성체 체중(하한 미만이면 하한, 상한 초과면 상한, XXL은 하한만)
+     * @param clipped      원값이 체급 범위를 벗어났는지(절단은 k에 영향을 주지 않는다)
+     */
+    private record PuppyGrowth(String sizeClass, NiasV3Parameters.SizeClass curve, double percent,
+                               double adultRawKg, double adultKg, boolean clipped, double k, boolean largeBreedCalcium) {}
+
+    private PuppyGrowth puppyGrowth(Profile profile) {
+        NiasV3Parameters.SizeClass curve = parameters.growthCurve().sizeClasses().get(profile.adultSize());
+        if (curve == null) throw new AnalysisException("지원하지 않는 체급입니다: " + profile.adultSize()); // validate에서 먼저 막는다
+        double percent = Math.min(curve.a() * Math.log(weeks(profile)) - curve.b(), 100.0);
+        double adultRaw = profile.weightKg() / (percent / 100.0);
+        double adult = Math.max(adultRaw, curve.lowerKg());
+        if (curve.upperKg() != null) adult = Math.min(adult, curve.upperKg());
+        boolean clipped = adultRaw < curve.lowerKg() || (curve.upperKg() != null && adultRaw > curve.upperKg());
+        NiasV3Parameters.Energy energy = parameters.energy();
+        double k = energy.puppyIntercept() - energy.puppySlope() * (percent / 100.0);
+        return new PuppyGrowth(profile.adultSize(), curve, percent, adultRaw, adult, clipped, k,
+                adult >= parameters.largeBreedCalcium().expectedAdultWeightAtLeastKg());
+    }
+
+    private static String range(NiasV3Parameters.SizeClass curve) {
+        return curve.upperKg() == null ? kg(curve.lowerKg()) + " kg 초과" : kg(curve.lowerKg()) + "~" + kg(curve.upperKg()) + " kg";
+    }
+
+    /** 경고 문구용 표시값: 소수 둘째 자리 반올림, 끝자리 0 제거. */
+    private static String kg(double value) {
+        return java.math.BigDecimal.valueOf(value).setScale(2, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
     }
 }
