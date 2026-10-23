@@ -195,7 +195,9 @@ public class NiasV3Strategy implements NutritionStandardStrategy {
     @Override public List<String> analysisWarnings(Profile profile, String stage) {
         List<String> warnings = new ArrayList<>();
         if (parameterVerification().containsValue(VerificationStatus.PENDING_VERIFICATION))
-            warnings.add("매개변수 미검증: NIAS-v3 매개변수(" + parameters.parameterVersion() + ")는 원문 대조 전이라 기준 열량은 참고값입니다.");
+            warnings.add(allowUnverified
+                    ? "매개변수 미검증: NIAS-v3 매개변수(" + parameters.parameterVersion() + ")는 원문 대조 전이라 기준 열량은 참고값입니다."
+                    : "매개변수 미검증: NIAS-v3 매개변수(" + parameters.parameterVersion() + ")는 원문 대조 전이라 기준 열량과 영양 기준선을 계산하지 않았습니다.");
         if (profile.weightKg() > (profile.species() == Species.DOG ? 100 : 15)) warnings.add("WEIGHT_UNUSUAL");
         if (isDogGrowth(stage)) {
             PuppyGrowth growth = puppyGrowth(profile);

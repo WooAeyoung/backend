@@ -156,6 +156,8 @@ class StandardProfileContractTest {
         JsonNode puppy = call("/api/v1/analyses", request("DOG", 3, 12, "WEEK", ",\"adultSize\":\"S\"", DOG_FEED, "NIAS_V3"));
         assertEquals("GROWTH_EARLY", puppy.get("lifeStage").asText());
         assertTrue(puppy.get("referenceEnergyKcal").isNull());
+        assertTrue(puppy.get("warnings").toString().contains("기준 열량과 영양 기준선을 계산하지 않았습니다."));
+        assertFalse(puppy.get("warnings").toString().contains("기준 열량은 참고값입니다."));
         for (JsonNode row : puppy.get("nutrients")) {
             String status = row.get("status").asText();
             assertTrue(Set.of("UNVERIFIED_STANDARD", "NO_STANDARD", "UNIT_CONVERSION_UNSUPPORTED").contains(status), row.get("nutrientId").asText());

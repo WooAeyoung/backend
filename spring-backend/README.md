@@ -107,7 +107,7 @@ NIAS 프로필에서만 나오는 성분 상태:
 
 `blocked`가 `true`이면 검증 대기 매개변수에서 나온 숫자는 모두 `null`이고, `lifeStage`·`kSource`·`blockedReason`·`parameterVerification`·`puppyGrowth.sizeClass`만 채워집니다. 숫자는 반올림하지 않은 값입니다.
 
-추천(`POST /api/v1/recommendations`): `standardProfile`, `parameterVersion`, `parameterVerification`, `standardsVerification`, `warnings`. `NIAS_V3`는 추천식(BE-V3-012~013)이 없어 `items: []`와 이유 경고를 돌려줍니다.
+추천(`POST /api/v1/recommendations`): `standardProfile`, `parameterVersion`, `parameterVerification`, `standardsVerification`, `warnings`. `NIAS_V3`는 검증 대기 매개변수가 있는 운영 설정에서는 `items: []`와 이유 경고를 돌려주며, 검증용 설정(`allow-unverified=true`)에서는 부족 성분 보완·중복 성분 감점 점수식으로 후보를 정렬합니다.
 
 `GET /api/v1/nutrients?standardProfile=NIAS_V3`는 44개 전체(`implemented`로 분석 대상 18개 표시)를, `FEDIAF_2025`는 6개를 기준값 레코드와 함께 돌려줍니다. 쿼리를 빼면 기존 응답과 같습니다.
 
