@@ -156,12 +156,43 @@ class StandardProfileContractTest {
         JsonNode puppy = call("/api/v1/analyses", request("DOG", 3, 12, "WEEK", ",\"adultSize\":\"S\"", DOG_FEED, "NIAS_V3"));
         assertEquals("GROWTH_EARLY", puppy.get("lifeStage").asText());
         assertTrue(puppy.get("referenceEnergyKcal").isNull());
+        assertTrue(puppy.get("warnings").toString().contains("기준 열량과 영양 기준선을 계산하지 않았습니다."));
+        assertFalse(puppy.get("warnings").toString().contains("기준 열량은 참고값입니다."));
         for (JsonNode row : puppy.get("nutrients")) {
             String status = row.get("status").asText();
             assertTrue(Set.of("UNVERIFIED_STANDARD", "NO_STANDARD", "UNIT_CONVERSION_UNSUPPORTED").contains(status), row.get("nutrientId").asText());
         }
         assertTrue(puppy.get("warnings").toString().contains("매개변수 미검증"));
         assertEquals("UNSUPPORTED", puppy.get("ratioApplicability").get("calciumPhosphorus").asText());
+    }
+
+    @Test void niasEnergyBasisShowsStageAndBlockReasonWithoutUnverifiedNumbers() throws Exception {
+        JsonNode puppy = call("/api/v1/analyses", request("DOG", 3, 12, "WEEK", ",\"adultSize\":\"S\"", DOG_FEED, "NIAS_V3"));
+        JsonNode basis = puppy.get("energyBasis");
+        assertEquals("GROWTH_EARLY", basis.get("lifeStage").asText());
+        assertEquals("PUPPY_GROWTH_CURVE", basis.get("kSource").asText());
+        assertTrue(basis.get("blocked").asBoolean());
+        assertTrue(basis.get("blockedReason").asText().contains("매개변수 미검증: energy, growthCurve"), basis.toString());
+        for (String field : List.of("k", "exponent", "referenceEnergyKcal", "adultK", "catGrowthMultiplier")) assertTrue(basis.get(field).isNull(), field);
+        assertEquals("PENDING_VERIFICATION", basis.get("parameterVerification").get("growthCurve").asText());
+        JsonNode growth = basis.get("puppyGrowth");
+        assertEquals("S", growth.get("sizeClass").asText());
+        for (String field : List.of("a", "b", "percentOfAdultWeight", "expectedAdultWeightRawKg", "expectedAdultWeightKg", "clipped", "sizeRange", "largeBreedCalcium"))
+            assertTrue(growth.get(field).isNull(), field);
+        assertTrue(puppy.get("referenceEnergyKcal").isNull());
+
+        JsonNode kitten = call("/api/v1/analyses", request("CAT", 1.5, 3, "MONTH", "", "{\"productId\":\"feed-balanced-cat\",\"dailyAmount\":40,\"unit\":\"G\"}", "NIAS_V3")).get("energyBasis");
+        assertEquals("CAT_S1", kitten.get("lifeStage").asText());
+        assertEquals("CAT_GROWTH_MULTIPLIER", kitten.get("kSource").asText());
+        assertTrue(kitten.get("blocked").asBoolean());
+        assertTrue(kitten.get("blockedReason").asText().contains("매개변수 미검증: energy"));
+        assertTrue(kitten.get("k").isNull() && kitten.get("catGrowthMultiplier").isNull() && kitten.get("puppyGrowth").isNull());
+    }
+
+    @Test void fediafAnalysisAddsNullEnergyBasisOnly() throws Exception {
+        JsonNode analysis = call("/api/v1/analyses", ADULT_DOG);
+        assertTrue(analysis.has("energyBasis") && analysis.get("energyBasis").isNull());
+        assertTrue(analysis.get("referenceEnergyKcal").isNumber());
     }
 
     // ---- 전체 영양소 조회와 빈칸 null

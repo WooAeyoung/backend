@@ -122,6 +122,7 @@ public class NutritionService {
         putProfileFields(result, strategy);
         result.put("ratioApplicability", Map.of("calciumPhosphorus", calciumPhosphorusApplicability));
         result.put("verificationSummary", verificationSummary);
+        result.put("energyBasis", strategy.energyBasis(profile, stage, kcal));
         return result;
     }
 
@@ -330,8 +331,9 @@ public class NutritionService {
         if (from == null || to == null) throw new AnalysisException("변환할 수 없는 단위입니다: " + source + " → " + target);
         return value * from / to;
     }
-    private static String classify(double total, Limit line) {
-        if (line.minimum() == null && line.upper() == null) return "NO_STANDARD";
+    /** 계산명세서 7장 judge. 하한·주의선·상한이 모두 null일 때만 기준 없음이다(주의선만 있는 성분도 판정한다). */
+    static String classify(double total, Limit line) {
+        if (line.minimum() == null && line.upper() == null && line.caution() == null) return "NO_STANDARD";
         if (line.minimum() != null && total < line.minimum()) return "DEFICIENT";
         if (line.upper() != null && total > line.upper()) return "EXCESS";
         if (line.caution() != null && total >= line.caution()) return "CAUTION";

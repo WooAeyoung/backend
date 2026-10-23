@@ -22,6 +22,8 @@ public interface NutritionStandardStrategy {
     String lifeStage(Profile profile);
     /** 하루 기준 열량(kcal). 이 프로필에서 계산하지 않는 생애주기는 null. */
     Double energy(Profile profile, String stage);
+    /** 분석 응답 energyBasis: 기준 열량의 계산 근거(생애주기, k와 그 근거, 지수, 성장곡선). 제공하지 않는 프로필은 null. */
+    default Map<String, Object> energyBasis(Profile profile, String stage, Double kcal) { return null; }
     /** 분석 대상 성분별 기준선과 근거. */
     Map<String, NutrientLine> lines(Profile profile, String stage, Double kcal);
     /** 개의 Ca:P를 판정하지 않는 이유(UNSUPPORTED, UNVERIFIED_STANDARD). 판정하면 null. */
