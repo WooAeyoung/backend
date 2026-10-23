@@ -1,0 +1,51 @@
+{
+  "version": "units-v3",
+  "sourceDocument": "docs/v3/영양성분_분석처리기준_v3.md 7.3, docs/v3/영양소별_처리기준_일람_v3.xlsx 단위 환산 시트",
+  "massUnits": [
+    {"unit": "g", "gramsExponent": 0, "source": "처리기준 v3 7.3(2) 접두 환산: 1 g = 1,000 mg = 1,000,000 µg"},
+    {"unit": "mg", "gramsExponent": -3, "source": "처리기준 v3 7.3(2) 접두 환산: 1 g = 1,000 mg = 1,000,000 µg"},
+    {"unit": "µg", "gramsExponent": -6, "source": "처리기준 v3 7.3(2) 접두 환산: 1 g = 1,000 mg = 1,000,000 µg"}
+  ],
+  "unitAliases": [
+    {"alias": "g", "unit": "g", "source": "처리기준 v3 7.3(2)"},
+    {"alias": "mg", "unit": "mg", "source": "처리기준 v3 7.3(2)"},
+    {"alias": "µg", "unit": "µg", "source": "처리기준 v3 7.3(2)"},
+    {"alias": "μg", "unit": "µg", "source": "처리기준 v3 7.3(2) — 그리스 문자 뮤(U+03BC)를 마이크로 기호(U+00B5)로 정규화"},
+    {"alias": "ug", "unit": "µg", "source": "처리기준 v3 7.3(2) — ASCII 표기"},
+    {"alias": "mcg", "unit": "µg", "source": "처리기준 v3 7.3(2): 라벨이 mcg로 적힌 것은 µg과 같다"},
+    {"alias": "iu", "unit": "IU", "source": "처리기준 v3 7.3(4): 라벨이 IU로 적혀 있으면 그대로 저장"},
+    {"alias": "%", "unit": "%", "source": "처리기준 v3 7.3(3): % ÷ 100 → 1 g당 g"},
+    {"alias": "ppm", "unit": "ppm", "source": "처리기준 v3 7.3(3): ppm = mg/kg"}
+  ],
+  "labelBases": [
+    {"basis": "PER_SERVING", "divisor": 1, "perGram": false, "requires": null, "source": "처리기준 v3 7.3(3): mg/정·캡슐·스쿱·포 — 그대로(1회 제공량당)"},
+    {"basis": "PER_100G", "divisor": 100, "perGram": true, "requires": null, "source": "처리기준 v3 7.3(3): mg/100 g ÷ 100 → 1 g당"},
+    {"basis": "PERCENT", "divisor": 100, "perGram": true, "requires": null, "source": "처리기준 v3 7.3(3): % ÷ 100 → 1 g당 g"},
+    {"basis": "PER_KG", "divisor": 1000, "perGram": true, "requires": null, "source": "처리기준 v3 7.3(3): mg/kg, IU/kg, ppm ÷ 1000 → 1 g당"},
+    {"basis": "PER_1000KCAL", "divisor": 1000, "perGram": true, "requires": "ENERGY", "source": "처리기준 v3 7.3(3): g·mg/1000 kcal × 사료 대사에너지(kcal/g) ÷ 1000 → 1 g당. kcal/kg 값이 없으면 정보 없음"},
+    {"basis": "DRY_MATTER_PERCENT", "divisor": 100, "perGram": true, "requires": "MOISTURE", "source": "처리기준 v3 7.3(3): 건물 기준(DM %) — 값 × (1 − 수분%) 후 % 환산. 수분 값이 없으면 정보 없음"}
+  ],
+  "iuFactors": [
+    {"nutrient": "VITAMIN_A", "form": "RETINOL", "amount": 0.3, "unit": "µg", "iu": 1, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: 레티놀(비타민 A 알콜) 0.3 µg = 1 IU"},
+    {"nutrient": "VITAMIN_A", "form": "RETINYL_ACETATE", "amount": 0.344, "unit": "µg", "iu": 1, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: 비타민 A 아세테이트 0.344 µg = 1 IU"},
+    {"nutrient": "VITAMIN_A", "form": "RETINYL_PROPIONATE", "amount": 0.359, "unit": "µg", "iu": 1, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: 비타민 A 프로피온산 0.359 µg = 1 IU"},
+    {"nutrient": "VITAMIN_A", "form": "RETINYL_PALMITATE", "amount": 0.55, "unit": "µg", "iu": 1, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: 비타민 A 팔미테이트 0.55 µg = 1 IU"},
+    {"nutrient": "VITAMIN_A", "form": "RETINOL_EQUIVALENT", "amount": 1, "unit": "µg", "iu": 3.33, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: 레티놀 당량(RE) 1 µg RE = 3.33 IU"},
+    {"nutrient": "VITAMIN_A", "form": "UNKNOWN_ASSUME_RETINOL_EQUIVALENT", "amount": 1, "unit": "µg", "iu": 3.33, "species": null, "excluded": false, "assumed": true, "note": "원료 미상, 레티놀 당량(RE)으로 간주", "source": "처리기준 v3 7.3(4), 영양표준 표 7-5의 레티놀 당량(RE) 1 µg = 3.33 IU. 간주 선택은 Issue #3 결정(사용자가 명시적으로 고른 경우만)"},
+    {"nutrient": "VITAMIN_A", "form": "BETA_CAROTENE", "amount": 1, "unit": "mg", "iu": 833, "species": "DOG", "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: 베타카로틴 개 1 mg = 833 IU"},
+    {"nutrient": "VITAMIN_A", "form": "BETA_CAROTENE", "amount": 1, "unit": "mg", "iu": 0, "species": "CAT", "excluded": true, "assumed": false, "note": "고양이는 베타카로틴을 비타민 A로 전환하지 못해 비타민 A에 더하지 않음", "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: 베타카로틴 고양이 환산하지 않음"},
+    {"nutrient": "VITAMIN_D", "form": "CHOLECALCIFEROL", "amount": 1, "unit": "µg", "iu": 40, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: D3(콜레칼시페롤) 1 µg = 40 IU"},
+    {"nutrient": "VITAMIN_D", "form": "UNKNOWN_ASSUME_CHOLECALCIFEROL", "amount": 1, "unit": "µg", "iu": 40, "species": null, "excluded": false, "assumed": true, "note": "원료 미상, D3(콜레칼시페롤)로 간주", "source": "처리기준 v3 7.3(4), 영양표준 표 7-5의 D3 1 µg = 40 IU. 간주 선택은 Issue #3 결정(사용자가 명시적으로 고른 경우만)"},
+    {"nutrient": "VITAMIN_E", "form": "DL_ALPHA_TOCOPHERYL_ACETATE", "amount": 1, "unit": "mg", "iu": 1.00, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: dl-알파-토코페롤 아세테이트 1 mg = 1.00 IU"},
+    {"nutrient": "VITAMIN_E", "form": "D_ALPHA_TOCOPHEROL", "amount": 1, "unit": "mg", "iu": 1.49, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: d-알파-토코페롤 1 mg = 1.49 IU"},
+    {"nutrient": "VITAMIN_E", "form": "D_ALPHA_TOCOPHERYL_ACETATE", "amount": 1, "unit": "mg", "iu": 1.36, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: d-알파-토코페롤 아세테이트 1 mg = 1.36 IU"},
+    {"nutrient": "VITAMIN_E", "form": "DL_ALPHA_TOCOPHEROL", "amount": 1, "unit": "mg", "iu": 1.10, "species": null, "excluded": false, "assumed": false, "note": null, "source": "처리기준 v3 7.3(4), 영양표준 표 7-5: dl-알파-토코페롤 1 mg = 1.10 IU"},
+    {"nutrient": "VITAMIN_E", "form": "UNKNOWN_ASSUME_DL_ALPHA_TOCOPHERYL_ACETATE", "amount": 1, "unit": "mg", "iu": 1.00, "species": null, "excluded": false, "assumed": true, "note": "원료 미상, dl-알파-토코페롤 아세테이트로 간주", "source": "처리기준 v3 7.3(4): 원료 미표기 '비타민 E ○ mg'은 dl-알파-토코페롤 아세테이트로 간주(1 mg = 1 IU). 간주 선택은 Issue #3 결정(사용자가 명시적으로 고른 경우만)"}
+  ],
+  "omega3": {
+    "target": "EPA_DHA",
+    "components": ["EPA", "DHA"],
+    "totalOnly": "OMEGA3",
+    "source": "처리기준 v3 7.3(5): EPA·DHA가 나뉘어 있으면 더해서 EPA+DHA. '오메가-3 ○ mg'만 있으면 EPA+DHA는 정보 없음(알파-리놀렌산 혼재 가능)"
+  }
+}
