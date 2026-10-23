@@ -3,6 +3,9 @@ package kr.co.wooaeyoung.api;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import kr.co.wooaeyoung.standards.StandardProfile;
+import kr.co.wooaeyoung.units.LabelBasis;
+import kr.co.wooaeyoung.units.LabelValue;
+import kr.co.wooaeyoung.units.NutrientForm;
 
 import java.util.List;
 import java.util.Map;
@@ -28,14 +31,29 @@ public final class ApiModels {
     }
 
     public record FeedingItem(@NotBlank String productId, @Positive double dailyAmount, @NotBlank String unit) {}
-    public record ManualNutrient(@NotBlank String nutrientId, @PositiveOrZero double amount, @NotBlank String unit) {}
+    /** form·basis·guarantee는 선택값(BE-V3-010). NIAS_V3에서만 쓰고 FEDIAF_2025는 경고와 함께 무시한다. */
+    public record ManualNutrient(@NotBlank String nutrientId, @PositiveOrZero double amount, @NotBlank String unit,
+                                 NutrientForm form, LabelBasis basis, LabelValue.Guarantee guarantee) {
+        public ManualNutrient(String nutrientId, double amount, String unit) { this(nutrientId, amount, unit, null, null, null); }
+        public boolean hasLabelDetail() { return form != null || basis != null || guarantee != null; }
+    }
+    /** moisturePercent(건물 기준 환산)·energyKcalPerKg(1000 kcal당 환산)는 선택값. NIAS_V3에서만 쓴다. */
     public record ManualItem(
             @NotBlank @Size(max = 100) String name,
             @NotNull ProductType type,
             @Positive double servingAmount,
             @NotBlank String servingUnit,
             @Positive double dailyAmount,
-            @NotEmpty List<@Valid ManualNutrient> nutrients) {}
+            @NotEmpty List<@Valid ManualNutrient> nutrients,
+            @DecimalMin("0") @DecimalMax(value = "100", inclusive = false) Double moisturePercent,
+            @Positive Double energyKcalPerKg) {
+        public ManualItem(String name, ProductType type, double servingAmount, String servingUnit, double dailyAmount, List<ManualNutrient> nutrients) {
+            this(name, type, servingAmount, servingUnit, dailyAmount, nutrients, null, null);
+        }
+        public boolean hasLabelDetail() {
+            return moisturePercent != null || energyKcalPerKg != null || nutrients.stream().anyMatch(ManualNutrient::hasLabelDetail);
+        }
+    }
 
     public record AnalysisRequest(
             @Valid @NotNull Profile profile,

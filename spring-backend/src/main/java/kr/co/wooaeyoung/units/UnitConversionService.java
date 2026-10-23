@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * 라벨 값 → 기준 단위(nutrients-master.json baseUnit) 환산(BE-V3-010, 처리기준 v3 7.3).
@@ -145,6 +148,53 @@ public class UnitConversionService {
                 sameUnit ? epa.originalUnit() : baseUnit, sameUnit ? epa.basis() : null, null,
                 baseUnit, "EPA " + epa.formula() + "; DHA " + dha.formula() + "; EPA " + plain(epa.value()) + " + DHA " + plain(dha.value()) + " = " + plain(sum) + " " + baseUnit,
                 source, "EPA·DHA 합산"));
+    }
+
+    /**
+     * 제품 하나의 라벨 전체를 성분 키별 환산 기록으로 바꾼다. EPA·DHA는 EPA_DHA로 합치고(총 오메가3만 있으면 NO_VALUE),
+     * BETA_CAROTENE은 VITAMIN_A에 더한다(고양이는 EXCLUDED). 라벨 키는 nutrients-master.json 키 또는 {@link #LABEL_ONLY}.
+     * UNIT_CONVERSION_UNSUPPORTED 기록도 그대로 돌려주므로 오류로 볼지는 호출하는 쪽이 정한다. 입력이 모순이면 IllegalArgumentException.
+     */
+    public Map<String, Conversion> convertLabels(Map<String, LabelValue> labels, Context context) {
+        if (labels.containsKey("EPA_DHA") && (labels.containsKey("EPA") || labels.containsKey("DHA")))
+            throw new IllegalArgumentException("EPA_DHA와 EPA·DHA를 함께 둘 수 없음");
+        Map<String, Conversion> result = new LinkedHashMap<>();
+        Conversion epa = null, dha = null, betaCarotene = null;
+        for (Map.Entry<String, LabelValue> entry : labels.entrySet()) {
+            LabelValue label = entry.getValue();
+            switch (entry.getKey()) {
+                case "OMEGA3" -> {}   // EPA+DHA 결합 단계에서만 쓴다
+                case "EPA" -> epa = convert("EPA_DHA", label, context);
+                case "DHA" -> dha = convert("EPA_DHA", label, context);
+                case "BETA_CAROTENE" -> {
+                    if (label.form() != null && label.form() != NutrientForm.BETA_CAROTENE)
+                        throw new IllegalArgumentException("BETA_CAROTENE의 원료 형태는 BETA_CAROTENE뿐입니다: " + label.form());
+                    betaCarotene = convert("VITAMIN_A", new LabelValue(label.amount(), label.unit(), label.basis(), NutrientForm.BETA_CAROTENE, label.guarantee()), context);
+                }
+                default -> result.put(entry.getKey(), convert(entry.getKey(), label, context));
+            }
+        }
+        LabelValue omega3 = labels.get("OMEGA3");
+        combineEpaDha(epa, dha, omega3 == null ? null : omega3.amount(), omega3 == null ? null : omega3.unit())
+                .ifPresent(conversion -> result.put("EPA_DHA", conversion));
+        if (betaCarotene != null) result.put("VITAMIN_A", addVitaminA(result.get("VITAMIN_A"), betaCarotene));
+        return result;
+    }
+
+    /** 기준값표에는 없지만 라벨에서 받는 성분 ID. OMEGA3(총 오메가3)는 EPA+DHA로 쓰지 않는다. */
+    public static final Set<String> LABEL_ONLY = Set.of("OMEGA3", "EPA", "DHA", "BETA_CAROTENE");
+
+    /** 레티놀류 비타민 A와 베타카로틴(개)을 더한다. 고양이 베타카로틴(EXCLUDED)은 더하지 않는다. */
+    private static Conversion addVitaminA(Conversion vitaminA, Conversion betaCarotene) {
+        if (vitaminA == null || betaCarotene.treatedAsMissing()) return vitaminA == null ? betaCarotene : vitaminA;
+        if (vitaminA.treatedAsMissing()) return betaCarotene;
+        if (!vitaminA.converted()) return vitaminA;
+        if (!betaCarotene.converted()) return betaCarotene;
+        if (vitaminA.perGram() != betaCarotene.perGram()) throw new IllegalArgumentException("VITAMIN_A와 BETA_CAROTENE의 표기 기준(1 g당/1회 제공량당)이 다릅니다.");
+        double sum = vitaminA.value() + betaCarotene.value();
+        return new Conversion(Status.CONVERTED, sum, vitaminA.perGram(), sum, IU, null, vitaminA.form() + "+" + betaCarotene.form(), IU,
+                "비타민 A " + vitaminA.formula() + "; 베타카로틴 " + betaCarotene.formula() + "; " + plain(vitaminA.value()) + " + " + plain(betaCarotene.value()) + " = " + plain(sum) + " IU",
+                vitaminA.source() + "; " + betaCarotene.source(), "비타민 A와 베타카로틴(개) 합산");
     }
 
     private LabelBasis basisOf(String nutrient, LabelBasis requested, String unit) {

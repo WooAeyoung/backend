@@ -33,8 +33,8 @@ import java.util.*;
 @Component
 public class ProductDataRegistry {
     public static final String DEFAULT_LOCATION = "products.json";
-    /** 기준값표에는 없지만 라벨에서 받는 성분 ID. OMEGA3(총 오메가3)는 EPA+DHA로 쓰지 않는다. */
-    public static final Set<String> LABEL_ONLY = Set.of("OMEGA3", "EPA", "DHA", "BETA_CAROTENE");
+    /** 기준값표에는 없지만 라벨에서 받는 성분 ID(UnitConversionService.LABEL_ONLY). */
+    public static final Set<String> LABEL_ONLY = UnitConversionService.LABEL_ONLY;
 
     public enum ContentBasis { PER_SERVING, PER_GRAM }
 
@@ -172,13 +172,12 @@ public class ProductDataRegistry {
             if (blank(detail.unit())) { errors.add("단위가 없음: " + id); return; }
             labels.put(id, new LabelValue(detail.amount(), detail.unit(), detail.basis(), detail.form(), detail.guarantee()));
         });
-        if (labels.containsKey("EPA_DHA") && (labels.containsKey("EPA") || labels.containsKey("DHA"))) errors.add("EPA_DHA와 EPA·DHA를 함께 둘 수 없음");
         if (!errors.isEmpty()) return null;
 
         Map<Species, Map<String, Conversion>> contents = new EnumMap<>(Species.class);
         for (Species species : Species.values()) {
             UnitConversionService.Context context = new UnitConversionService.Context(species, product.moisturePercent(), product.energyKcalPerKg());
-            Map<String, Conversion> converted = convertAll(labels, context, errors);
+            Map<String, Conversion> converted = convertAll(product, labels, context, errors);
             Map<String, Conversion> normalized = new LinkedHashMap<>();
             converted.forEach((id, conversion) -> normalized.put(id, normalize(product, basis, conversion)));
             contents.put(species, Collections.unmodifiableMap(normalized));
@@ -210,59 +209,21 @@ public class ProductDataRegistry {
         }
     }
 
-    private Map<String, Conversion> convertAll(Map<String, LabelValue> labels, UnitConversionService.Context context, List<String> errors) {
-        Map<String, Conversion> result = new LinkedHashMap<>();
-        Conversion epa = null, dha = null, betaCarotene = null;
-        for (Map.Entry<String, LabelValue> entry : labels.entrySet()) {
-            String id = entry.getKey();
-            LabelValue label = entry.getValue();
-            try {
-                switch (id) {
-                    case "OMEGA3" -> {}   // EPA+DHA 결합 단계에서만 쓴다
-                    case "EPA" -> epa = checked(id, units.convert("EPA_DHA", label, context), errors);
-                    case "DHA" -> dha = checked(id, units.convert("EPA_DHA", label, context), errors);
-                    case "BETA_CAROTENE" -> {
-                        if (label.form() != null && label.form() != NutrientForm.BETA_CAROTENE) throw new IllegalArgumentException("BETA_CAROTENE의 원료 형태는 BETA_CAROTENE뿐입니다: " + label.form());
-                        betaCarotene = checked(id, units.convert("VITAMIN_A",
-                                new LabelValue(label.amount(), label.unit(), label.basis(), NutrientForm.BETA_CAROTENE, label.guarantee()), context), errors);
-                    }
-                    default -> result.put(id, checked(id, units.convert(id, label, context), errors));
-                }
-            } catch (IllegalArgumentException error) {
-                errors.add(error.getMessage());
-            }
-        }
-        LabelValue omega3 = labels.get("OMEGA3");
-        try {
-            units.combineEpaDha(epa, dha, omega3 == null ? null : omega3.amount(), omega3 == null ? null : omega3.unit())
-                    .ifPresent(conversion -> result.put("EPA_DHA", conversion));
-        } catch (IllegalArgumentException error) {
-            errors.add(error.getMessage());
-        }
-        if (betaCarotene != null) {
-            try { result.put("VITAMIN_A", addVitaminA(result.get("VITAMIN_A"), betaCarotene)); }
-            catch (IllegalArgumentException error) { errors.add(error.getMessage()); }
-        }
+    /**
+     * 잘못된 단위(환산표에 없는 단위, 질량 성분에 IU 등)와 1 g당 표기인데 1회 제공량이 g가 아닌 경우는 적재 단계 오류다.
+     * 원료·수분·열량 부족(INSUFFICIENT_DATA)은 데이터 상태로 보관한다.
+     */
+    private Map<String, Conversion> convertAll(ProductRecord product, Map<String, LabelValue> labels, UnitConversionService.Context context, List<String> errors) {
+        Map<String, Conversion> result;
+        try { result = units.convertLabels(labels, context); }
+        catch (IllegalArgumentException error) { errors.add(error.getMessage()); return Map.of(); }
+        result.forEach((id, conversion) -> {
+            if (conversion.status() == Status.UNIT_CONVERSION_UNSUPPORTED)
+                errors.add("잘못된 단위: " + id + " " + conversion.originalUnit() + " (" + conversion.note() + ")");
+            if (conversion.perGram() && !"G".equalsIgnoreCase(product.servingUnit()))
+                errors.add(id + ": 1 g당 표기(" + conversion.basis() + ")는 servingUnit이 G일 때만 쓸 수 있음");
+        });
         return result;
-    }
-
-    /** 잘못된 단위(환산표에 없는 단위, 질량 성분에 IU 등)는 적재 단계 오류다. 원료·수분·열량 부족(INSUFFICIENT_DATA)은 데이터 상태로 보관한다. */
-    private static Conversion checked(String id, Conversion conversion, List<String> errors) {
-        if (conversion != null && conversion.status() == Status.UNIT_CONVERSION_UNSUPPORTED) errors.add("잘못된 단위: " + id + " " + conversion.originalUnit() + " (" + conversion.note() + ")");
-        return conversion;
-    }
-
-    /** 레티놀류 비타민 A와 베타카로틴(개)을 더한다. 고양이 베타카로틴(EXCLUDED)은 더하지 않는다. */
-    private static Conversion addVitaminA(Conversion vitaminA, Conversion betaCarotene) {
-        if (vitaminA == null || betaCarotene.treatedAsMissing()) return vitaminA == null ? betaCarotene : vitaminA;
-        if (vitaminA.treatedAsMissing()) return betaCarotene;
-        if (!vitaminA.converted()) return vitaminA;
-        if (!betaCarotene.converted()) return betaCarotene;
-        if (vitaminA.perGram() != betaCarotene.perGram()) throw new IllegalArgumentException("VITAMIN_A와 BETA_CAROTENE의 표기 기준(1 g당/1회 제공량당)이 다릅니다.");
-        double sum = vitaminA.value() + betaCarotene.value();
-        return new Conversion(Status.CONVERTED, sum, vitaminA.perGram(), sum, "IU", null, vitaminA.form() + "+" + betaCarotene.form(), "IU",
-                "비타민 A " + vitaminA.formula() + "; 베타카로틴 " + betaCarotene.formula() + "; " + plain(vitaminA.value()) + " + " + plain(betaCarotene.value()) + " = " + plain(sum) + " IU",
-                vitaminA.source() + "; " + betaCarotene.source(), "비타민 A와 베타카로틴(개) 합산");
     }
 
     /** 사료는 1 g당, 영양제는 1회 제공량당으로 맞춘다(계산명세서 0.4). */

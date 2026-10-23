@@ -119,7 +119,7 @@ class StandardProfileContractTest {
         for (JsonNode row : analysis.get("nutrients")) {
             String status = row.get("status").asText();
             if (row.get("verificationStatus").asText().equals("PENDING_VERIFICATION")) {
-                assertTrue(Set.of("UNVERIFIED_STANDARD", "UNIT_CONVERSION_UNSUPPORTED").contains(status), row.get("nutrientId") + "=" + status);
+                assertTrue(Set.of("UNVERIFIED_STANDARD", "UNIT_CONVERSION_UNSUPPORTED", "INSUFFICIENT_DATA").contains(status), row.get("nutrientId") + "=" + status);
                 for (String line : List.of("minimum", "caution", "upper")) assertTrue(row.get(line).isNull(), row.get("nutrientId") + "." + line);
             } else {
                 assertEquals("NO_STANDARD", status, row.get("nutrientId").asText());
@@ -143,12 +143,14 @@ class StandardProfileContractTest {
 
     @Test void iuNutrientTotalsStayNullWithStatusAndWarning() throws Exception {
         JsonNode analysis = call("/api/v1/analyses", withProfile(ADULT_DOG, "NIAS_V3"));
+        // BE-V3-010: 데모 제품의 비타민 D(µg)·E(mg)는 원료 형태가 없어 추측하지 않는다(UNIT_CONVERSION_UNSUPPORTED → INSUFFICIENT_DATA).
         for (String key : List.of("VITAMIN_D", "VITAMIN_E")) {
             JsonNode row = row(analysis, key);
             assertTrue(row.has("total") && row.get("total").isNull(), key);
-            assertEquals("UNIT_CONVERSION_UNSUPPORTED", row.get("status").asText(), key);
+            assertEquals("INSUFFICIENT_DATA", row.get("status").asText(), key);
         }
-        assertTrue(analysis.get("warnings").toString().contains("단위 환산 미구현(BE-V3-010)"));
+        assertTrue(analysis.get("warnings").toString().contains("정보 부족(INSUFFICIENT_DATA)"));
+        assertEquals(2, analysis.get("verificationSummary").get("insufficientData").asInt());
         assertEquals("FEDIAF-2025.09", call("/api/v1/analyses", ADULT_DOG).get("standardVersion").asText());
     }
 
@@ -160,7 +162,7 @@ class StandardProfileContractTest {
         assertFalse(puppy.get("warnings").toString().contains("기준 열량은 참고값입니다."));
         for (JsonNode row : puppy.get("nutrients")) {
             String status = row.get("status").asText();
-            assertTrue(Set.of("UNVERIFIED_STANDARD", "NO_STANDARD", "UNIT_CONVERSION_UNSUPPORTED").contains(status), row.get("nutrientId").asText());
+            assertTrue(Set.of("UNVERIFIED_STANDARD", "NO_STANDARD", "UNIT_CONVERSION_UNSUPPORTED", "INSUFFICIENT_DATA").contains(status), row.get("nutrientId").asText());
         }
         assertTrue(puppy.get("warnings").toString().contains("매개변수 미검증"));
         assertEquals("UNSUPPORTED", puppy.get("ratioApplicability").get("calciumPhosphorus").asText());

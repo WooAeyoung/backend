@@ -21,14 +21,19 @@ public class NutritionService {
     private static final String IU = "IU";
     /** 합계를 기준 단위로 환산할 수 없음(IU 환산은 BE-V3-010). 합계는 0이 아니라 null이다. */
     static final String UNIT_CONVERSION_UNSUPPORTED = "UNIT_CONVERSION_UNSUPPORTED";
+    /** 환산에 필요한 원료 형태·수분·열량이 없어 추정하지 않음(BE-V3-010, NIAS_V3). 합계는 null이다. */
+    static final String INSUFFICIENT_DATA = "INSUFFICIENT_DATA";
+    static final String FEDIAF_IGNORED_LABEL_FIELDS = "FEDIAF_2025는 원료 형태·표기 기준·수분·열량 입력을 사용하지 않아 무시했습니다.";
 
     private final CatalogService catalog;
     private final StandardsProperties properties;
     private final Map<StandardProfile, NutritionStandardStrategy> strategies;
+    private final NiasIntakeAggregator niasIntake;
 
-    public NutritionService(CatalogService catalog, StandardsProperties properties, List<NutritionStandardStrategy> strategies) {
+    public NutritionService(CatalogService catalog, StandardsProperties properties, List<NutritionStandardStrategy> strategies, NiasIntakeAggregator niasIntake) {
         this.catalog = catalog;
         this.properties = properties;
+        this.niasIntake = niasIntake;
         Map<StandardProfile, NutritionStandardStrategy> byProfile = new EnumMap<>(StandardProfile.class);
         for (NutritionStandardStrategy strategy : strategies)
             if (byProfile.put(strategy.profile(), strategy) != null) throw new IllegalStateException("기준 프로필 전략이 중복되었습니다: " + strategy.profile());
@@ -45,7 +50,9 @@ public class NutritionService {
         String stage = strategy.lifeStage(profile);
         Double kcal = strategy.energy(profile, stage);
         Map<String, NutrientLine> lines = strategy.lines(profile, stage, kcal);
-        Aggregate aggregate = aggregate(request, lines, meta, strategy.feedFactor());
+        boolean nias = strategy.profile() == StandardProfile.NIAS_V3;
+        Aggregate aggregate = nias ? fromNias(niasIntake.aggregate(request, lines, meta, strategy.feedFactor()))
+                : aggregate(request, lines, meta, strategy.feedFactor());
         List<Map<String, Object>> nutrients = new ArrayList<>();
         Map<String, Integer> summary = new LinkedHashMap<>();
         summary.put("deficient", 0); summary.put("adequate", 0); summary.put("caution", 0);
@@ -54,7 +61,8 @@ public class NutritionService {
         Map<String, Integer> verificationSummary = new LinkedHashMap<>();
         for (String key : List.of("judgedWithVerified", "judgedWithUnverified", "noStandard", "unverifiedStandard", "unsupported", "unitConversionUnsupported"))
             verificationSummary.put(key, 0);
-        List<String> unconvertible = new ArrayList<>();
+        if (nias) verificationSummary.put("insufficientData", 0);
+        List<String> unconvertible = new ArrayList<>(), insufficient = new ArrayList<>();
         Map<String, Double> current = new LinkedHashMap<>();
         for (String id : meta.keySet()) {
             Total total = aggregate.totals().get(id);
@@ -64,12 +72,13 @@ public class NutritionService {
             Limit line = nutrientLine.limit();
             String status;
             if (NutrientLine.UNSUPPORTED.equals(nutrientLine.blockedStatus())) status = NutrientLine.UNSUPPORTED;
-            else if (value == null) status = UNIT_CONVERSION_UNSUPPORTED;
+            else if (value == null) status = total.nullStatus != null ? total.nullStatus : UNIT_CONVERSION_UNSUPPORTED;
             else if (nutrientLine.blockedStatus() != null) status = nutrientLine.blockedStatus();
             else status = classify(value, line);
-            if (value == null) unconvertible.add(meta.get(id).name());
+            if (value == null) (INSUFFICIENT_DATA.equals(status) ? insufficient : unconvertible).add(meta.get(id).name());
             String verificationBucket = switch (status) {
                 case NutrientLine.UNSUPPORTED -> "unsupported"; case UNIT_CONVERSION_UNSUPPORTED -> "unitConversionUnsupported";
+                case INSUFFICIENT_DATA -> "insufficientData";
                 case NutrientLine.UNVERIFIED_STANDARD -> "unverifiedStandard";
                 default -> switch (nutrientLine.verificationStatus()) {
                     case VERIFIED -> "judgedWithVerified"; case PENDING_VERIFICATION -> "judgedWithUnverified"; case NOT_APPLICABLE -> "noStandard";
@@ -88,6 +97,7 @@ public class NutritionService {
             row.put("fromFeed", value == null ? null : total.feed); row.put("fromSupplements", value == null ? null : total.supplement); row.put("source", total.source);
             row.put("total", value); row.put("minimum", line.minimum()); row.put("caution", line.caution()); row.put("upper", line.upper()); row.put("status", status);
             row.put("nutrientNo", meta.get(id).nutrientNo()); row.put("verificationStatus", nutrientLine.verificationStatus()); row.put("reference", nutrientLine.reference());
+            if (nias) { row.put("provenance", total.provenance); row.put("unknownContribution", total.unknownContribution); }
             nutrients.add(row);
         }
         Map<String, Object> ratios = new LinkedHashMap<>();
@@ -109,6 +119,9 @@ public class NutritionService {
             warnings.add("기준 미검증: " + unverified + "개 성분의 기준값이 원문 대조 전(PENDING_VERIFICATION)이라 판정에 쓰지 않았습니다. 공식 기준이 아닙니다.");
         if (!unconvertible.isEmpty())
             warnings.add("단위 환산 미구현(BE-V3-010): " + String.join(", ", unconvertible) + "은(는) 제품 단위를 기준 단위로 환산할 수 없어 합계를 null로 둡니다.");
+        if (!insufficient.isEmpty())
+            warnings.add("정보 부족(INSUFFICIENT_DATA): " + String.join(", ", insufficient) + "은(는) 원료 형태·수분·열량 정보가 없어 추정하지 않고 합계를 null로 둡니다.");
+        if (!nias && request.safeManualItems().stream().anyMatch(ManualItem::hasLabelDetail)) warnings.add(FEDIAF_IGNORED_LABEL_FIELDS);
         if (verificationSummary.get("judgedWithUnverified") > 0)
             warnings.add("테스트 설정(allow-unverified=true): 검증 대기 기준값으로 판정했습니다. 공식 기준이 아닙니다.");
         Map<String, Object> result = new LinkedHashMap<>();
@@ -357,7 +370,22 @@ public class NutritionService {
         }
         return found ? minimum : 1d;
     }
-    private static final class Total { double feed; double supplement; boolean unconvertible; String source = "ACTUAL"; void add(String type, double value) { if (type.equals("FEED")) feed += value; else supplement += value; } }
+    private static final class Total { double feed; double supplement; boolean unconvertible; String source = "ACTUAL";
+        // NIAS_V3 전용(BE-V3-009): 합계를 만들지 못한 사유, 정보 없음 기여 여부, 제품별 근거.
+        String nullStatus; boolean unknownContribution; List<Map<String, Object>> provenance;
+        void add(String type, double value) { if (type.equals("FEED")) feed += value; else supplement += value; } }
+    /** NIAS 성분별 합산 결과를 기존 Aggregate 형태로 옮긴다. 합계를 만들지 못한 성분은 unconvertible로 두어 total이 null이 된다. */
+    private static Aggregate fromNias(NiasIntakeAggregator.Result result) {
+        Map<String, Total> totals = new LinkedHashMap<>();
+        result.totals().forEach((id, intake) -> {
+            Total total = new Total();
+            total.feed = intake.feed(); total.supplement = intake.supplement(); total.source = intake.source();
+            total.unconvertible = intake.nullStatus() != null; total.nullStatus = intake.nullStatus();
+            total.unknownContribution = intake.unknownContribution(); total.provenance = intake.provenance();
+            totals.put(id, total);
+        });
+        return new Aggregate(totals, result.estimated(), result.warnings(), result.contributions());
+    }
     private record Aggregate(Map<String, Total> totals, boolean estimated, List<String> warnings, List<Map<String, Object>> contributions) {}
     private record Candidate(double score, long fixed, double margin, long overlap, CatalogService.Product product,
                              double dailyAmount, Map<String, Double> projected, Map<String, String> statuses) implements Comparable<Candidate> {
