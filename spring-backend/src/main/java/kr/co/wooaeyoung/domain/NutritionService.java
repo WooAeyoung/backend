@@ -123,7 +123,7 @@ public class NutritionService {
             warnings.add("정보 부족(INSUFFICIENT_DATA): " + String.join(", ", insufficient) + "은(는) 원료 형태·수분·열량 정보가 없어 추정하지 않고 합계를 null로 둡니다.");
         if (!nias && request.safeManualItems().stream().anyMatch(ManualItem::hasLabelDetail)) warnings.add(FEDIAF_IGNORED_LABEL_FIELDS);
         if (verificationSummary.get("judgedWithUnverified") > 0)
-            warnings.add("테스트 설정(allow-unverified=true): 검증 대기 기준값으로 판정했습니다. 공식 기준이 아닙니다.");
+            warnings.add("참고 판정: 원문 대조가 끝나지 않은 기준값을 사용했습니다. 공식 기준이나 수의학적 진단·처방이 아닙니다.");
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("traceId", fingerprint(request) + "-" + UUID.randomUUID().toString().substring(0, 8));
         result.put("standardVersion", strategy.profile().version());
