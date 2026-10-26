@@ -49,7 +49,7 @@ class StandardsStartupValidationTest {
         assertFails("standards-invalid/fediaf-parameters-unknown-field.json", "unexpected");
     }
 
-    @Test void allowUnverifiedIsOffByDefault() {
+    @Test void allowUnverifiedIsOffWithoutApplicationConfiguration() {
         guard.run(context -> {
             assertThat(context).hasNotFailed();
             assertThat(context.getBean(StandardsProperties.class).allowUnverified()).isFalse();
