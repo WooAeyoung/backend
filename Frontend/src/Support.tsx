@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import NearestVets from './NearestVets'
+import PetCompanion from './PetCompanion'
 
 const FAQ = [
   { q: '분석 결과는 진단인가요?', a: '아니요. 우애영은 입력한 급여량과 영양성분을 비교하는 정보 제공 도구이며, 질병 진단이나 처방을 제공하지 않습니다.' },
@@ -32,5 +33,6 @@ export default function Support() {
     </div>
     <p className="note">Beta 자동 답변은 미리 정의된 FAQ를 바탕으로 안내합니다. 수의학적 진단·치료·처방을 대체하지 않습니다.</p>
     <NearestVets />
+    <PetCompanion />
   </div>
 }
