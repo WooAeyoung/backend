@@ -10,7 +10,7 @@ import java.util.*;
 @Service
 public class VetClinicService {
     private final String kakaoKey;
-    private final RestClient http = RestClient.create();
+    private RestClient http() { return RestClient.create(); }
 
     public VetClinicService(@Value("${app.kakao-rest-api-key:}") String kakaoKey) {
         this.kakaoKey = kakaoKey == null ? "" : kakaoKey.trim();
@@ -25,7 +25,7 @@ public class VetClinicService {
 
     public List<Map<String, Object>> nearest(double lat, double lon, int limit) {
         if (!kakaoKey.isBlank()) {
-            JsonNode body = http.get().uri(uri -> uri.scheme("https").host("dapi.kakao.com").path("/v2/local/search/keyword.json")
+            JsonNode body = http().get().uri(uri -> uri.scheme("https").host("dapi.kakao.com").path("/v2/local/search/keyword.json")
                     .queryParam("query", "동물병원").queryParam("x", lon).queryParam("y", lat)
                     .queryParam("radius", 20000).queryParam("sort", "distance").queryParam("size", limit).build())
                     .header("Authorization", "KakaoAK " + kakaoKey).retrieve().body(JsonNode.class);
