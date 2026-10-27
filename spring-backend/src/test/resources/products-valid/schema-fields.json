@@ -1,0 +1,24 @@
+{
+  "products": [
+    {"id":"feed-label","name":"라벨 사료","brand":"테스트","type":"FEED","servingAmount":100,"servingUnit":"G","dataQuality":"COMPLETE",
+     "hasDetail":true,"contentBasis":"PER_SERVING","moisturePercent":10,"energyKcalPerKg":3800,
+     "tags":["피부"],"dataSource":"테스트 라벨","updatedAt":"2026-10-23",
+     "nutrients":{"ZINC":12},
+     "nutrientDetails":{
+       "CALCIUM":{"amount":1.2,"unit":"%"},
+       "PHOSPHORUS":{"amount":0.9,"unit":"%","guarantee":"MIN"},
+       "VITAMIN_D":{"amount":2500,"unit":"IU","basis":"PER_KG"},
+       "VITAMIN_A":{"amount":344,"unit":"mcg","form":"RETINYL_ACETATE"},
+       "VITAMIN_E":{"amount":10,"unit":"mg"},
+       "COPPER":{"amount":3,"unit":"mg","basis":"PER_1000KCAL"},
+       "MAGNESIUM":{"amount":0.2,"unit":"%","basis":"DRY_MATTER_PERCENT"},
+       "EPA":{"amount":120,"unit":"mg"},
+       "DHA":{"amount":80,"unit":"mg"}
+     }},
+    {"id":"supp-beta","name":"베타카로틴","brand":"테스트","type":"SUPPLEMENT","servingAmount":1,"servingUnit":"TABLET","dataQuality":"COMPLETE",
+     "recommendedDailyAmount":1,"doseByWeight":[{"maxKg":5,"dose":1},{"maxKg":15,"dose":2},{"maxKg":null,"dose":3}],
+     "nutrientDetails":{"BETA_CAROTENE":{"amount":1,"unit":"mg"},"OMEGA3":{"amount":300,"unit":"mg"}}},
+    {"id":"supp-per-gram","name":"분말","brand":"테스트","type":"SUPPLEMENT","servingAmount":2,"servingUnit":"G","dataQuality":"COMPLETE",
+     "contentBasis":"PER_GRAM","nutrients":{"ZINC":5}}
+  ]
+}

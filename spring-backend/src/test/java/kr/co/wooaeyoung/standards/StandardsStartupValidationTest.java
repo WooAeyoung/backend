@@ -49,19 +49,22 @@ class StandardsStartupValidationTest {
         assertFails("standards-invalid/fediaf-parameters-unknown-field.json", "unexpected");
     }
 
-    @Test void allowUnverifiedIsOffByDefault() {
+    @Test void allowUnverifiedIsOffWithoutApplicationConfiguration() {
         guard.run(context -> {
             assertThat(context).hasNotFailed();
             assertThat(context.getBean(StandardsProperties.class).allowUnverified()).isFalse();
         });
     }
 
-    @Test void allowUnverifiedOutsideTestProfileFailsContext() {
+    @Test void allowUnverifiedCanBeExplicitlyEnabledOutsideTestProfile() {
         guard.withPropertyValues("wooaeyoung.standards.allow-unverified=true").run(context -> {
-            assertThat(context).hasFailed();
-            assertThat(context.getStartupFailure()).rootCause().hasMessageContaining("test 프로필에서만 허용");
+            assertThat(context).hasNotFailed();
+            assertThat(context.getBean(StandardsProperties.class).allowUnverified()).isTrue();
         });
-        guard.withPropertyValues("wooaeyoung.standards.allow-unverified=true", "spring.profiles.active=prod").run(context -> assertThat(context).hasFailed());
+        guard.withPropertyValues("wooaeyoung.standards.allow-unverified=true", "spring.profiles.active=prod").run(context -> {
+            assertThat(context).hasNotFailed();
+            assertThat(context.getBean(StandardsProperties.class).allowUnverified()).isTrue();
+        });
     }
 
     @Test void allowUnverifiedInTestProfileStarts() {

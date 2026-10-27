@@ -1,0 +1,8 @@
+{
+  "products": [
+    {"id":"p1","name":"x","brand":"테스트","dataQuality":"COMPLETE","type":"SUPPLEMENT","servingAmount":1,"servingUnit":"TABLET",
+     "calories":1,
+     "nutrientDetails":{"ZINC":{"amount":4,"unit":"mg","labelText":"아연 4 mg"}},
+     "doseByWeight":[{"maxKg":10,"dose":1,"memo":"소형"},{"maxKg":null,"dose":2}]}
+  ]
+}

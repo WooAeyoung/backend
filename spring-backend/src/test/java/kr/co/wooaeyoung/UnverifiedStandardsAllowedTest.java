@@ -55,7 +55,7 @@ class UnverifiedStandardsAllowedTest {
         assertLine(t1, "VITAMIN_A", 773.2, 38661d, 61858d, 1);
         assertLine(t1, "ZINC", 11.13, 35.10, null, 0.01);
         assertTrue(t1.get("standardsVerification").get("allowUnverified").asBoolean());
-        assertTrue(t1.get("warnings").toString().contains("테스트 설정(allow-unverified=true)"));
+        assertTrue(t1.get("warnings").toString().contains("참고 판정"));
         assertTrue(t1.get("verificationSummary").get("judgedWithUnverified").asInt() > 0);
         // 주의선만 있는 성분(구리·철·망간·아연)은 기준 없음이 아니라 하한·주의선으로 판정한다.
         for (String key : new String[] {"COPPER", "IRON", "MANGANESE", "ZINC"}) {
