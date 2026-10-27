@@ -7,7 +7,11 @@ import java.util.*;
 
 @Service
 public class JarvisService {
+    private final JarvisAiService ai;
+    public JarvisService(JarvisAiService ai) { this.ai = ai; }
     public Map<String, Object> answer(ApiModels.JarvisRequest request) {
+        Optional<String> generated = ai.complete(request.message(), request.analysis(), request.provider());
+        if (generated.isPresent()) return reply("AI_CHAT", null, generated.get());
         String phrase = request.message().replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
         if (phrase.matches(".*(오늘|최근).*(분석|결과).*(요약|설명).*|.*(요약|설명).*(분석|결과).*")) {
             return reply("ANALYSIS_SUMMARY", "analysis", describeAnalysis(request.analysis()));
