@@ -29,11 +29,14 @@ public class NutritionService {
     private final StandardsProperties properties;
     private final Map<StandardProfile, NutritionStandardStrategy> strategies;
     private final NiasIntakeAggregator niasIntake;
+    private final NiasRecommendationService niasRecommendations;
 
-    public NutritionService(CatalogService catalog, StandardsProperties properties, List<NutritionStandardStrategy> strategies, NiasIntakeAggregator niasIntake) {
+    public NutritionService(CatalogService catalog, StandardsProperties properties, List<NutritionStandardStrategy> strategies, NiasIntakeAggregator niasIntake,
+                            NiasRecommendationService niasRecommendations) {
         this.catalog = catalog;
         this.properties = properties;
         this.niasIntake = niasIntake;
+        this.niasRecommendations = niasRecommendations;
         Map<StandardProfile, NutritionStandardStrategy> byProfile = new EnumMap<>(StandardProfile.class);
         for (NutritionStandardStrategy strategy : strategies)
             if (byProfile.put(strategy.profile(), strategy) != null) throw new IllegalStateException("기준 프로필 전략이 중복되었습니다: " + strategy.profile());
@@ -151,6 +154,19 @@ public class NutritionService {
             result.put("message", "현재 기준 프로필에서는 추천 후보를 계산하지 않습니다.");
             result.put("items", List.of()); result.put("excluded", List.of()); result.put("usesEstimatedFeed", base.get("usesEstimatedFeed"));
             putProfileFields(result, strategy); result.put("warnings", List.of(unsupported));
+            return result;
+        }
+        if (strategy.profile() == StandardProfile.NIAS_V3) {
+            // NIAS_V3 추천 A안(BE-V3-012·013)은 NiasRecommendationService가 계산한다. 아래 기존 경로는 FEDIAF_2025에만 쓴다.
+            NiasRecommendationService.Result nias = niasRecommendations.recommend(request, base, strategy);
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("traceId", base.get("traceId")); result.put("standardVersion", strategy.profile().version());
+            result.put("message", nias.message());
+            result.put("items", nias.items()); result.put("excluded", nias.excluded()); result.put("usesEstimatedFeed", base.get("usesEstimatedFeed"));
+            // 기존 NIAS 추천 경로의 warnings(차단되지 않으면 빈 목록)를 유지하고, 추천 계산이 만든 경고를 뒤에 더한다.
+            List<String> warnings = new ArrayList<>();
+            warnings.addAll(nias.warnings());
+            putProfileFields(result, strategy); result.put("warnings", warnings);
             return result;
         }
         @SuppressWarnings("unchecked") List<Map<String, Object>> nutrientRows = (List<Map<String, Object>>) base.get("nutrients");
