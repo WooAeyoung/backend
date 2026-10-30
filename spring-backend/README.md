@@ -176,7 +176,48 @@ NIAS 분석 응답에 추가된 필드:
 - 시작 실패: 알 수 없는 성분 ID, 음수 함량, 잘못된 단위, 성분과 맞지 않는 원료, `doseByWeight` 구간 오류(정렬 안 됨·겹침·상한 없는 구간이 마지막이 아님), `hasDetail` 모순, 중복 ID, 잘못된 날짜
 - 알 수 없는 JSON 필드는 실패시키지 않고 WARN 로그(`제품 ID: 알 수 없는 필드 경로 (무시함)`)만 남깁니다.
 
-추천(`POST /api/v1/recommendations`): `standardProfile`, `parameterVersion`, `parameterVerification`, `standardsVerification`, `warnings`. `NIAS_V3`는 검증 대기 매개변수가 있는 운영 설정에서는 `items: []`와 이유 경고를 돌려주며, 검증용 설정(`allow-unverified=true`)에서는 부족 성분 보완·중복 성분 감점 점수식으로 후보를 정렬합니다.
+추천(`POST /api/v1/recommendations`): `standardProfile`, `parameterVersion`, `parameterVerification`, `standardsVerification`, `warnings`. `NIAS_V3`는 `allow-unverified=false`이고 검증 대기 매개변수가 있으면 `items: []`와 이유 경고를 돌려주며, `allow-unverified=true`이면 아래 "NIAS 추천"의 점수식으로 계산합니다.
+
+### NIAS 추천 (`NIAS_V3`, Issue #4)
+
+규칙은 `docs/v3/계산명세서_v3.md` 10장과 `docs/v3/영양성분_분석처리기준_v3.md` 9장(A안)을 따르고, `NiasRecommendationService`가 계산합니다. `FEDIAF_2025` 추천은 바뀌지 않았습니다.
+
+```
+점수 = w2 × 보완 수 + w3 × 안전 여유 − w4 × 중복 수      (w2·w3·w4·topN은 nias-v3/parameters.json recommendation)
+```
+
+- 후보: 카탈로그 영양제 중 `recommendedDailyAmount` 또는 `doseByWeight`가 있는 제품. 성분 값은 `ProductDataRegistry`의 정규화 값(기준 단위, 종별 환산)입니다.
+- 급여량: `doseByWeight`에서 체중 이하(`weightKg ≤ maxKg`)인 첫 구간. 구간은 (이전 `maxKg`, `maxKg`]이고 상한 없는 구간은 마지막입니다. 모든 닫힌 구간을 넘으면 마지막 구간을 쓰고, `doseByWeight`가 없으면 `recommendedDailyAmount`입니다.
+- 거르기(탈락): 후보를 급여량만큼 더한 뒤 판정해서
+  - 판정 대상 성분 중 하나라도 주의·과다(이미 주의·과다인 성분은 `ALREADY_CAUTION_OR_EXCESS`로 따로 표시)
+  - 개이고 그 생애주기가 Ca:P를 판정하면, 칼슘·인을 담은 후보를 더한 뒤 비율이 범위를 벗어남(성장기처럼 Ca:P를 판정하지 않는 생애주기는 검사하지 않고 경고)
+  - 합계가 `null`이거나 판정이 막힌 성분, 또는 후보 쪽 값을 환산하지 못한 성분을 후보가 담고 있고 그 성분에 주의선·상한이 있음(안전 확인 불가)
+- 보완 수: 현재 부족인 성분 중 추가 후 부족이 아닌 성분 수. 합계가 `null`인 성분은 부족으로 세지 않습니다.
+- 안전 여유: 후보가 담은 판정 대상 성분 중 주의선이 있는 성분(주의선만 있는 성분 포함)마다 `(주의 − 추가 후) ÷ (주의 − 하한)`의 최솟값. 하한이 없으면 0, 추가 후 값이 하한 미만이면 1, 대상 성분이 없으면 1. 평균을 쓰지 않습니다.
+- 중복 수: 후보 성분 ∩ (현재 급여 영양제 성분(수동 입력 포함) ∪ 이미 고른 제품 성분). 사료는 넣지 않습니다.
+- 선택: 최대 힙(`MaxHeap`)으로 1위를 고르고, 총량과 중복 성분을 갱신한 뒤 남은 후보를 다시 계산합니다. 최대 `maxItems`(없으면 `topN`)개. 현재 급여 중인 제품과 이미 고른 제품은 다시 추천하지 않습니다. 동점이면 `productId` 오름차순입니다.
+- 점수와 안전 여유는 반올림하지 않습니다.
+
+NIAS 추천 응답(기존 필드는 그대로, 아래는 추가만):
+
+| 필드 | 내용 |
+| --- | --- |
+| `message` | 부족 성분이 있으면 "부족 성분을 보완하는 추천 조합입니다.", 없으면 "현재 조합에서 부족한 성분은 없습니다. 아래 제품은 추가해도 주의 구간에 들지 않습니다.", 통과 후보가 없으면 "현재 조합에 추가할 수 있는 제품이 없습니다." |
+| `items[].scoreBreakdown` | 기존 `fixedNutrients`·`margin`·`overlap`에 `w2`·`w3`·`w4`, `fixedScore`(w2 × 보완), `marginScore`(w3 × 여유), `overlapPenalty`(w4 × 중복) 추가. `score = fixedScore + marginScore − overlapPenalty` |
+| `items[].fixedNutrientIds` | 보완된 성분 ID |
+| `items[].marginNutrientId` | 안전 여유가 가장 작은 성분 ID(대상이 없으면 `null`) |
+| `items[].overlapNutrientIds` | 중복 성분 ID |
+| `items[].doseBand` | `source`(`DOSE_BY_WEIGHT`·`RECOMMENDED_DAILY_AMOUNT`), `bandIndex`, `aboveKg`(초과), `maxKg`(이하, 상한 없으면 `null`), `dose`, `beyondLastBand` |
+| `excluded[].reasonCode` | 대표 사유: `ALREADY_FED`, `EXCESS`, `CAUTION`, `ALREADY_CAUTION_OR_EXCESS`, `UNVERIFIABLE`, `CALCIUM_PHOSPHORUS` |
+| `excluded[].reasons[]` | 사유 전체: `code`, `nutrientIds`, Ca:P면 `ratioStatus`(`LOW`·`HIGH`). 기존 `reason`은 같은 내용의 문장입니다 |
+
+- `excluded`에는 제품마다 마지막 라운드의 사유 하나만 남깁니다. 고른 제품은 `items`에만 있습니다.
+- `warnings`: 이전 NIAS 추천 경로는 차단되지 않으면 빈 목록이었습니다. 이를 유지하고 다음을 더합니다.
+  - 맨 앞: `allow-unverified=true`이고 추천 매개변수가 검증 대기이거나 검증 대기 기준값으로 판정한 성분이 있으면 "참고값: NIAS-v3 기준값·추천 매개변수는 원문 대조 전이라 추천 결과는 검증되지 않은 참고 정보입니다."
+  - 개인데 그 생애주기가 Ca:P를 판정하지 않으면 "칼슘:인 비율 미적용: …"
+  - 이미 주의·과다인 성분이 있으면 "이미 주의·과다인 성분(…)이 있어 추가 후 판정에서 모든 후보가 탈락합니다. 현재 급여량을 먼저 확인하세요."
+- 차단 응답(`allow-unverified=false`)과 `FEDIAF_2025` 응답은 바뀌지 않았습니다.
+- `NiasV3Strategy.recommendationScore`(w3 항 없음)는 NIAS 추천에서 더 쓰지 않습니다.
 
 `GET /api/v1/nutrients?standardProfile=NIAS_V3`는 44개 전체(`implemented`로 분석 대상 18개 표시)를, `FEDIAF_2025`는 6개를 기준값 레코드와 함께 돌려줍니다. 쿼리를 빼면 기존 응답과 같습니다.
 
