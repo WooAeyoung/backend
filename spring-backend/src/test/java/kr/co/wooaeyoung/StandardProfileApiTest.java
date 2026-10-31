@@ -69,14 +69,14 @@ class StandardProfileApiTest {
                 .andExpect(jsonPath("$.ratioApplicability.calciumPhosphorus").value("APPLICABLE"));
     }
 
-    @Test void niasRecommendationReturnsEmptyListWithReason() throws Exception {
+    @Test void niasRecommendationReturnsReferenceResultsWithWarning() throws Exception {
         mvc.perform(post("/api/v1/recommendations").contentType(MediaType.APPLICATION_JSON).content(request("DOG", 10, "feed-balanced-dog", 150, "NIAS_V3")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.standardProfile").value("NIAS_V3"))
                 .andExpect(jsonPath("$.standardVersion").value("NIAS-v3"))
-                .andExpect(jsonPath("$.items", hasSize(0)))
-                .andExpect(jsonPath("$.warnings", hasSize(1)))
-                .andExpect(jsonPath("$.warnings[0]", containsString("원문 대조")));
+                .andExpect(jsonPath("$.items", not(empty())))
+                .andExpect(jsonPath("$.warnings", not(empty())))
+                .andExpect(jsonPath("$.warnings[0]", containsString("검증되지 않은 참고 정보")));
         mvc.perform(post("/api/v1/recommendations").contentType(MediaType.APPLICATION_JSON).content(request("DOG", 10, "feed-balanced-dog", 150, null)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.standardProfile").value("FEDIAF_2025"))
