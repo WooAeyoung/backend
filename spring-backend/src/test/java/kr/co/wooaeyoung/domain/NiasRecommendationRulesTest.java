@@ -9,6 +9,7 @@ import kr.co.wooaeyoung.standards.Limit;
 import kr.co.wooaeyoung.standards.NiasV3Strategy;
 import kr.co.wooaeyoung.standards.NutrientLine;
 import kr.co.wooaeyoung.standards.StandardProfile;
+import kr.co.wooaeyoung.units.Conversion;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -210,6 +211,17 @@ class NiasRecommendationRulesTest {
         assertEquals(2.0, (double) breakdown.get("overlapPenalty"), 1e-12);
         assertEquals(5.0, (double) breakdown.get("marginScore"), 1e-12);
         assertEquals(0.0, (double) breakdown.get("fixedScore"), 1e-12);
+    }
+
+    @Test @DisplayName("종 규칙으로 제외된 성분은 중복 키와 중복 감점에서 제외한다")
+    void speciesExcludedNutrientsDoNotCountAsOverlap() {
+        Conversion converted = new Conversion(Conversion.Status.CONVERTED, 1d, false,
+                1d, "MG", null, null, "MG", null, "test", null);
+        Conversion excluded = new Conversion(Conversion.Status.EXCLUDED, null, false,
+                1d, "MG", null, "BETA_CAROTENE", "IU", null, "test", "고양이에서 제외");
+
+        assertEquals(Set.of("ZINC"), NiasRecommendationService.overlapKeys(
+                new LinkedHashMap<>(Map.of("ZINC", converted, "VITAMIN_A", excluded))));
     }
 
     // ---------------------------------------------------------------- 재평가·중복 추천·동점

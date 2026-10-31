@@ -138,12 +138,22 @@ public class NiasRecommendationService {
         Map<String, Double> amounts = new LinkedHashMap<>();
         Set<String> unconverted = new LinkedHashSet<>();
         double ratio = dose.dose() / product.servingAmount();
-        contents(product.id(), species).forEach((id, conversion) -> {
+        Map<String, Conversion> contents = contents(product.id(), species);
+        contents.forEach((id, conversion) -> {
             if (conversion.converted()) amounts.put(id, conversion.perGram() ? conversion.value() * dose.dose() : conversion.value() * ratio);
             else if (conversion.status() != Conversion.Status.EXCLUDED) unconverted.add(id);   // 종 규칙으로 더하지 않는 성분(고양이 베타카로틴)은 기여가 없다
         });
-        Set<String> keys = new LinkedHashSet<>(contents(product.id(), species).keySet());
+        Set<String> keys = overlapKeys(contents);
         return new Candidate(product.id(), product.name(), product.servingUnit(), dose, amounts, unconverted, keys);
+    }
+
+    /** 종 규칙으로 제외된 성분은 실제 기여가 없으므로 중복 성분과 중복 감점에도 포함하지 않는다. */
+    static Set<String> overlapKeys(Map<String, Conversion> contents) {
+        Set<String> keys = new LinkedHashSet<>();
+        contents.forEach((id, conversion) -> {
+            if (conversion.status() != Conversion.Status.EXCLUDED) keys.add(id);
+        });
+        return keys;
     }
 
     private Map<String, Conversion> contents(String productId, Species species) {

@@ -109,36 +109,33 @@ class StandardProfileContractTest {
         }
     }
 
-    // ---- 미검증 차단 (allow-unverified=false)
+    // ---- 미검증 참고 판정 (allow-unverified=true)
 
-    @Test void pendingValuesAreNotUsedForJudgement() throws Exception {
+    @Test void pendingValuesAreUsedOnlyAsExplicitReferenceJudgements() throws Exception {
         JsonNode analysis = call("/api/v1/analyses", withProfile(ADULT_DOG, "NIAS_V3"));
-        assertFalse(analysis.get("standardsVerification").get("allowUnverified").asBoolean());
-        assertTrue(analysis.get("referenceEnergyKcal").isNull());
+        assertTrue(analysis.get("standardsVerification").get("allowUnverified").asBoolean());
+        assertTrue(analysis.get("referenceEnergyKcal").isNumber());
         assertEquals(18, analysis.get("nutrients").size());
         for (JsonNode row : analysis.get("nutrients")) {
             String status = row.get("status").asText();
             if (row.get("verificationStatus").asText().equals("PENDING_VERIFICATION")) {
-                assertTrue(Set.of("UNVERIFIED_STANDARD", "UNIT_CONVERSION_UNSUPPORTED", "INSUFFICIENT_DATA").contains(status), row.get("nutrientId") + "=" + status);
-                for (String line : List.of("minimum", "caution", "upper")) assertTrue(row.get(line).isNull(), row.get("nutrientId") + "." + line);
+                assertNotEquals("UNVERIFIED_STANDARD", status, row.get("nutrientId") + "=" + status);
             } else {
                 assertEquals("NO_STANDARD", status, row.get("nutrientId").asText());
             }
         }
-        assertEquals(0, analysis.get("verificationSummary").get("judgedWithUnverified").asInt());
-        assertTrue(analysis.get("warnings").toString().contains("기준 미검증"));
-        // 주의선만 있는 성분도 '기준 없음'으로 처리되지 않는다.
-        for (String key : List.of("COPPER", "IRON", "MANGANESE", "ZINC")) assertEquals("UNVERIFIED_STANDARD", row(analysis, key).get("status").asText(), key);
+        assertTrue(analysis.get("verificationSummary").get("judgedWithUnverified").asInt() > 0);
+        assertTrue(analysis.get("warnings").toString().contains("참고 판정"));
+        for (String key : List.of("COPPER", "IRON", "MANGANESE", "ZINC")) assertNotEquals("NO_STANDARD", row(analysis, key).get("status").asText(), key);
         JsonNode cat = call("/api/v1/analyses", request("CAT", 4, 36, "MONTH", "", "{\"productId\":\"feed-balanced-cat\",\"dailyAmount\":60,\"unit\":\"G\"}", "NIAS_V3"));
-        assertTrue(cat.get("referenceEnergyKcal").isNull());
-        assertEquals("UNVERIFIED_STANDARD", row(cat, "SELENIUM").get("status").asText());
+        assertTrue(cat.get("referenceEnergyKcal").isNumber());
+        assertNotEquals("UNVERIFIED_STANDARD", row(cat, "SELENIUM").get("status").asText());
         assertEquals("UNCONFIRMED", row(cat, "SELENIUM").get("reference").get("caution").get("table").asText());
-        // Ca:P도 미검증 매개변수로 판정하지 않는다.
-        assertEquals(0, analysis.get("ratios").size());
-        assertEquals("UNVERIFIED_STANDARD", analysis.get("ratioApplicability").get("calciumPhosphorus").asText());
+        assertTrue(analysis.get("ratios").has("calciumPhosphorus"));
+        assertEquals("APPLICABLE", analysis.get("ratioApplicability").get("calciumPhosphorus").asText());
         JsonNode recommendation = call("/api/v1/recommendations", withProfile(ADULT_DOG, "NIAS_V3"));
-        assertEquals(0, recommendation.get("items").size());
-        assertEquals(1, recommendation.get("warnings").size());
+        assertTrue(recommendation.get("items").size() > 0);
+        assertTrue(recommendation.get("warnings").toString().contains("검증되지 않은 참고 정보"));
     }
 
     @Test void iuNutrientTotalsStayNullWithStatusAndWarning() throws Exception {
@@ -154,41 +151,41 @@ class StandardProfileContractTest {
         assertEquals("FEDIAF-2025.09", call("/api/v1/analyses", ADULT_DOG).get("standardVersion").asText());
     }
 
-    @Test void niasGrowthUsesV3StageAndKeepsPendingStandardsBlocked() throws Exception {
+    @Test void niasGrowthUsesV3StageAndMarksPendingStandardsAsReference() throws Exception {
         JsonNode puppy = call("/api/v1/analyses", request("DOG", 3, 12, "WEEK", ",\"adultSize\":\"S\"", DOG_FEED, "NIAS_V3"));
         assertEquals("GROWTH_EARLY", puppy.get("lifeStage").asText());
-        assertTrue(puppy.get("referenceEnergyKcal").isNull());
-        assertTrue(puppy.get("warnings").toString().contains("기준 열량과 영양 기준선을 계산하지 않았습니다."));
-        assertFalse(puppy.get("warnings").toString().contains("기준 열량은 참고값입니다."));
+        assertTrue(puppy.get("referenceEnergyKcal").isNumber());
+        assertTrue(puppy.get("warnings").toString().contains("기준 열량은 참고값입니다."));
         for (JsonNode row : puppy.get("nutrients")) {
             String status = row.get("status").asText();
-            assertTrue(Set.of("UNVERIFIED_STANDARD", "NO_STANDARD", "UNIT_CONVERSION_UNSUPPORTED", "INSUFFICIENT_DATA").contains(status), row.get("nutrientId").asText());
+            assertNotEquals("UNVERIFIED_STANDARD", status, row.get("nutrientId").asText());
         }
         assertTrue(puppy.get("warnings").toString().contains("매개변수 미검증"));
         assertEquals("UNSUPPORTED", puppy.get("ratioApplicability").get("calciumPhosphorus").asText());
     }
 
-    @Test void niasEnergyBasisShowsStageAndBlockReasonWithoutUnverifiedNumbers() throws Exception {
+    @Test void niasEnergyBasisShowsReferenceNumbersAndVerificationState() throws Exception {
         JsonNode puppy = call("/api/v1/analyses", request("DOG", 3, 12, "WEEK", ",\"adultSize\":\"S\"", DOG_FEED, "NIAS_V3"));
         JsonNode basis = puppy.get("energyBasis");
         assertEquals("GROWTH_EARLY", basis.get("lifeStage").asText());
         assertEquals("PUPPY_GROWTH_CURVE", basis.get("kSource").asText());
-        assertTrue(basis.get("blocked").asBoolean());
-        assertTrue(basis.get("blockedReason").asText().contains("매개변수 미검증: energy, growthCurve"), basis.toString());
-        for (String field : List.of("k", "exponent", "referenceEnergyKcal", "adultK", "catGrowthMultiplier")) assertTrue(basis.get(field).isNull(), field);
+        assertFalse(basis.get("blocked").asBoolean());
+        assertTrue(basis.get("blockedReason").isNull());
+        for (String field : List.of("k", "exponent", "referenceEnergyKcal")) assertTrue(basis.get(field).isNumber(), field);
+        assertTrue(basis.get("adultK").isNull() && basis.get("catGrowthMultiplier").isNull());
         assertEquals("PENDING_VERIFICATION", basis.get("parameterVerification").get("growthCurve").asText());
         JsonNode growth = basis.get("puppyGrowth");
         assertEquals("S", growth.get("sizeClass").asText());
         for (String field : List.of("a", "b", "percentOfAdultWeight", "expectedAdultWeightRawKg", "expectedAdultWeightKg", "clipped", "sizeRange", "largeBreedCalcium"))
-            assertTrue(growth.get(field).isNull(), field);
-        assertTrue(puppy.get("referenceEnergyKcal").isNull());
+            assertFalse(growth.get(field).isNull(), field);
+        assertTrue(puppy.get("referenceEnergyKcal").isNumber());
 
         JsonNode kitten = call("/api/v1/analyses", request("CAT", 1.5, 3, "MONTH", "", "{\"productId\":\"feed-balanced-cat\",\"dailyAmount\":40,\"unit\":\"G\"}", "NIAS_V3")).get("energyBasis");
         assertEquals("CAT_S1", kitten.get("lifeStage").asText());
         assertEquals("CAT_GROWTH_MULTIPLIER", kitten.get("kSource").asText());
-        assertTrue(kitten.get("blocked").asBoolean());
-        assertTrue(kitten.get("blockedReason").asText().contains("매개변수 미검증: energy"));
-        assertTrue(kitten.get("k").isNull() && kitten.get("catGrowthMultiplier").isNull() && kitten.get("puppyGrowth").isNull());
+        assertFalse(kitten.get("blocked").asBoolean());
+        assertTrue(kitten.get("blockedReason").isNull());
+        assertTrue(kitten.get("k").isNumber() && kitten.get("catGrowthMultiplier").isNumber() && kitten.get("puppyGrowth").isNull());
     }
 
     @Test void fediafAnalysisAddsNullEnergyBasisOnly() throws Exception {
