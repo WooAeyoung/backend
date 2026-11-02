@@ -25,7 +25,7 @@ services:
       - key: KAKAO_SKILL_SECRET
         sync: false
       - key: JARVIS_PROVIDER
-        value: grok
+        value: aimlapi
       - key: XAI_API_KEY
         sync: false
       - key: GROK_MODEL
