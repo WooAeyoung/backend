@@ -30,9 +30,11 @@ public final class ApiModels {
         public boolean usesCompleteFeed() { return completeFeed == null || completeFeed; }
     }
 
-    public record FeedingItem(@NotBlank String productId, @Positive double dailyAmount, @NotBlank String unit) {}
+    public record FeedingItem(@NotBlank @Size(max = 100) String productId, @Positive double dailyAmount,
+                              @NotBlank @Size(max = 30) String unit) {}
     /** form·basis·guarantee는 선택값(BE-V3-010). NIAS_V3에서만 쓰고 FEDIAF_2025는 경고와 함께 무시한다. */
-    public record ManualNutrient(@NotBlank String nutrientId, @PositiveOrZero double amount, @NotBlank String unit,
+    public record ManualNutrient(@NotBlank @Size(max = 100) String nutrientId, @PositiveOrZero double amount,
+                                 @NotBlank @Size(max = 30) String unit,
                                  NutrientForm form, LabelBasis basis, LabelValue.Guarantee guarantee) {
         public ManualNutrient(String nutrientId, double amount, String unit) { this(nutrientId, amount, unit, null, null, null); }
         public boolean hasLabelDetail() { return form != null || basis != null || guarantee != null; }
@@ -42,9 +44,9 @@ public final class ApiModels {
             @NotBlank @Size(max = 100) String name,
             @NotNull ProductType type,
             @Positive double servingAmount,
-            @NotBlank String servingUnit,
+            @NotBlank @Size(max = 30) String servingUnit,
             @Positive double dailyAmount,
-            @NotEmpty List<@Valid ManualNutrient> nutrients,
+            @NotEmpty @Size(max = 50) List<@Valid ManualNutrient> nutrients,
             @DecimalMin("0") @DecimalMax(value = "100", inclusive = false) Double moisturePercent,
             @Positive Double energyKcalPerKg) {
         public ManualItem(String name, ProductType type, double servingAmount, String servingUnit, double dailyAmount, List<ManualNutrient> nutrients) {
@@ -57,8 +59,8 @@ public final class ApiModels {
 
     public record AnalysisRequest(
             @Valid @NotNull Profile profile,
-            List<@Valid FeedingItem> items,
-            List<@Valid ManualItem> manualItems,
+            @Size(max = 50) List<@Valid FeedingItem> items,
+            @Size(max = 20) List<@Valid ManualItem> manualItems,
             StandardProfile standardProfile) {
         public List<FeedingItem> safeItems() { return items == null ? List.of() : items; }
         public List<ManualItem> safeManualItems() { return manualItems == null ? List.of() : manualItems; }
@@ -68,8 +70,8 @@ public final class ApiModels {
 
     public record RecommendationRequest(
             @Valid @NotNull Profile profile,
-            List<@Valid FeedingItem> items,
-            List<@Valid ManualItem> manualItems,
+            @Size(max = 50) List<@Valid FeedingItem> items,
+            @Size(max = 20) List<@Valid ManualItem> manualItems,
             @Min(1) @Max(3) Integer maxItems,
             StandardProfile standardProfile) {
         public AnalysisRequest analysisRequest() { return new AnalysisRequest(profile, items, manualItems, standardProfile); }
@@ -79,6 +81,6 @@ public final class ApiModels {
     /** 자비스는 분석 결과를 저장하지 않고, 현재 브라우저에서 전달한 결과만 요약한다. */
     public record JarvisRequest(
             @NotBlank @Size(max = 500) String message,
-            Map<String, Object> analysis,
+            @Size(max = 50) Map<String, Object> analysis,
             String provider) {}
 }

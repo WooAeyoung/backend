@@ -10,8 +10,6 @@ public class JarvisService {
     private final JarvisAiService ai;
     public JarvisService(JarvisAiService ai) { this.ai = ai; }
     public Map<String, Object> answer(ApiModels.JarvisRequest request) {
-        Optional<String> generated = ai.complete(request.message(), request.analysis(), request.provider());
-        if (generated.isPresent()) return reply("AI_CHAT", null, generated.get());
         String phrase = request.message().replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
         if (phrase.matches(".*(오늘|최근).*(분석|결과).*(요약|설명).*|.*(요약|설명).*(분석|결과).*")) {
             return reply("ANALYSIS_SUMMARY", "analysis", describeAnalysis(request.analysis()));
@@ -31,7 +29,9 @@ public class JarvisService {
         if (phrase.matches(".*(분석|영양제).*")) return reply("ANALYSIS", "analysis", "영양제 분석 화면으로 이동할게요. 반려동물 정보와 급여 제품을 입력해 주세요.");
         if (phrase.matches(".*(고객센터|문의|도움말).*")) return reply("SUPPORT", "support", "고객센터로 이동할게요.");
         if (phrase.matches(".*(홈|처음|메인).*")) return reply("HOME", "home", "홈 화면으로 이동할게요.");
-        return reply("HELP", null, "“영양제 분석”, “지난 기록 보여줘”, “오늘 분석 결과 요약해 줘”, “칼슘이 부족하면 어떻게 해?”라고 말씀해 보세요.");
+        Optional<String> generated = ai.complete(request.message(), request.analysis());
+        if (generated.isPresent()) return reply("AI_CHAT", null, generated.get());
+        throw new JarvisProviderException("AI 제공자 API 키가 설정되지 않았습니다.", null);
     }
 
     private Map<String, Object> reply(String intent, String page, String answer) {

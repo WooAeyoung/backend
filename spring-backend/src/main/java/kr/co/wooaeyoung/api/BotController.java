@@ -12,5 +12,9 @@ public class BotController {
     public BotController(KakaoBotService bot) { this.bot = bot; }
 
     @PostMapping("/skill")
-    public Map<String, Object> skill(@RequestBody Map<String, Object> payload) { return bot.respond(payload); }
+    public Map<String, Object> skill(
+            @RequestBody Map<String, Object> payload,
+            @RequestHeader(value = "X-Wooaeyoung-Skill-Secret", required = false) String secret) {
+        return bot.respond(payload, secret);
+    }
 }

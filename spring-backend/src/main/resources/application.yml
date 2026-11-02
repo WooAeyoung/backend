@@ -7,6 +7,7 @@ app:
   public-base-url: ${PUBLIC_BASE_URL:https://wooaeyoung-backend.onrender.com}
   kakao-oauth-base-url: ${KAKAO_OAUTH_BASE_URL:https://wooaeyoung-backend.onrender.com}
   kakao-rest-api-key: ${KAKAO_REST_API_KEY:}
+  kakao-skill-secret: ${KAKAO_SKILL_SECRET:}
 wooaeyoung:
   standards:
     # 검증 대기(PENDING_VERIFICATION) 기준값을 참고 판정에 쓸지 여부. 운영에서는 환경변수로 명시한다.
