@@ -38,8 +38,7 @@ public class JarvisAiService {
                 default -> throw new IllegalStateException("지원하지 않는 JARVIS_PROVIDER입니다.");
             };
         } catch (RestClientResponseException error) {
-            // Expose only the upstream status, never the response body or secret-bearing headers.
-            throw new JarvisProviderException("AI 제공자 요청이 거부되었습니다 (HTTP " + error.getStatusCode().value() + "). API 키와 모델 설정을 확인해 주세요.", error);
+            throw new JarvisProviderException(providerErrorMessage(error), error);
         } catch (Exception error) {
             throw new JarvisProviderException("AI 제공자 응답을 받지 못했습니다. 잠시 후 다시 시도해 주세요.", error);
         }
@@ -78,5 +77,20 @@ public class JarvisAiService {
     }
 
     private String allowed(String model, Set<String> allowlist) { if (!allowlist.contains(model)) throw new IllegalArgumentException("허용되지 않은 JARVIS 모델입니다."); return model; }
+    private String providerErrorMessage(RestClientResponseException error) {
+        String detail = "API 키와 모델 설정을 확인해 주세요.";
+        try {
+            JsonNode root = mapper.readTree(error.getResponseBodyAsString());
+            JsonNode message = root.path("error").path("message");
+            if (!message.isTextual()) message = root.path("message");
+            if (message.isTextual() && !message.asText().isBlank()) {
+                detail = message.asText().replaceAll("[\\r\\n]+", " ");
+                if (detail.length() > 240) detail = detail.substring(0, 240);
+            }
+        } catch (Exception ignored) {
+            // Never expose raw upstream bodies, headers, or credentials.
+        }
+        return "AI 제공자 요청이 거부되었습니다 (HTTP " + error.getStatusCode().value() + "): " + detail;
+    }
     private String prompt(String message, Map<String, Object> analysis) { return "우애영 반려동물 영양 도우미. 진단·처방을 단정하지 말고, 제공된 분석 데이터만 사용하세요. 분석 데이터가 없으면 추측하지 마세요. 페이지 이동은 명령 라우터가 처리합니다.\n분석: " + String.valueOf(analysis) + "\n사용자: " + message; }
 }
