@@ -14,7 +14,7 @@ import java.util.*;
 /** Provider-isolated JARVIS completion client. Secrets are read only from the server environment. */
 @Service
 public class JarvisAiService {
-    private static final Set<String> GROK_MODELS = Set.of("grok-4-1-fast-reasoning", "grok-4-1-fast-non-reasoning", "grok-3-mini");
+    private static final Set<String> GROK_MODELS = Set.of("grok-4.7", "grok-4-1-fast-reasoning", "grok-4-1-fast-non-reasoning", "grok-3-mini");
     private static final Set<String> OLLAMA_MODELS = Set.of("llama3.2", "qwen2.5:7b", "gemma3:4b");
     private static final Set<String> AIMLAPI_MODELS = Set.of("openai/gpt-5-5");
     private final ObjectMapper mapper = new ObjectMapper();
@@ -48,7 +48,7 @@ public class JarvisAiService {
     private Optional<String> grok(String message, Map<String, Object> analysis) throws Exception {
         String key = System.getenv("XAI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
-        String model = allowed(System.getenv().getOrDefault("GROK_MODEL", "grok-4-1-fast-non-reasoning"), GROK_MODELS);
+        String model = allowed(System.getenv().getOrDefault("GROK_MODEL", "grok-4.7"), GROK_MODELS);
         Map<String, Object> body = Map.of("model", model, "input", List.of(Map.of("role", "user", "content", prompt(message, analysis))));
         String raw = client.post().uri("https://api.x.ai/v1/responses").header(HttpHeaders.AUTHORIZATION, "Bearer " + key).contentType(MediaType.APPLICATION_JSON).body(body).retrieve().body(String.class);
         JsonNode root = mapper.readTree(raw);
