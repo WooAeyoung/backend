@@ -82,7 +82,9 @@ public class JarvisAiService {
         try {
             JsonNode root = mapper.readTree(error.getResponseBodyAsString());
             JsonNode message = root.path("error").path("message");
+            if (!message.isTextual() && root.path("error").isTextual()) message = root.path("error");
             if (!message.isTextual()) message = root.path("message");
+            if (!message.isTextual()) message = root.path("detail");
             if (message.isTextual() && !message.asText().isBlank()) {
                 detail = message.asText().replaceAll("[\\r\\n]+", " ");
                 if (detail.length() > 240) detail = detail.substring(0, 240);
