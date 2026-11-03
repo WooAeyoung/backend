@@ -32,9 +32,7 @@ public class JarvisService {
         if (phrase.matches(".*(분석|영양제).*")) return reply("ANALYSIS", "analysis", "영양제 분석 화면으로 이동할게요. 반려동물 정보와 급여 제품을 입력해 주세요.");
         if (phrase.matches(".*(고객센터|문의|도움말).*")) return reply("SUPPORT", "support", "고객센터로 이동할게요.");
         if (phrase.matches(".*(홈|처음|메인).*")) return reply("HOME", "home", "홈 화면으로 이동할게요.");
-        Optional<String> generated = ai.complete(request.message(), request.analysis());
-        if (generated.isPresent()) return reply("AI_CHAT", null, generated.get());
-        throw new JarvisProviderException("AI 제공자 API 키가 설정되지 않았습니다.", null);
+        return reply("ANALYSIS_DATA", "analysis", answerFromAnalysis(request.message(), request.analysis()));
     }
 
     private Map<String, Object> reply(String intent, String page, String answer) {
@@ -68,6 +66,20 @@ public class JarvisService {
             }
         }
         return "칼슘 부족 여부는 사료와 영양제를 합친 하루 섭취량, 나이·체중, 칼슘:인 비율을 함께 봐야 해요. 임의로 칼슘제를 추가하지 말고 급여 제품을 등록해 분석한 뒤 결과를 확인해 주세요. 증상이 있으면 수의사와 상담해 주세요.";
+    }
+
+    private String answerFromAnalysis(String message, Map<String, Object> analysis) {
+        if (analysis == null) return "아직 불러온 분석 데이터가 없어요. 먼저 영양제 분석을 완료해 주세요.";
+        String normalized = message.replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
+        if (normalized.contains("부족")) {
+            List<String> deficient = new ArrayList<>();
+            if (analysis.get("nutrients") instanceof List<?> rows) for (Object row : rows) {
+                Map<String, Object> nutrient = map(row);
+                if ("DEFICIENT".equals(String.valueOf(nutrient.get("status")))) deficient.add(String.valueOf(nutrient.get("name")));
+            }
+            return deficient.isEmpty() ? "현재 불러온 분석 데이터에서 부족으로 표시된 성분이 없어요." : "부족한 성분: " + String.join(", ", deficient) + ".";
+        }
+        return describeAnalysis(analysis);
     }
 
     @SuppressWarnings("unchecked") private Map<String, Object> map(Object value) { return value instanceof Map<?, ?> raw ? (Map<String, Object>) raw : Map.of(); }
