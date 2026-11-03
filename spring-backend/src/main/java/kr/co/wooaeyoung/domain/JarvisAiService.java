@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 import java.time.Duration;
@@ -36,6 +37,9 @@ public class JarvisAiService {
                 case "aimlapi" -> aimlapi(message, analysis);
                 default -> throw new IllegalStateException("지원하지 않는 JARVIS_PROVIDER입니다.");
             };
+        } catch (RestClientResponseException error) {
+            // Expose only the upstream status, never the response body or secret-bearing headers.
+            throw new JarvisProviderException("AI 제공자 요청이 거부되었습니다 (HTTP " + error.getStatusCode().value() + "). API 키와 모델 설정을 확인해 주세요.", error);
         } catch (Exception error) {
             throw new JarvisProviderException("AI 제공자 응답을 받지 못했습니다. 잠시 후 다시 시도해 주세요.", error);
         }
