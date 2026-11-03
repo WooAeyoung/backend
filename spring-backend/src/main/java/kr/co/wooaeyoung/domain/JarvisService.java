@@ -11,6 +11,9 @@ public class JarvisService {
     public JarvisService(JarvisAiService ai) { this.ai = ai; }
     public Map<String, Object> answer(ApiModels.JarvisRequest request) {
         String phrase = request.message().replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
+        if (phrase.contains("부족한성분만보여줘")) {
+            return reply("DEMO_DEFICIENT_NUTRIENTS", "analysis", "[데모 데이터] 부족한 성분: 타우린, 비타민 D, 비타민 E. 실제 결과는 영양제 분석을 완료한 뒤 표시됩니다.");
+        }
         if (phrase.matches(".*(오늘|최근).*(분석|결과).*(요약|설명).*|.*(요약|설명).*(분석|결과).*")) {
             return reply("ANALYSIS_SUMMARY", "analysis", describeAnalysis(request.analysis()));
         }
