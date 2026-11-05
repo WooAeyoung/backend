@@ -123,7 +123,7 @@ class ResponseContractSnapshotTest {
                 }
         assertEquals(Set.of("VerificationSummary.insufficientData", "NutrientRow.provenance", "NutrientRow.unknownContribution",
                 "Contribution.nutrientSources", "Ratios.calciumPhosphorus", "ExcludedProduct.reasonCode", "ExcludedProduct.reasons",
-                "ExclusionReason.ratioStatus"), omittable);
+                "ExclusionReason.ratioStatus", "ErrorDetail.reason"), omittable);
         Set<String> keys = new TreeSet<>();
         omittable.forEach(name -> keys.add(name.substring(name.indexOf('.') + 1)));
         keys.remove("calciumPhosphorus");   // ratioApplicability.calciumPhosphorus(문자열)와 이름이 같아 아래에서 경로로 본다

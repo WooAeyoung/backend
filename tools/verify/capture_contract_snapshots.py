@@ -27,8 +27,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--base", default="http://localhost:8080")
     parser.add_argument("--mode", choices=["default", "strict"], required=True)
+    parser.add_argument("--cases", default="requests.json", help="contract/ 아래 케이스 파일(requests.json, errors.json)")
     args = parser.parse_args()
-    cases = json.loads((CONTRACT / "requests.json").read_text(encoding="utf-8"))
+    cases = json.loads((CONTRACT / args.cases).read_text(encoding="utf-8"))
     out = CONTRACT / "snapshots"
     out.mkdir(exist_ok=True)
     failures = 0
@@ -36,15 +37,17 @@ def main():
         if case["mode"] != args.mode:
             continue
         data = None if "body" not in case else json.dumps(case["body"], ensure_ascii=False).encode()
+        if "rawBody" in case: data = case["rawBody"].encode()   # 깨진 JSON 등 그대로 보낼 본문
         request = Request(args.base.rstrip("/") + case["path"], data=data, method=case["method"], headers={"Content-Type": "application/json"})
         try:
             with urlopen(request, timeout=15) as response:
                 status, raw = response.status, response.read()
         except HTTPError as error:
             status, raw = error.code, error.read()
-        if status != 200:
+        expected = case.get("status", 200)   # 오류 계약 케이스는 기대 상태(400·422)를 적는다
+        if status != expected:
             failures += 1
-            print(f"FAIL {case['id']}: HTTP {status} {raw.decode('utf-8', 'replace')}")
+            print(f"FAIL {case['id']}: HTTP {status} (기대 {expected}) {raw.decode('utf-8', 'replace')}")
             continue
         (out / f"{case['id']}.json").write_bytes(raw)
         print(f"OK   {case['id']} ({len(raw)} bytes)")

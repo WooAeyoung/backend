@@ -25,8 +25,8 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/AnalysisResponse'}
-        '400': {description: '요청 형식 오류(JSON 파싱, 알 수 없는 enum 값)'}
-        '422': {description: 입력 검증 실패(VALIDATION_ERROR) 또는 계산 입력 오류(CALCULATION_INPUT_ERROR)}
+        '400': {description: '요청 형식 오류(JSON 파싱, 알 수 없는 enum 값). 알 수 없는 standardProfile이면 reason STANDARD_PROFILE_UNKNOWN', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '422': {description: '입력 검증 실패(VALIDATION_ERROR) 또는 계산 입력 오류(CALCULATION_INPUT_ERROR, reason 있음)', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
   /api/v1/recommendations:
     post:
       summary: 영양제 추천
@@ -41,8 +41,8 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/RecommendationResponse'}
-        '400': {description: 요청 형식 오류}
-        '422': {description: 입력 검증 실패 또는 계산 입력 오류}
+        '400': {description: 요청 형식 오류, content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '422': {description: 입력 검증 실패 또는 계산 입력 오류, content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
   /api/v1/nutrients:
     get:
       summary: 성분 목록
@@ -61,6 +61,7 @@ paths:
                 oneOf:
                   - {$ref: '#/components/schemas/NutrientListResponse'}
                   - {$ref: '#/components/schemas/NutrientCatalogResponse'}
+        '400': {description: '알 수 없는 standardProfile(reason STANDARD_PROFILE_UNKNOWN)', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
   /api/v2/standards/{profile}:
     get:
       summary: 프로필의 전체 성분·기준값·출처·검증 상태
@@ -72,7 +73,7 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/NutrientCatalogResponse'}
-        '400': {description: 알 수 없는 프로필}
+        '400': {description: '알 수 없는 프로필(reason STANDARD_PROFILE_UNKNOWN)', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
   /api/v2/parameters/{profile}:
     get:
       summary: 프로필의 매개변수 버전·검증 상태
@@ -84,7 +85,7 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ParameterCatalogResponse'}
-        '400': {description: 알 수 없는 프로필}
+        '400': {description: '알 수 없는 프로필(reason STANDARD_PROFILE_UNKNOWN)', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
 components:
   schemas:
     # ---------------------------------------------------------------- enum
@@ -500,3 +501,23 @@ components:
         parameterVersion: {type: string}
         verification: {type: object, additionalProperties: {$ref: '#/components/schemas/VerificationStatus'}}
         allowUnverified: {type: boolean}
+
+    # ---------------------------------------------------------------- 오류 응답
+    ErrorResponse:
+      type: object
+      required: [detail]
+      properties:
+        detail: {$ref: '#/components/schemas/ErrorDetail'}
+    ErrorDetail:
+      type: object
+      description: code·message·HTTP 상태는 Issue #5 이전과 같다. reason만 새로 더했다.
+      required: [code, message]
+      properties:
+        code: {type: string, description: 'CALCULATION_INPUT_ERROR(422), VALIDATION_ERROR(422), BAD_REQUEST(400), JARVIS_PROVIDER_UNAVAILABLE(503), EXTERNAL_SERVICE_UNAVAILABLE(503). 503 본문은 같은 키를 쓰지만 키 순서는 아직 고정되지 않았다'}
+        message: {type: string, description: 사람이 읽는 문구. 화면 분기는 reason으로 한다}
+        reason: {$ref: '#/components/schemas/ErrorReason'}
+    ErrorReason:
+      type: string
+      description: 'CALCULATION_INPUT_ERROR에는 항상 있다(분류되지 않으면 INPUT_ERROR). BAD_REQUEST에는 STANDARD_PROFILE_UNKNOWN일 때만 있다. 그 밖의 오류에는 키가 없다.'
+      enum: [AGE_UNSUPPORTED, SIZE_CLASS_REQUIRED, SIZE_CLASS_INVALID, EXPECTED_ADULT_WEIGHT_REQUIRED, PRODUCT_NOT_FOUND, UNIT_MISMATCH,
+             UNIT_UNSUPPORTED, NUTRIENT_UNSUPPORTED, DUPLICATE_NUTRIENT, NO_ITEMS, TOO_MANY_ITEMS, LABEL_INVALID, INPUT_ERROR, STANDARD_PROFILE_UNKNOWN]

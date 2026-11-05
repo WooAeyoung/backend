@@ -1,0 +1,903 @@
+[
+  {
+    "id": "error-age-nias-dog",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "AGE_UNSUPPORTED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 1,
+        "age": {
+          "value": 4,
+          "unit": "WEEK"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-age-nias-cat-t7",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "AGE_UNSUPPORTED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "CAT",
+        "weightKg": 0.3,
+        "age": {
+          "value": 2,
+          "unit": "WEEK"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 10,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-age-fediaf",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "AGE_UNSUPPORTED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 1,
+        "age": {
+          "value": 4,
+          "unit": "WEEK"
+        },
+        "expectedAdultWeightKg": 5,
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "error-age-recommendation",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "AGE_UNSUPPORTED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 1,
+        "age": {
+          "value": 4,
+          "unit": "WEEK"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-size-required-t8",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "SIZE_CLASS_REQUIRED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 3,
+        "age": {
+          "value": 12,
+          "unit": "WEEK"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-size-invalid",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "SIZE_CLASS_INVALID",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 3,
+        "age": {
+          "value": 12,
+          "unit": "WEEK"
+        },
+        "adultSize": "Q",
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-expected-adult-weight",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "EXPECTED_ADULT_WEIGHT_REQUIRED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 3,
+        "age": {
+          "value": 12,
+          "unit": "WEEK"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "error-product-not-found-fediaf",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "PRODUCT_NOT_FOUND",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "no-such-product",
+          "dailyAmount": 1,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "error-product-not-found-nias",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "PRODUCT_NOT_FOUND",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "no-such-product",
+          "dailyAmount": 1,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-unit-mismatch-fediaf",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "UNIT_MISMATCH",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 1,
+          "unit": "TABLET"
+        }
+      ]
+    }
+  },
+  {
+    "id": "error-unit-mismatch-nias",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "UNIT_MISMATCH",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 1,
+          "unit": "TABLET"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-unit-unsupported-fediaf",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "UNIT_UNSUPPORTED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "수동",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_E",
+              "amount": 1,
+              "unit": "IU"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "error-unit-unsupported-nias",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "UNIT_UNSUPPORTED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "수동",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "ZINC",
+              "amount": 1,
+              "unit": "IU"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-nutrient-unsupported-fediaf",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "NUTRIENT_UNSUPPORTED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "수동",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "UNOBTAINIUM",
+              "amount": 1,
+              "unit": "MG"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "error-nutrient-unsupported-nias",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "NUTRIENT_UNSUPPORTED",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "수동",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "UNOBTAINIUM",
+              "amount": 1,
+              "unit": "MG"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-duplicate-nutrient",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "DUPLICATE_NUTRIENT",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "수동",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "ZINC",
+              "amount": 1,
+              "unit": "MG"
+            },
+            {
+              "nutrientId": "ZINC",
+              "amount": 2,
+              "unit": "MG"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-no-items",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "NO_ITEMS",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-too-many-items",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "TOO_MANY_ITEMS",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        },
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 10,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "error-label-invalid-form",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "LABEL_INVALID",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "수동",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_D",
+              "amount": 1,
+              "unit": "MG",
+              "form": "RETINOL"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-label-invalid-percent",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "CALCULATION_INPUT_ERROR",
+    "reason": "LABEL_INVALID",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "수동",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "ZINC",
+              "amount": 1,
+              "unit": "MG",
+              "basis": "PERCENT"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "error-standard-profile-unknown-path",
+    "mode": "default",
+    "method": "GET",
+    "path": "/api/v2/standards/UNKNOWN_PROFILE",
+    "status": 400,
+    "code": "BAD_REQUEST",
+    "reason": "STANDARD_PROFILE_UNKNOWN"
+  },
+  {
+    "id": "error-standard-profile-unknown-query",
+    "mode": "default",
+    "method": "GET",
+    "path": "/api/v1/nutrients?standardProfile=UNKNOWN_PROFILE",
+    "status": 400,
+    "code": "BAD_REQUEST",
+    "reason": "STANDARD_PROFILE_UNKNOWN"
+  },
+  {
+    "id": "error-standard-profile-unknown-body",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 400,
+    "code": "BAD_REQUEST",
+    "reason": "STANDARD_PROFILE_UNKNOWN",
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "UNKNOWN_PROFILE"
+    }
+  },
+  {
+    "id": "error-bad-request-malformed-json",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 400,
+    "code": "BAD_REQUEST",
+    "reason": null,
+    "rawBody": "{\"profile\":"
+  },
+  {
+    "id": "error-bad-request-unknown-species",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 400,
+    "code": "BAD_REQUEST",
+    "reason": null,
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "FISH",
+        "weightKg": 1,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "error-validation",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "status": 422,
+    "code": "VALIDATION_ERROR",
+    "reason": null,
+    "body": {
+      "profile": {
+        "name": "오류",
+        "species": "DOG",
+        "weightKg": 0,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  }
+]

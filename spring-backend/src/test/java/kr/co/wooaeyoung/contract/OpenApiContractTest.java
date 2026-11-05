@@ -32,7 +32,7 @@ class OpenApiContractTest {
     private static final String REF = "#/components/schemas/";
     private static final List<Class<?>> ROOTS = List.of(
             AnalysisResponse.class, RecommendationResponse.class, NutrientListResponse.class, NutrientCatalogResponse.class,
-            ParameterCatalogResponse.class, AnalysisRequest.class, RecommendationRequest.class, StandardProfile.class);
+            ParameterCatalogResponse.class, ErrorResponse.class, AnalysisRequest.class, RecommendationRequest.class, StandardProfile.class);
 
     private static Map<String, Object> spec;
     private static Map<String, Map<String, Object>> schemas;

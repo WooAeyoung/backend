@@ -229,4 +229,16 @@ public final class ApiResponses {
             String parameterVersion,
             Map<String, VerificationStatus> verification,
             boolean allowUnverified) {}
+
+    // ---- 오류 응답(400·422) ApiExceptionHandler. 503(JARVIS·외부 서비스)은 아직 Map.of라 키 순서가 고정되지 않았다.
+
+    public record ErrorResponse(ErrorDetail detail) {
+        public static ErrorResponse of(String code, String message, ErrorReason reason) { return new ErrorResponse(new ErrorDetail(code, message, reason)); }
+    }
+
+    /**
+     * code·message는 기존 그대로다. reason은 BE-V3-015 세부 사유로 CALCULATION_INPUT_ERROR에는 항상,
+     * BAD_REQUEST에는 기준 프로필 값이 잘못됐을 때만 있다. 그 밖의 오류에는 키가 없다.
+     */
+    public record ErrorDetail(String code, String message, @JsonInclude(JsonInclude.Include.NON_NULL) ErrorReason reason) {}
 }
