@@ -28,10 +28,12 @@ def main():
     parser.add_argument("--base", default="http://localhost:8080")
     parser.add_argument("--mode", choices=["default", "strict"], required=True)
     parser.add_argument("--cases", default="requests.json", help="contract/ 아래 케이스 파일(requests.json, errors.json)")
+    parser.add_argument("--out", type=Path, default=CONTRACT / "snapshots",
+                        help="저장 위치. 저장소 스냅숏을 덮어쓰지 않고 JVM 간 비교만 할 때는 임시 디렉터리를 준다")
     args = parser.parse_args()
     cases = json.loads((CONTRACT / args.cases).read_text(encoding="utf-8"))
-    out = CONTRACT / "snapshots"
-    out.mkdir(exist_ok=True)
+    out = args.out
+    out.mkdir(parents=True, exist_ok=True)
     failures = 0
     for case in cases:
         if case["mode"] != args.mode:
