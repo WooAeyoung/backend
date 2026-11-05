@@ -43,6 +43,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  *   <li>예외(결정 D4): 전환 전 Map.of로 만들어 JVM마다 키 순서가 달랐던 객체는 스냅숏 쪽을 record 선언 순서로 맞춘 뒤 비교한다.
  *       ratios.calciumPhosphorus(value, status), excluded[](productId, name, reason …), GET /api/v1/nutrients items[](id, name, unit).</li>
  *   <li>같은 호출의 Map 응답과 record 응답을 엄격 모드(모르는 키·null 기본형 거부)로 다시 대조해 record가 빠뜨린 키가 없는지 본다.</li>
+ *   <li>Issue #5 단계 4에서 더한 키(addedKeys)는 기존 키 뒤 맨 끝에 정해진 순서로만 허용한다. 기존 부분은 여전히 바이트 단위로 같아야 하고,
+ *       더한 값 자체는 DataChecksumTest·LookupApiContractTest가 검사한다.</li>
  * </ul>
  */
 class ResponseContractSnapshotTest {
@@ -63,6 +65,25 @@ class ResponseContractSnapshotTest {
 
     static String snapshot(String id) throws IOException {
         return Files.readString(CONTRACT.resolve("snapshots").resolve(id + ".json"), StandardCharsets.UTF_8);
+    }
+
+    /** 경로별로 Issue #5에서 맨 끝에 더한 키. /api/v1/nutrients(쿼리 유무 모두)는 더한 키가 없다. */
+    static List<String> addedKeys(String path) {
+        if (path.equals("/api/v1/analyses") || path.equals("/api/v1/recommendations")) return List.of("checksums");
+        if (path.startsWith("/api/v2/standards/")) return List.of("labelInput", "checksums");
+        if (path.startsWith("/api/v2/parameters/")) return List.of("parameters", "checksums");
+        return List.of();
+    }
+
+    /** 기대값 = 전환 전 응답 + (실제 응답의 맨 끝 키들이 정확히 added 순서일 때) 그 값. 더한 키가 다른 자리에 있거나 빠지면 실패한다. */
+    static String withAddedKeys(ObjectMapper mapper, JsonNode before, JsonNode actual, List<String> added) throws IOException {
+        List<String> names = new ArrayList<>();
+        actual.fieldNames().forEachRemaining(names::add);
+        assertTrue(names.size() >= added.size(), "더한 키가 없음: " + names);
+        assertEquals(added, names.subList(names.size() - added.size(), names.size()), "더한 키는 맨 끝에 있어야 함");
+        ObjectNode expected = before.deepCopy();
+        for (String key : added) expected.set(key, actual.get(key));
+        return mapper.writeValueAsString(expected);
     }
 
     /** traceId = 입력 해시 16자 + "-" + UUID 8자. UUID 부분만 가린다. */
@@ -147,6 +168,8 @@ class ResponseContractSnapshotTest {
         @Autowired MockMvc mvc;
         @Autowired ObjectMapper mapper;
         @Autowired NutritionService nutrition;
+        @Autowired kr.co.wooaeyoung.standards.DataChecksums checksums;
+        @Autowired kr.co.wooaeyoung.api.StandardLookup lookup;
 
         abstract String mode();
 
@@ -155,8 +178,9 @@ class ResponseContractSnapshotTest {
                 MockHttpServletResponse response = mvc.perform(c.method().equals("GET") ? get(c.path())
                         : post(c.path()).contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(c.body()))).andReturn().getResponse();
                 assertEquals(200, response.getStatus(), c.id());
-                String expected = PLAIN.writeValueAsString(fixMapOfKeyOrder(PLAIN.readTree(snapshot(c.id()))));
-                assertEquals(maskTraceId(expected), maskTraceId(response.getContentAsString(StandardCharsets.UTF_8)), c.id());
+                String actual = response.getContentAsString(StandardCharsets.UTF_8);
+                String expected = withAddedKeys(PLAIN, fixMapOfKeyOrder(PLAIN.readTree(snapshot(c.id()))), PLAIN.readTree(actual), addedKeys(c.path()));
+                assertEquals(maskTraceId(expected), maskTraceId(actual), c.id());
             }));
         }
 
@@ -164,11 +188,11 @@ class ResponseContractSnapshotTest {
             ObjectMapper strictMapper = mapper.copy()
                     .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                     .enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
-            ResponseAssembler strict = new ResponseAssembler(strictMapper);
+            ResponseAssembler strict = new ResponseAssembler(strictMapper, checksums, lookup);
             return cases(mode()).stream().map(c -> DynamicTest.dynamicTest(c.id(), () -> {
                 Object map = serviceResult(c);
                 Object record = toRecord(strict, c, map);
-                String expected = mapper.writeValueAsString(fixMapOfKeyOrder(mapper.valueToTree(map)));
+                String expected = withAddedKeys(mapper, fixMapOfKeyOrder(mapper.valueToTree(map)), mapper.valueToTree(record), addedKeys(c.path()));
                 assertEquals(expected, mapper.writeValueAsString(record), c.id());
             }));
         }
@@ -191,6 +215,7 @@ class ResponseContractSnapshotTest {
             if (path.equals("/api/v1/recommendations")) return assembler.recommendation((Map<String, Object>) map);
             if (path.equals("/api/v1/nutrients")) return assembler.nutrients((List<Map<String, String>>) ((Map<String, Object>) map).get("items"));
             if (path.startsWith("/api/v2/parameters/")) return assembler.parameterCatalog((Map<String, Object>) map);
+            if (path.startsWith("/api/v2/standards/")) return assembler.standardCatalog((Map<String, Object>) map);
             return assembler.nutrientCatalog((Map<String, Object>) map);
         }
 

@@ -82,8 +82,8 @@ public class ApiController {
     }
 
     @GetMapping("/api/v2/standards/{profile}")
-    public NutrientCatalogResponse standard(@PathVariable StandardProfile profile) {
-        return responses.nutrientCatalog(nutrition.nutrientCatalog(profile));
+    public StandardCatalogResponse standard(@PathVariable StandardProfile profile) {
+        return responses.standardCatalog(nutrition.nutrientCatalog(profile));
     }
 
     @GetMapping("/api/v2/parameters/{profile}")

@@ -32,7 +32,7 @@ class OpenApiContractTest {
     private static final String REF = "#/components/schemas/";
     private static final List<Class<?>> ROOTS = List.of(
             AnalysisResponse.class, RecommendationResponse.class, NutrientListResponse.class, NutrientCatalogResponse.class,
-            ParameterCatalogResponse.class, ErrorResponse.class, AnalysisRequest.class, RecommendationRequest.class, StandardProfile.class);
+            ParameterCatalogResponse.class, StandardCatalogResponse.class, ErrorResponse.class, AnalysisRequest.class, RecommendationRequest.class, StandardProfile.class);
 
     private static Map<String, Object> spec;
     private static Map<String, Map<String, Object>> schemas;
@@ -137,6 +137,7 @@ class OpenApiContractTest {
         if (raw == boolean.class || raw == Boolean.class) return "boolean";
         if (raw == int.class || raw == Integer.class || raw == long.class || raw == Long.class) return "integer";
         if (raw == double.class || raw == Double.class) return "number";
+        if (raw == com.fasterxml.jackson.databind.JsonNode.class) return "object";   // 데이터 파일 원문(parameters)
         throw new IllegalStateException(where + ": 대응하는 OpenAPI 타입이 없음 " + raw);
     }
 

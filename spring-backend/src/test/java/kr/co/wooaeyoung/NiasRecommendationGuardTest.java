@@ -29,7 +29,8 @@ class NiasRecommendationGuardTest {
     static final String REFERENCE_ONLY = "참고값: NIAS-v3 기준값·추천 매개변수는 원문 대조 전이라 추천 결과는 검증되지 않은 참고 정보입니다.";
     /** 분기 전 NIAS 추천 응답의 최상위 필드 순서(차단·계산 모두 같음). */
     static final List<String> TOP_LEVEL = List.of("traceId", "standardVersion", "message", "items", "excluded", "usesEstimatedFeed",
-            "standardProfile", "parameterVersion", "parameterVerification", "standardsVerification", "warnings");
+            "standardProfile", "parameterVersion", "parameterVerification", "standardsVerification", "warnings",
+            "checksums");   // Issue #5 BE-V3-019: 기존 11개 순서 그대로 맨 끝에 추가
 
     static JsonNode recommend(MockMvc mvc, ObjectMapper mapper, String body) throws Exception {
         MockHttpServletResponse response = mvc.perform(post("/api/v1/recommendations").contentType(MediaType.APPLICATION_JSON).content(body)).andReturn().getResponse();

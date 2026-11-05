@@ -1,10 +1,14 @@
 package kr.co.wooaeyoung.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
+import kr.co.wooaeyoung.api.ApiModels.Species;
 import kr.co.wooaeyoung.standards.StandardReference;
 import kr.co.wooaeyoung.standards.StandardValue;
 import kr.co.wooaeyoung.standards.VerificationStatus;
 import kr.co.wooaeyoung.units.Conversion;
+import kr.co.wooaeyoung.units.LabelBasis;
+import kr.co.wooaeyoung.units.NutrientForm;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +43,16 @@ public final class ApiResponses {
             RatioApplicability ratioApplicability,
             VerificationSummary verificationSummary,
             /** FEDIAF_2025는 null. */
-            EnergyBasis energyBasis) {}
+            EnergyBasis energyBasis,
+            /** Issue #5에서 맨 끝에 더함: 이 결과를 만든 데이터 파일의 체크섬. */
+            Checksums checksums) {}
+
+    /**
+     * 데이터 파일 체크섬(BE-V3-019). CRLF를 LF로 바꾼 바이트의 SHA-256(소문자 16진수)이다.
+     * standards·parameters는 응답 프로필의 standards/{profile}/nutrients.json·parameters.json,
+     * units는 units/conversion-factors.json(이 표로 환산하는 NIAS_V3만, FEDIAF_2025는 null), products는 제품 파일이다.
+     */
+    public record Checksums(String algorithm, String standards, String parameters, String nutrientMaster, String units, String products) {}
 
     /** 판정에 쓴 성분만 센다(차단·합계 없음 성분은 verificationSummary에 센다). */
     public record Summary(int deficient, int adequate, int caution, int excess, int noStandard) {}
@@ -144,7 +157,9 @@ public final class ApiResponses {
             String parameterVersion,
             Map<String, VerificationStatus> parameterVerification,
             StandardsVerification standardsVerification,
-            List<String> warnings) {}
+            List<String> warnings,
+            /** Issue #5에서 맨 끝에 더함. */
+            Checksums checksums) {}
 
     public sealed interface RecommendationItem permits FediafRecommendationItem, NiasRecommendationItem {}
 
@@ -222,13 +237,45 @@ public final class ApiResponses {
             Map<String, StandardValue> maximum,
             Map<String, StandardValue> caution) {}
 
-    /** GET /api/v2/parameters/{profile}. */
+    /**
+     * GET /api/v2/standards/{profile}. NutrientCatalogResponse와 앞부분이 같고, Issue #5에서 labelInput·checksums를 맨 끝에 더했다.
+     * GET /api/v1/nutrients?standardProfile=는 NutrientCatalogResponse 그대로다.
+     */
+    public record StandardCatalogResponse(
+            String standardVersion,
+            String standardProfile,
+            String parameterVersion,
+            Map<String, VerificationStatus> parameterVerification,
+            StandardsVerification standardsVerification,
+            List<NutrientCatalogItem> items,
+            /** 수동 입력에서 받는 단위·표기 기준·원료 형태(units/conversion-factors.json). FEDIAF_2025는 null. */
+            LabelInput labelInput,
+            Checksums checksums) {}
+
+    /**
+     * 라벨 수동 입력 선택지. units는 받는 단위 표기와 정규화 단위, bases는 표기 기준(requires가 ENERGY면 energyKcalPerKg,
+     * MOISTURE면 moisturePercent 필요), forms는 성분별 원료 형태(species가 null이면 모든 종, excluded면 그 종에서 더하지 않음,
+     * assumed면 원료 미표기 시 고르는 간주 값), labelOnlyNutrients는 분석 성분은 아니지만 라벨에서 받는 성분 ID다.
+     */
+    public record LabelInput(String version, String sourceDocument, List<UnitOption> units, List<BasisOption> bases,
+                             Map<String, List<FormOption>> forms, List<String> labelOnlyNutrients) {}
+
+    public record UnitOption(String alias, String unit) {}
+
+    public record BasisOption(LabelBasis basis, boolean perGram, String requires) {}
+
+    public record FormOption(NutrientForm form, Species species, boolean excluded, boolean assumed) {}
+
+    /** GET /api/v2/parameters/{profile}. Issue #5에서 parameters·checksums를 맨 끝에 더했다. */
     public record ParameterCatalogResponse(
             String standardProfile,
             String standardVersion,
             String parameterVersion,
             Map<String, VerificationStatus> verification,
-            boolean allowUnverified) {}
+            boolean allowUnverified,
+            /** standards/{profile}/parameters.json 원문(키 순서·값 그대로). 성장곡선 체급(growthCurve.sizeClasses) 등을 여기서 읽는다. */
+            JsonNode parameters,
+            Checksums checksums) {}
 
     // ---- 오류 응답(400·422) ApiExceptionHandler. 503(JARVIS·외부 서비스)은 아직 Map.of라 키 순서가 고정되지 않았다.
 
