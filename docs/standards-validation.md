@@ -92,7 +92,8 @@ FEDIAF 표는 최소 권장량과 최대치를 제공하며 별도의 `주의선
 - `VERIFIED`: 이 문서로 원문과 대조한 값. 현재 FEDIAF 기준값(Ca, P, 비타민 D, 아연)과 FEDIAF 매개변수 중 생애주기 경계·대형견 칼슘 조건·주의 비율·Ca:P 상한이 해당한다.
 - `PENDING_VERIFICATION`: 원문 대조 전. NIAS xlsx 값, EU 법정 주의값, AAFCO 주의값은 전부 이 상태다. 표 번호를 확인할 수 없으면 `table: "UNCONFIRMED"`이고, 그 레코드는 반드시 이 상태다(무결성 테스트로 강제).
 - `NOT_APPLICABLE`: 빈칸(기준 없음). `value: null`, `table: "N/A"`, 사유는 `note`에 적는다.
-- `PENDING_VERIFICATION` 값은 판정·추천에 쓰지 않는다. 해당 성분은 `UNVERIFIED_STANDARD` 상태와 경고로 응답하며 기준값을 공식 기준처럼 노출하지 않는다. `wooaeyoung.standards.allow-unverified=true`는 `test` 프로필에서만 허용되고, 켜면 응답에 표시된다.
+- `wooaeyoung.standards.allow-unverified=false`이면 `PENDING_VERIFICATION` 값은 판정·추천에 쓰지 않는다. 해당 성분은 `UNVERIFIED_STANDARD` 상태와 경고로 응답하며 기준값을 공식 기준처럼 노출하지 않는다.
+- 2026-10-26(`a5ae994`·`c9c1147`)부터 기본값은 `true`이고 test 프로필 제한이 없다. 이때 검증 대기 값으로 참고 판정하고 응답에 `standardsVerification.allowUnverified: true`와 "참고 판정" 경고를 붙인다.
 
 ### 검증 대기(PENDING_VERIFICATION) 목록
 
@@ -172,3 +173,56 @@ FEDIAF 표는 최소 권장량과 최대치를 제공하며 별도의 `주의선
 - 합계가 `null`인 성분은 부족으로 세지 않고, 그 성분에 주의선·상한이 있는데 후보가 담으면 안전 확인 불가로 탈락시킨다. 후보 쪽 값을 환산하지 못한 성분도 같다. **처리기준에 없는 결정이다.**
 - 후보 성분의 환산 상태가 `EXCLUDED`(고양이 베타카로틴처럼 종 규칙으로 더하지 않음)이면 기여가 없는 것으로 보고 탈락 사유로 치지 않는다. `NO_VALUE`(보증값만 표기, 총 오메가3만 표기)는 실제 함량을 알 수 없으므로 환산하지 못한 성분과 같이 처리한다. **처리기준에 없는 결정이다.**
 - 데모 데이터 영향: `supp-multi`(데일리 멀티)는 비타민 D(µg)·E(mg)의 원료 형태가 없어 IU로 환산할 수 없고(`INSUFFICIENT_DATA`), 비타민 D에 주의선·상한이 있으므로 NIAS 추천에서 `UNVERIFIABLE`로 탈락한다. 제품 데이터에 원료 형태(`nutrientDetails.form`)를 채우면 후보가 된다.
+
+## 데이터 체크섬 (Issue #5, BE-V3-019)
+
+분석·추천·조회 응답의 `checksums`는 그 결과를 만든 데이터 파일의 SHA-256이다. 같은 체크섬이면 같은 기준값·매개변수·환산표·제품 데이터로 계산한 결과다.
+
+| 응답 필드 | 파일(classpath) |
+| --- | --- |
+| `standards` | `standards/{profile}/nutrients.json` |
+| `parameters` | `standards/{profile}/parameters.json` |
+| `nutrientMaster` | `standards/nutrients-master.json` |
+| `units` | `units/conversion-factors.json`. 이 표로 환산하는 `NIAS_V3`만, `FEDIAF_2025`는 `null` |
+| `products` | `products.json`(`wooaeyoung.catalog.products-resource`) |
+
+- 계산: 파일 바이트에서 CRLF(`\r\n`)를 LF(`\n`)로 바꾼 뒤 SHA-256, 소문자 16진수. 홀로 있는 CR은 바꾸지 않는다. `algorithm` 값은 `SHA-256 (CRLF→LF)`이다.
+- 정규화하는 이유: 저장소 index는 LF이고 Windows 체크아웃(`core.autocrlf=true`)은 CRLF다. 2026-11-05에 7개 파일 모두 Windows 작업 트리가 CRLF였고, 원본 바이트를 그대로 해시하면 7개 모두 CI·Docker(LF)와 값이 달랐다. 정규화한 값은 `git show HEAD:<경로> | sha256sum`(git에 저장된 내용)과 같다.
+- 시작 시 한 번 계산한다(`standards/DataChecksums`). 기록 값은 `spring-backend/src/test/resources/contract/data-checksums.json`에 있다.
+- `DataChecksumTest`가 확인하는 것:
+  - 서버가 계산한 값이 기록 값과 같다.
+  - 파일마다 LF판과 CRLF판을 만들어 둘 다 기록 값이 나온다.
+  - 정규화하지 않은 CRLF판은 값이 달라진다.
+  - 응답 `checksums`가 이 값을 보여 준다.
+- 데이터 파일을 의도적으로 바꾸면 `data-checksums.json`도 함께 바꾸고, PR에 바꾼 파일과 이유를 적는다. 기록 값만 바뀌고 데이터 변경 이유가 없으면 리뷰에서 막는다.
+
+기록 값(2026-11-05, `c65d99e` 기준):
+
+| 파일 | SHA-256 (CRLF→LF) |
+| --- | --- |
+| `standards/nutrients-master.json` | `ef6eb11fdec31f4d4dca556264f77797e03888a49ccd9b6ab666aee40c82bb08` |
+| `standards/fediaf-2025/nutrients.json` | `85666c3521f40659aa7269770742e5fc728b1682e7f7ff7946906ba481990fbf` |
+| `standards/fediaf-2025/parameters.json` | `0fed9d839ac0436d734ea783723dccfa0c3781dc181dd30a0eaf5dfba8819f7c` |
+| `standards/nias-v3/nutrients.json` | `04885f37dd563e87ed54bfb057eb85673dedfc83c2058f7553d28dbee1f0509a` |
+| `standards/nias-v3/parameters.json` | `2ebc7940055db9720a52b194854e5a05b843f633e3ca55fc7fd6f17536304bfb` |
+| `units/conversion-factors.json` | `fe8f6e18e6e90ba769ef6de89ad92cb7b1ec0c19297fb15587c6256a75b7337d` |
+| `products.json` | `f4b44a0267f1481dfc7d35244e91d557a0acbe7574c18fefc1dc27ba15f770d0` |
+
+`GET /api/v2/parameters/{profile}`의 `parameters`는 위 `parameters.json`의 원문(키 순서·값 그대로)이라, 응답 `checksums.parameters`로 어떤 파일 내용인지 확인할 수 있다.
+
+### T1~T16 검산 목록 (BE-V3-017)
+
+계산명세서 11장 T1~T16의 입력, 참조 구현 정답(`docs/v3/계산_참조구현_v3.py`를 저장소 밖에서 실행한 출력), 참조 구현과 다르게 정한 결정, 담당 테스트는 `spring-backend/src/test/resources/contract/nias-t1-t16.json` 한 곳에 둔다. `NiasGoldenCasesTest`는 두 가지를 확인한다.
+
+- 16개 모두 있는지, 담당 테스트 메서드가 실제로 있는지 확인한다. 이름이 바뀌거나 지워지면 실패한다.
+- T13(성견 비타민 E: 상한·주의선 없음 → 적정(상한 기준 없음))을 API 수준에서 새로 검사한다.
+
+참조 구현과 다르게 정한 곳:
+
+| 케이스 | 참조 구현 | Java | 결정 |
+| --- | --- | --- | --- |
+| T7 | 200, 전 성분 미지원 | 422 `CALCULATION_INPUT_ERROR`, `reason: AGE_UNSUPPORTED` | Issue #5 D1. 기존 API 계약 유지, v2 전환은 남은 작업 |
+| T8 | 오류 "체급 선택 필요" | 422, `reason: SIZE_CLASS_REQUIRED` | Issue #5 |
+| T9·T10 | 사료 항목 없이 complete_feed | 성분 미표기 완전사료(`feed-complete-unknown`)를 함께 보냄 | Issue #3 |
+| T11 | 비타민 K 기준 없음 | 비타민 K는 `implemented=false`라 분석 행 없음, 성분 목록에서 기준값 `null` 확인 | Issue #3 |
+| T14·T15 | Ca:P 거르기 없음 | Ca:P 이탈 탈락(운영 규칙). 참조 비교는 Ca:P를 끈 상태 | Issue #4 결정 A |
