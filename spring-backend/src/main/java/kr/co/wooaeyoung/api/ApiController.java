@@ -1,6 +1,7 @@
 package kr.co.wooaeyoung.api;
 
 import jakarta.validation.Valid;
+import kr.co.wooaeyoung.api.ApiResponses.*;
 import kr.co.wooaeyoung.domain.CatalogService;
 import kr.co.wooaeyoung.domain.NutritionService;
 import kr.co.wooaeyoung.domain.JarvisService;
@@ -16,12 +17,15 @@ public class ApiController {
     private final NutritionService nutrition;
     private final JarvisService jarvis;
     private final VetClinicService vets;
+    private final ResponseAssembler responses;
 
-    public ApiController(CatalogService catalog, NutritionService nutrition, JarvisService jarvis, VetClinicService vets) {
+    public ApiController(CatalogService catalog, NutritionService nutrition, JarvisService jarvis, VetClinicService vets,
+                         ResponseAssembler responses) {
         this.catalog = catalog;
         this.nutrition = nutrition;
         this.jarvis = jarvis;
         this.vets = vets;
+        this.responses = responses;
     }
 
     @GetMapping("/api/v1/vets/nearest")
@@ -56,20 +60,20 @@ public class ApiController {
     }
 
     @GetMapping("/api/v1/nutrients")
-    public Map<String, Object> nutrients(@RequestParam(required = false) StandardProfile standardProfile) {
+    public Object nutrients(@RequestParam(required = false) StandardProfile standardProfile) {
         // 쿼리 미지정이면 기존 응답(FEDIAF 6개, id·name·unit)을 그대로 준다.
-        if (standardProfile == null) return Map.of("items", nutrition.nutrients());
-        return nutrition.nutrientCatalog(standardProfile);
+        if (standardProfile == null) return responses.nutrients(nutrition.nutrients());
+        return responses.nutrientCatalog(nutrition.nutrientCatalog(standardProfile));
     }
 
     @PostMapping("/api/v1/analyses")
-    public Map<String, Object> analyses(@Valid @RequestBody ApiModels.AnalysisRequest request) {
-        return nutrition.analyze(request);
+    public AnalysisResponse analyses(@Valid @RequestBody ApiModels.AnalysisRequest request) {
+        return responses.analysis(nutrition.analyze(request));
     }
 
     @PostMapping("/api/v1/recommendations")
-    public Map<String, Object> recommendations(@Valid @RequestBody ApiModels.RecommendationRequest request) {
-        return nutrition.recommend(request);
+    public RecommendationResponse<?> recommendations(@Valid @RequestBody ApiModels.RecommendationRequest request) {
+        return responses.recommendation(nutrition.recommend(request));
     }
 
     @PostMapping("/api/v1/jarvis")
@@ -78,12 +82,12 @@ public class ApiController {
     }
 
     @GetMapping("/api/v2/standards/{profile}")
-    public Map<String, Object> standard(@PathVariable StandardProfile profile) {
-        return nutrition.nutrientCatalog(profile);
+    public NutrientCatalogResponse standard(@PathVariable StandardProfile profile) {
+        return responses.nutrientCatalog(nutrition.nutrientCatalog(profile));
     }
 
     @GetMapping("/api/v2/parameters/{profile}")
-    public Map<String, Object> parameters(@PathVariable StandardProfile profile) {
-        return nutrition.parameterCatalog(profile);
+    public ParameterCatalogResponse parameters(@PathVariable StandardProfile profile) {
+        return responses.parameterCatalog(nutrition.parameterCatalog(profile));
     }
 }
