@@ -26,6 +26,8 @@ services:
         sync: false
       - key: JARVIS_PROVIDER
         value: grok
+      - key: JARVIS_FALLBACK_PROVIDER
+        value: aimlapi
       - key: XAI_API_KEY
         sync: false
       - key: GROK_MODEL

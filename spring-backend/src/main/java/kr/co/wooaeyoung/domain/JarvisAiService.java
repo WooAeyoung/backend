@@ -23,25 +23,42 @@ public class JarvisAiService {
     public JarvisAiService() {
         SimpleClientHttpRequestFactory requests = new SimpleClientHttpRequestFactory();
         requests.setConnectTimeout(Duration.ofSeconds(5));
-        requests.setReadTimeout(Duration.ofSeconds(20));
+        requests.setReadTimeout(Duration.ofSeconds(12));
         this.client = RestClient.builder().requestFactory(requests).build();
     }
 
     public Optional<String> complete(String message, Map<String, Object> analysis) { return complete(message, analysis, null); }
     public Optional<String> complete(String message, Map<String, Object> analysis, String requestedProvider) {
         String provider = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
+        String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
+        if ("grok".equals(provider) && (System.getenv("XAI_API_KEY") == null || System.getenv("XAI_API_KEY").isBlank())
+                && !fallback.isBlank() && !fallback.equals(provider)) provider = fallback;
         try {
-            return switch (provider) {
-                case "grok" -> grok(message, analysis);
-                case "ollama" -> ollama(message, analysis);
-                case "aimlapi" -> aimlapi(message, analysis);
-                default -> throw new IllegalStateException("지원하지 않는 JARVIS_PROVIDER입니다.");
-            };
-        } catch (RestClientResponseException error) {
-            throw new JarvisProviderException(providerErrorMessage(error), error);
-        } catch (Exception error) {
-            throw new JarvisProviderException("AI 제공자 응답을 받지 못했습니다. 잠시 후 다시 시도해 주세요.", error);
+            Optional<String> answer = request(provider, message, analysis);
+            if (answer.isPresent() && !answer.get().isBlank()) return answer;
+            // No configured key or empty upstream response: command/data-based answers remain available.
+            return Optional.empty();
+        } catch (Exception primaryError) {
+            if (!fallback.isBlank() && !fallback.equals(provider)) {
+                try {
+                    Optional<String> answer = request(fallback, message, analysis);
+                    if (answer.isPresent() && !answer.get().isBlank()) return answer;
+                } catch (Exception fallbackError) {
+                    primaryError.addSuppressed(fallbackError);
+                }
+            }
+            // Let JarvisService answer from the submitted analysis instead of failing the whole request.
+            return Optional.empty();
         }
+    }
+
+    private Optional<String> request(String provider, String message, Map<String, Object> analysis) throws Exception {
+        return switch (provider) {
+            case "grok" -> grok(message, analysis);
+            case "ollama" -> ollama(message, analysis);
+            case "aimlapi" -> aimlapi(message, analysis);
+            default -> throw new IllegalStateException("지원하지 않는 JARVIS 제공자입니다.");
+        };
     }
 
     private Optional<String> grok(String message, Map<String, Object> analysis) throws Exception {
