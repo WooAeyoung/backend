@@ -12,7 +12,7 @@ public class JarvisService {
     public Map<String, Object> answer(ApiModels.JarvisRequest request) {
         String phrase = request.message().replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
         if (phrase.contains("부족한성분만보여줘")) {
-            return reply("DEMO_DEFICIENT_NUTRIENTS", "analysis", "부족한 성분: 타우린, 비타민 D, 비타민 E. 실제 결과는 영양제 분석을 완료한 뒤 표시됩니다.");
+            return reply("DEFICIENT_NUTRIENTS", "analysis", deficientAnswer(request.analysis()));
         }
         if (phrase.matches(".*(오늘|최근).*(분석|결과).*(요약|설명).*|.*(요약|설명).*(분석|결과).*")) {
             return reply("ANALYSIS_SUMMARY", "analysis", describeAnalysis(request.analysis()));
@@ -73,16 +73,24 @@ public class JarvisService {
     private String answerFromAnalysis(String message, Map<String, Object> analysis) {
         if (analysis == null) return "아직 불러온 분석 데이터가 없어요. 먼저 영양제 분석을 완료해 주세요.";
         String normalized = message.replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
-        if (normalized.contains("부족")) {
-            List<String> deficient = new ArrayList<>();
-            if (analysis.get("nutrients") instanceof List<?> rows) for (Object row : rows) {
-                Map<String, Object> nutrient = map(row);
-                if ("DEFICIENT".equals(String.valueOf(nutrient.get("status")))) deficient.add(String.valueOf(nutrient.get("name")));
-            }
-            return deficient.isEmpty() ? "현재 불러온 분석 데이터에서 부족으로 표시된 성분이 없어요." : "부족한 성분: " + String.join(", ", deficient) + ".";
-        }
+        if (normalized.contains("부족")) return deficientAnswer(analysis);
         if (normalized.contains("칼슘") || normalized.contains("비율")) return calciumGuidance(analysis);
         return describeAnalysis(analysis);
+    }
+
+    private String deficientAnswer(Map<String, Object> analysis) {
+        if (analysis == null) return "아직 분석 결과가 없어요. 영양제 분석을 완료하면 실제 부족 성분을 확인해 드릴게요.";
+        List<String> deficient = new ArrayList<>();
+        if (analysis.get("nutrients") instanceof List<?> rows) for (Object row : rows) {
+            Map<String, Object> nutrient = map(row);
+            if ("DEFICIENT".equals(String.valueOf(nutrient.get("status")))) {
+                Object name = nutrient.get("name");
+                if (name != null && !String.valueOf(name).isBlank()) deficient.add(String.valueOf(name));
+            }
+        }
+        return deficient.isEmpty()
+                ? "현재 분석 결과에서 부족으로 표시된 성분은 없어요."
+                : "현재 분석 결과에서 부족한 성분은 " + String.join(", ", deficient) + "이에요.";
     }
 
     @SuppressWarnings("unchecked") private Map<String, Object> map(Object value) { return value instanceof Map<?, ?> raw ? (Map<String, Object>) raw : Map.of(); }
