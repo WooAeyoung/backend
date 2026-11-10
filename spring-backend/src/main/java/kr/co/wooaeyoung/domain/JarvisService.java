@@ -32,8 +32,9 @@ public class JarvisService {
         if (phrase.matches(".*(분석|영양제).*")) return reply("ANALYSIS", "analysis", "영양제 분석 화면으로 이동할게요. 반려동물 정보와 급여 제품을 입력해 주세요.");
         if (phrase.matches(".*(고객센터|문의|도움말).*")) return reply("SUPPORT", "support", "고객센터로 이동할게요.");
         if (phrase.matches(".*(홈|처음|메인).*")) return reply("HOME", "home", "홈 화면으로 이동할게요.");
+        String localAnswer = answerFromAnalysis(request.message(), request.analysis());
         Optional<String> aiAnswer = ai.complete(request.message(), request.analysis());
-        return reply("AI_ASSISTANT", null, aiAnswer.orElseGet(() -> answerFromAnalysis(request.message(), request.analysis())));
+        return reply("AI_ASSISTANT", null, aiAnswer.filter(answer -> !answer.isBlank()).orElse(localAnswer));
     }
 
     private Map<String, Object> reply(String intent, String page, String answer) {
@@ -80,6 +81,7 @@ public class JarvisService {
             }
             return deficient.isEmpty() ? "현재 불러온 분석 데이터에서 부족으로 표시된 성분이 없어요." : "부족한 성분: " + String.join(", ", deficient) + ".";
         }
+        if (normalized.contains("칼슘") || normalized.contains("비율")) return calciumGuidance(analysis);
         return describeAnalysis(analysis);
     }
 
