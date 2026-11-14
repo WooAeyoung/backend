@@ -88,8 +88,11 @@ public class JarvisAiService {
     private Optional<String> grok(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         String key = System.getenv("XAI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
-        String model = allowed(System.getenv().getOrDefault("GROK_MODEL", "grok-4-1-fast-non-reasoning"), GROK_MODELS);
-        Map<String, Object> body = Map.of("model", model, "messages", List.of(Map.of("role", "user", "content", prompt(message, analysis, history))));
+        String model = allowed(System.getenv().getOrDefault("GROK_MODEL", "grok-4.7"), GROK_MODELS);
+        Map<String, Object> body = Map.of(
+                "model", model,
+                "reasoning_effort", "low",
+                "messages", List.of(Map.of("role", "user", "content", prompt(message, analysis, history))));
         String raw = client.post().uri("https://api.x.ai/v1/chat/completions").header(HttpHeaders.AUTHORIZATION, "Bearer " + key).contentType(MediaType.APPLICATION_JSON).body(body).retrieve().body(String.class);
         JsonNode text = mapper.readTree(raw).path("choices").path(0).path("message").path("content");
         return text.isTextual() ? Optional.of(text.asText()) : Optional.empty();
