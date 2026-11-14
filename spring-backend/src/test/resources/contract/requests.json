@@ -1,0 +1,1740 @@
+[
+  {
+    "id": "analysis-fediaf-adult-dog",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "recommendation-fediaf-adult-dog",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "analysis-fediaf-adult-dog-multi",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        },
+        {
+          "productId": "supp-multi",
+          "dailyAmount": 1,
+          "unit": "TABLET"
+        }
+      ]
+    }
+  },
+  {
+    "id": "recommendation-fediaf-adult-dog-multi",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        },
+        {
+          "productId": "supp-multi",
+          "dailyAmount": 1,
+          "unit": "TABLET"
+        }
+      ]
+    }
+  },
+  {
+    "id": "analysis-fediaf-adult-cat",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 4,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 60,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "recommendation-fediaf-adult-cat",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 4,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 60,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "analysis-fediaf-growth-cat",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 1.5,
+        "age": {
+          "value": 3,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 40,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "recommendation-fediaf-growth-cat",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 1.5,
+        "age": {
+          "value": 3,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 40,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "analysis-fediaf-large-puppy",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 12,
+        "age": {
+          "value": 16,
+          "unit": "WEEK"
+        },
+        "expectedAdultWeightKg": 30,
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 300,
+          "unit": "G"
+        },
+        {
+          "productId": "supp-calcium",
+          "dailyAmount": 1,
+          "unit": "SCOOP"
+        }
+      ]
+    }
+  },
+  {
+    "id": "recommendation-fediaf-large-puppy",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 12,
+        "age": {
+          "value": 16,
+          "unit": "WEEK"
+        },
+        "expectedAdultWeightKg": 30,
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 300,
+          "unit": "G"
+        },
+        {
+          "productId": "supp-calcium",
+          "dailyAmount": 1,
+          "unit": "SCOOP"
+        }
+      ]
+    }
+  },
+  {
+    "id": "analysis-fediaf-estimated-feed",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-complete-unknown",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "recommendation-fediaf-estimated-feed",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-complete-unknown",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "analysis-fediaf-explicit-profile",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "FEDIAF_2025"
+    }
+  },
+  {
+    "id": "recommendation-fediaf-explicit-profile",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "FEDIAF_2025"
+    }
+  },
+  {
+    "id": "analysis-fediaf-manual",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": false
+      },
+      "items": [],
+      "manualItems": [
+        {
+          "name": "수동 칼슘·인",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "CALCIUM",
+              "amount": 1,
+              "unit": "G"
+            },
+            {
+              "nutrientId": "PHOSPHORUS",
+              "amount": 900,
+              "unit": "MG"
+            }
+          ]
+        },
+        {
+          "name": "수동 비타민",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_D",
+              "amount": 10,
+              "unit": "UG"
+            },
+            {
+              "nutrientId": "VITAMIN_E",
+              "amount": 20,
+              "unit": "MG",
+              "form": "DL_ALPHA_TOCOPHERYL_ACETATE"
+            },
+            {
+              "nutrientId": "ZINC",
+              "amount": 5,
+              "unit": "MG"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "recommendation-fediaf-manual",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": false
+      },
+      "items": [],
+      "manualItems": [
+        {
+          "name": "수동 칼슘·인",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "CALCIUM",
+              "amount": 1,
+              "unit": "G"
+            },
+            {
+              "nutrientId": "PHOSPHORUS",
+              "amount": 900,
+              "unit": "MG"
+            }
+          ]
+        },
+        {
+          "name": "수동 비타민",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_D",
+              "amount": 10,
+              "unit": "UG"
+            },
+            {
+              "nutrientId": "VITAMIN_E",
+              "amount": 20,
+              "unit": "MG",
+              "form": "DL_ALPHA_TOCOPHERYL_ACETATE"
+            },
+            {
+              "nutrientId": "ZINC",
+              "amount": 5,
+              "unit": "MG"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "recommendation-fediaf-max-1",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "maxItems": 1
+    }
+  },
+  {
+    "id": "analysis-nias-t1-adult-dog",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-t1-adult-dog",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-adult-dog-supplements",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        },
+        {
+          "productId": "supp-multi",
+          "dailyAmount": 1,
+          "unit": "TABLET"
+        },
+        {
+          "productId": "supp-omega",
+          "dailyAmount": 1,
+          "unit": "CAPSULE"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-adult-dog-supplements",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        },
+        {
+          "productId": "supp-multi",
+          "dailyAmount": 1,
+          "unit": "TABLET"
+        },
+        {
+          "productId": "supp-omega",
+          "dailyAmount": 1,
+          "unit": "CAPSULE"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-t2-adult-cat",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 4,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 60,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-t2-adult-cat",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 4,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 60,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-t3-puppy-s",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 3,
+        "age": {
+          "value": 12,
+          "unit": "WEEK"
+        },
+        "adultSize": "S",
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 90,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-t3-puppy-s",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 3,
+        "age": {
+          "value": 12,
+          "unit": "WEEK"
+        },
+        "adultSize": "S",
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 90,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-t4-puppy-xl",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 18,
+        "age": {
+          "value": 20,
+          "unit": "WEEK"
+        },
+        "adultSize": "XL",
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 300,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-t4-puppy-xl",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 18,
+        "age": {
+          "value": 20,
+          "unit": "WEEK"
+        },
+        "adultSize": "XL",
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 300,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-t5-clipped",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 40,
+        "age": {
+          "value": 20,
+          "unit": "WEEK"
+        },
+        "adultSize": "S",
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 300,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-xxl",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 30,
+        "age": {
+          "value": 20,
+          "unit": "WEEK"
+        },
+        "adultSize": "XXL",
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 300,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-t6-kitten-s1",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 1.5,
+        "age": {
+          "value": 3,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 40,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-t6-kitten-s1",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 1.5,
+        "age": {
+          "value": 3,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 40,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-kitten-s2",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 4,
+        "age": {
+          "value": 6,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 60,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-t9-estimated-feed",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-complete-unknown",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "비타민 D제",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_D",
+              "amount": 300,
+              "unit": "IU"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-t9-estimated-feed",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-complete-unknown",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "비타민 D제",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_D",
+              "amount": 300,
+              "unit": "IU"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-t11-not-complete",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": false
+      },
+      "items": [
+        {
+          "productId": "feed-complete-unknown",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-t11-not-complete",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": false
+      },
+      "items": [
+        {
+          "productId": "feed-complete-unknown",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-t12-ca-p",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": false
+      },
+      "items": [],
+      "manualItems": [
+        {
+          "name": "칼슘·인",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "CALCIUM",
+              "amount": 1.2,
+              "unit": "G"
+            },
+            {
+              "nutrientId": "PHOSPHORUS",
+              "amount": 0.9,
+              "unit": "G"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-t13-vitamin-e",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": false
+      },
+      "items": [],
+      "manualItems": [
+        {
+          "name": "비타민 E제",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_E",
+              "amount": 10,
+              "unit": "IU"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-manual-labels",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "수동 사료",
+          "type": "FEED",
+          "servingAmount": 100,
+          "servingUnit": "G",
+          "dailyAmount": 50,
+          "nutrients": [
+            {
+              "nutrientId": "CALCIUM",
+              "amount": 1.2,
+              "unit": "%"
+            },
+            {
+              "nutrientId": "ZINC",
+              "amount": 150,
+              "unit": "ppm"
+            },
+            {
+              "nutrientId": "VITAMIN_A",
+              "amount": 5000,
+              "unit": "IU/kg",
+              "basis": "PER_KG"
+            }
+          ],
+          "moisturePercent": 10,
+          "energyKcalPerKg": 3800
+        },
+        {
+          "name": "수동 영양제",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_D",
+              "amount": 0.01,
+              "unit": "MG"
+            },
+            {
+              "nutrientId": "VITAMIN_A",
+              "amount": 1,
+              "unit": "MG",
+              "form": "RETINYL_ACETATE"
+            },
+            {
+              "nutrientId": "EPA",
+              "amount": 100,
+              "unit": "MG"
+            },
+            {
+              "nutrientId": "DHA",
+              "amount": 50,
+              "unit": "MG"
+            },
+            {
+              "nutrientId": "ZINC",
+              "amount": 10,
+              "unit": "MG",
+              "guarantee": "MIN"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-manual-labels",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "수동 사료",
+          "type": "FEED",
+          "servingAmount": 100,
+          "servingUnit": "G",
+          "dailyAmount": 50,
+          "nutrients": [
+            {
+              "nutrientId": "CALCIUM",
+              "amount": 1.2,
+              "unit": "%"
+            },
+            {
+              "nutrientId": "ZINC",
+              "amount": 150,
+              "unit": "ppm"
+            },
+            {
+              "nutrientId": "VITAMIN_A",
+              "amount": 5000,
+              "unit": "IU/kg",
+              "basis": "PER_KG"
+            }
+          ],
+          "moisturePercent": 10,
+          "energyKcalPerKg": 3800
+        },
+        {
+          "name": "수동 영양제",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_D",
+              "amount": 0.01,
+              "unit": "MG"
+            },
+            {
+              "nutrientId": "VITAMIN_A",
+              "amount": 1,
+              "unit": "MG",
+              "form": "RETINYL_ACETATE"
+            },
+            {
+              "nutrientId": "EPA",
+              "amount": 100,
+              "unit": "MG"
+            },
+            {
+              "nutrientId": "DHA",
+              "amount": 50,
+              "unit": "MG"
+            },
+            {
+              "nutrientId": "ZINC",
+              "amount": 10,
+              "unit": "MG",
+              "guarantee": "MIN"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-nias-cat-manual",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 4,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 60,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "고양이 영양제",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "BETA_CAROTENE",
+              "amount": 1,
+              "unit": "MG",
+              "form": "BETA_CAROTENE"
+            },
+            {
+              "nutrientId": "VITAMIN_E",
+              "amount": 5,
+              "unit": "MG",
+              "form": "D_ALPHA_TOCOPHEROL"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-cat-manual",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 4,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 60,
+          "unit": "G"
+        }
+      ],
+      "manualItems": [
+        {
+          "name": "고양이 영양제",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "BETA_CAROTENE",
+              "amount": 1,
+              "unit": "MG",
+              "form": "BETA_CAROTENE"
+            },
+            {
+              "nutrientId": "VITAMIN_E",
+              "amount": 5,
+              "unit": "MG",
+              "form": "D_ALPHA_TOCOPHEROL"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-nias-max-1",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3",
+      "maxItems": 1
+    }
+  },
+  {
+    "id": "recommendation-nias-t15-like",
+    "mode": "default",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": false
+      },
+      "items": [],
+      "manualItems": [
+        {
+          "name": "수동 비타민 E",
+          "type": "SUPPLEMENT",
+          "servingAmount": 1,
+          "servingUnit": "TABLET",
+          "dailyAmount": 1,
+          "nutrients": [
+            {
+              "nutrientId": "VITAMIN_E",
+              "amount": 1,
+              "unit": "IU"
+            }
+          ]
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "nutrients-default",
+    "mode": "default",
+    "method": "GET",
+    "path": "/api/v1/nutrients"
+  },
+  {
+    "id": "nutrients-nias",
+    "mode": "default",
+    "method": "GET",
+    "path": "/api/v1/nutrients?standardProfile=NIAS_V3"
+  },
+  {
+    "id": "nutrients-fediaf",
+    "mode": "default",
+    "method": "GET",
+    "path": "/api/v1/nutrients?standardProfile=FEDIAF_2025"
+  },
+  {
+    "id": "v2-standards-nias",
+    "mode": "default",
+    "method": "GET",
+    "path": "/api/v2/standards/NIAS_V3"
+  },
+  {
+    "id": "v2-standards-fediaf",
+    "mode": "default",
+    "method": "GET",
+    "path": "/api/v2/standards/FEDIAF_2025"
+  },
+  {
+    "id": "v2-parameters-nias",
+    "mode": "default",
+    "method": "GET",
+    "path": "/api/v2/parameters/NIAS_V3"
+  },
+  {
+    "id": "v2-parameters-fediaf",
+    "mode": "default",
+    "method": "GET",
+    "path": "/api/v2/parameters/FEDIAF_2025"
+  },
+  {
+    "id": "analysis-strict-nias-t1-adult-dog",
+    "mode": "strict",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-strict-nias-t1-adult-dog",
+    "mode": "strict",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-strict-nias-t3-puppy-s",
+    "mode": "strict",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 3,
+        "age": {
+          "value": 12,
+          "unit": "WEEK"
+        },
+        "adultSize": "S",
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 90,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "recommendation-strict-nias-t3-puppy-s",
+    "mode": "strict",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 3,
+        "age": {
+          "value": 12,
+          "unit": "WEEK"
+        },
+        "adultSize": "S",
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 90,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-strict-nias-t6-kitten-s1",
+    "mode": "strict",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "CAT",
+        "weightKg": 1.5,
+        "age": {
+          "value": 3,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-cat",
+          "dailyAmount": 40,
+          "unit": "G"
+        }
+      ],
+      "standardProfile": "NIAS_V3"
+    }
+  },
+  {
+    "id": "analysis-strict-fediaf-adult-dog",
+    "mode": "strict",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "recommendation-strict-fediaf-adult-dog",
+    "mode": "strict",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "body": {
+      "profile": {
+        "name": "계약",
+        "species": "DOG",
+        "weightKg": 10,
+        "age": {
+          "value": 36,
+          "unit": "MONTH"
+        },
+        "completeFeed": true
+      },
+      "items": [
+        {
+          "productId": "feed-balanced-dog",
+          "dailyAmount": 150,
+          "unit": "G"
+        }
+      ]
+    }
+  },
+  {
+    "id": "strict-v2-parameters-nias",
+    "mode": "strict",
+    "method": "GET",
+    "path": "/api/v2/parameters/NIAS_V3"
+  },
+  {
+    "id": "strict-v2-standards-nias",
+    "mode": "strict",
+    "method": "GET",
+    "path": "/api/v2/standards/NIAS_V3"
+  }
+]

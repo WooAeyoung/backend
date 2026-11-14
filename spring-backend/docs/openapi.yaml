@@ -1,0 +1,585 @@
+openapi: 3.0.3
+info:
+  title: 우애영 영양 분석 API
+  version: "1.0.0"
+  description: |
+    분석·추천·기준 조회 응답 계약(Issue #5, BE-V3-014~016).
+    - 응답 객체의 properties 순서는 실제 JSON 키 순서와 같다.
+    - required에 있는 키는 값이 null이어도 항상 있다. required에 없는 키는 해당 프로필에서만 있다(설명 참조).
+    - 스키마 이름은 Java record·enum 이름이다(api/ApiResponses.java, api/ApiModels.java). OpenApiContractTest가 둘을 대조한다.
+    - FEDIAF_2025는 기존 운영 기준(standardProfile 생략 시 기본값), NIAS_V3는 원문 대조 전(PENDING_VERIFICATION) 참고 기준이다.
+servers:
+  - url: https://wooaeyoung-backend.onrender.com
+paths:
+  /api/v1/analyses:
+    post:
+      summary: 급여 조합 영양 분석
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/AnalysisRequest'}
+      responses:
+        '200':
+          description: 분석 결과
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnalysisResponse'}
+        '400': {description: '요청 형식 오류(JSON 파싱, 알 수 없는 enum 값). 알 수 없는 standardProfile이면 reason STANDARD_PROFILE_UNKNOWN', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '422': {description: '입력 검증 실패(VALIDATION_ERROR) 또는 계산 입력 오류(CALCULATION_INPUT_ERROR, reason 있음)', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+  /api/v1/recommendations:
+    post:
+      summary: 영양제 추천
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/RecommendationRequest'}
+      responses:
+        '200':
+          description: 추천 결과
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/RecommendationResponse'}
+        '400': {description: 요청 형식 오류, content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '422': {description: 입력 검증 실패 또는 계산 입력 오류, content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+  /api/v1/nutrients:
+    get:
+      summary: 성분 목록
+      description: standardProfile이 없으면 기존 FEDIAF 6개 성분(NutrientListResponse), 있으면 그 프로필의 전체 성분과 기준값(NutrientCatalogResponse).
+      parameters:
+        - name: standardProfile
+          in: query
+          required: false
+          schema: {$ref: '#/components/schemas/StandardProfile'}
+      responses:
+        '200':
+          description: 성분 목록
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - {$ref: '#/components/schemas/NutrientListResponse'}
+                  - {$ref: '#/components/schemas/NutrientCatalogResponse'}
+        '400': {description: '알 수 없는 standardProfile(reason STANDARD_PROFILE_UNKNOWN)', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+  /api/v2/standards/{profile}:
+    get:
+      summary: 프로필의 전체 성분·기준값·출처·검증 상태
+      parameters:
+        - {name: profile, in: path, required: true, schema: {$ref: '#/components/schemas/StandardProfile'}}
+      responses:
+        '200':
+          description: 기준값 목록
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/StandardCatalogResponse'}
+        '400': {description: '알 수 없는 프로필(reason STANDARD_PROFILE_UNKNOWN)', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+  /api/v2/parameters/{profile}:
+    get:
+      summary: 프로필의 매개변수 버전·검증 상태
+      parameters:
+        - {name: profile, in: path, required: true, schema: {$ref: '#/components/schemas/StandardProfile'}}
+      responses:
+        '200':
+          description: 매개변수 정보
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ParameterCatalogResponse'}
+        '400': {description: '알 수 없는 프로필(reason STANDARD_PROFILE_UNKNOWN)', content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+components:
+  schemas:
+    # ---------------------------------------------------------------- enum
+    StandardProfile: {type: string, enum: [FEDIAF_2025, NIAS_V3]}
+    Species: {type: string, enum: [DOG, CAT]}
+    ProductType: {type: string, enum: [FEED, SUPPLEMENT]}
+    AgeUnit: {type: string, enum: [WEEK, MONTH]}
+    VerificationStatus: {type: string, enum: [VERIFIED, PENDING_VERIFICATION, NOT_APPLICABLE]}
+    ValueType: {type: string, enum: [LITERATURE, POLICY]}
+    ConversionStatus: {type: string, enum: [CONVERTED, NO_VALUE, EXCLUDED, INSUFFICIENT_DATA, UNIT_CONVERSION_UNSUPPORTED]}
+    LabelBasis: {type: string, enum: [PER_SERVING, PER_100G, PERCENT, PER_KG, PER_1000KCAL, DRY_MATTER_PERCENT]}
+    LabelValueGuarantee: {type: string, enum: [MIN, MAX], description: 이상(MIN)/이하(MAX) 보증값. 실제 함량으로 합산하지 않는다.}
+    NutrientForm:
+      type: string
+      description: 비타민 A·D·E 원료 형태. UNKNOWN_ASSUME_*는 원료 미표기 시 사용자가 명시적으로 고르는 간주 값이다(NIAS_V3).
+      enum: [RETINOL, RETINYL_ACETATE, RETINYL_PROPIONATE, RETINYL_PALMITATE, RETINOL_EQUIVALENT, BETA_CAROTENE,
+             UNKNOWN_ASSUME_RETINOL_EQUIVALENT, CHOLECALCIFEROL, UNKNOWN_ASSUME_CHOLECALCIFEROL, DL_ALPHA_TOCOPHERYL_ACETATE,
+             D_ALPHA_TOCOPHEROL, D_ALPHA_TOCOPHERYL_ACETATE, DL_ALPHA_TOCOPHEROL, UNKNOWN_ASSUME_DL_ALPHA_TOCOPHERYL_ACETATE]
+
+    # ---------------------------------------------------------------- 요청
+    Age:
+      type: object
+      properties:
+        value: {type: number, exclusiveMinimum: true, minimum: 0}
+        unit: {$ref: '#/components/schemas/AgeUnit'}
+    Profile:
+      type: object
+      properties:
+        name: {type: string, maxLength: 30}
+        species: {$ref: '#/components/schemas/Species'}
+        weightKg: {type: number, minimum: 0.0001, maximum: 100}
+        age: {$ref: '#/components/schemas/Age'}
+        adultSize: {type: string, nullable: true, description: 'NIAS_V3 성장기 강아지 체급(S, M, L, XL, XXL)'}
+        expectedAdultWeightKg: {type: number, nullable: true, description: FEDIAF_2025 12개월 미만 개에 필요}
+        completeFeed: {type: boolean, nullable: true, description: 생략하면 true}
+    FeedingItem:
+      type: object
+      properties:
+        productId: {type: string, maxLength: 100}
+        dailyAmount: {type: number}
+        unit: {type: string, maxLength: 30}
+    ManualNutrient:
+      type: object
+      properties:
+        nutrientId: {type: string, maxLength: 100}
+        amount: {type: number, minimum: 0}
+        unit: {type: string, maxLength: 30}
+        form: {allOf: [{$ref: '#/components/schemas/NutrientForm'}], nullable: true}
+        basis: {allOf: [{$ref: '#/components/schemas/LabelBasis'}], nullable: true}
+        guarantee: {allOf: [{$ref: '#/components/schemas/LabelValueGuarantee'}], nullable: true}
+    ManualItem:
+      type: object
+      properties:
+        name: {type: string, maxLength: 100}
+        type: {$ref: '#/components/schemas/ProductType'}
+        servingAmount: {type: number}
+        servingUnit: {type: string, maxLength: 30}
+        dailyAmount: {type: number}
+        nutrients: {type: array, maxItems: 50, items: {$ref: '#/components/schemas/ManualNutrient'}}
+        moisturePercent: {type: number, nullable: true}
+        energyKcalPerKg: {type: number, nullable: true}
+    AnalysisRequest:
+      type: object
+      properties:
+        profile: {$ref: '#/components/schemas/Profile'}
+        items: {type: array, nullable: true, maxItems: 50, items: {$ref: '#/components/schemas/FeedingItem'}}
+        manualItems: {type: array, nullable: true, maxItems: 20, items: {$ref: '#/components/schemas/ManualItem'}}
+        standardProfile: {allOf: [{$ref: '#/components/schemas/StandardProfile'}], nullable: true, description: 생략하면 FEDIAF_2025}
+    RecommendationRequest:
+      type: object
+      properties:
+        profile: {$ref: '#/components/schemas/Profile'}
+        items: {type: array, nullable: true, maxItems: 50, items: {$ref: '#/components/schemas/FeedingItem'}}
+        manualItems: {type: array, nullable: true, maxItems: 20, items: {$ref: '#/components/schemas/ManualItem'}}
+        maxItems: {type: integer, nullable: true, minimum: 1, maximum: 3}
+        standardProfile: {allOf: [{$ref: '#/components/schemas/StandardProfile'}], nullable: true}
+
+    # ---------------------------------------------------------------- 분석 응답
+    AnalysisResponse:
+      type: object
+      required: [traceId, standardVersion, standardSource, cautionPolicy, lifeStage, referenceEnergyKcal, usesEstimatedFeed, summary, nutrients,
+                 contributions, ratios, warnings, standardProfile, parameterVersion, parameterVerification, standardsVerification,
+                 ratioApplicability, verificationSummary, energyBasis, checksums]
+      properties:
+        traceId: {type: string, description: '입력 해시 16자 + "-" + UUID 8자. 같은 입력이면 앞부분이 같다.'}
+        standardVersion: {type: string, example: NIAS-v3}
+        standardSource: {type: string}
+        cautionPolicy: {type: string}
+        lifeStage: {type: string, description: 'FEDIAF: GROWTH_EARLY, GROWTH_LATE, GROWTH, ADULT / NIAS: GROWTH_EARLY, GROWTH_LATE, CAT_S1, CAT_S2, CAT_S3, ADULT'}
+        referenceEnergyKcal: {type: number, nullable: true, description: 하루 기준 열량. 운영 설정에서 미검증 매개변수로 차단되면 null}
+        usesEstimatedFeed: {type: boolean}
+        summary: {$ref: '#/components/schemas/Summary'}
+        nutrients: {type: array, items: {$ref: '#/components/schemas/NutrientRow'}}
+        contributions: {type: array, items: {$ref: '#/components/schemas/Contribution'}}
+        ratios: {$ref: '#/components/schemas/Ratios'}
+        warnings: {type: array, items: {type: string}}
+        standardProfile: {type: string}
+        parameterVersion: {type: string}
+        parameterVerification: {type: object, additionalProperties: {$ref: '#/components/schemas/VerificationStatus'}}
+        standardsVerification: {$ref: '#/components/schemas/StandardsVerification'}
+        ratioApplicability: {$ref: '#/components/schemas/RatioApplicability'}
+        verificationSummary: {$ref: '#/components/schemas/VerificationSummary'}
+        energyBasis: {allOf: [{$ref: '#/components/schemas/EnergyBasis'}], nullable: true, description: FEDIAF_2025는 null}
+        checksums: {$ref: '#/components/schemas/Checksums'}
+    Summary:
+      type: object
+      required: [deficient, adequate, caution, excess, noStandard]
+      properties:
+        deficient: {type: integer}
+        adequate: {type: integer}
+        caution: {type: integer}
+        excess: {type: integer}
+        noStandard: {type: integer}
+    VerificationSummary:
+      type: object
+      required: [judgedWithVerified, judgedWithUnverified, noStandard, unverifiedStandard, unsupported, unitConversionUnsupported]
+      properties:
+        judgedWithVerified: {type: integer}
+        judgedWithUnverified: {type: integer}
+        noStandard: {type: integer}
+        unverifiedStandard: {type: integer}
+        unsupported: {type: integer}
+        unitConversionUnsupported: {type: integer}
+        insufficientData: {type: integer, description: NIAS_V3에서만 있다}
+    NutrientRow:
+      type: object
+      required: [nutrientId, name, unit, fromFeed, fromSupplements, source, total, minimum, caution, upper, status, nutrientNo, verificationStatus, reference]
+      properties:
+        nutrientId: {type: string}
+        name: {type: string}
+        unit: {type: string, description: 'G, MG, UG, IU'}
+        fromFeed: {type: number, nullable: true}
+        fromSupplements: {type: number, nullable: true}
+        source: {type: string, description: 'ACTUAL, ESTIMATED'}
+        total: {type: number, nullable: true, description: 합계를 만들 수 없으면 null(status가 사유)}
+        minimum: {type: number, nullable: true}
+        caution: {type: number, nullable: true}
+        upper: {type: number, nullable: true}
+        status: {type: string, description: 'DEFICIENT, ADEQUATE, ADEQUATE_NO_UPPER_LIMIT, CAUTION, EXCESS, NO_STANDARD, UNSUPPORTED, UNVERIFIED_STANDARD, UNIT_CONVERSION_UNSUPPORTED, INSUFFICIENT_DATA'}
+        nutrientNo: {type: integer, nullable: true, description: NIAS 성분 번호(1~44). 마스터에 없는 성분은 null}
+        verificationStatus: {$ref: '#/components/schemas/VerificationStatus'}
+        reference: {$ref: '#/components/schemas/NutrientReference'}
+        provenance: {type: array, items: {$ref: '#/components/schemas/Provenance'}, description: NIAS_V3에서만 있다}
+        unknownContribution: {type: boolean, description: NIAS_V3에서만 있다}
+    NutrientReference:
+      type: object
+      required: [minimum, caution, upper]
+      properties:
+        minimum: {$ref: '#/components/schemas/StandardReference'}
+        caution: {$ref: '#/components/schemas/StandardReference'}
+        upper: {$ref: '#/components/schemas/StandardReference'}
+    StandardReference:
+      type: object
+      required: [sourceDocument, table, sourceYear, verificationStatus, valueType, unit, basis, note]
+      properties:
+        sourceDocument: {type: string}
+        table: {type: string, description: '원문 표 위치. 확인 전이면 UNCONFIRMED, 해당 없음이면 N/A'}
+        sourceYear: {type: integer, nullable: true}
+        verificationStatus: {$ref: '#/components/schemas/VerificationStatus'}
+        valueType: {$ref: '#/components/schemas/ValueType'}
+        unit: {type: string, nullable: true}
+        basis: {type: string}
+        note: {type: string, nullable: true}
+    Provenance:
+      type: object
+      required: [name, type, source, amount, conversion, note]
+      properties:
+        name: {type: string}
+        type: {type: string}
+        source: {type: string, description: 'ACTUAL, ESTIMATED, UNKNOWN 또는 환산 상태(INSUFFICIENT_DATA 등)'}
+        amount: {type: number, nullable: true}
+        conversion: {allOf: [{$ref: '#/components/schemas/Conversion'}], nullable: true}
+        note: {type: string, nullable: true}
+    Conversion:
+      type: object
+      required: [status, value, perGram, originalValue, originalUnit, basis, form, baseUnit, formula, source, note]
+      properties:
+        status: {$ref: '#/components/schemas/ConversionStatus'}
+        value: {type: number, nullable: true}
+        perGram: {type: boolean}
+        originalValue: {type: number}
+        originalUnit: {type: string}
+        basis: {type: string, nullable: true}
+        form: {type: string, nullable: true}
+        baseUnit: {type: string}
+        formula: {type: string, nullable: true}
+        source: {type: string, nullable: true}
+        note: {type: string, nullable: true}
+    Contribution:
+      type: object
+      required: [name, type, source, nutrients]
+      properties:
+        name: {type: string}
+        type: {type: string}
+        source: {type: string}
+        nutrients: {type: object, additionalProperties: {type: number}}
+        nutrientSources: {type: object, additionalProperties: {type: string}, description: NIAS_V3에서만 있다}
+    Ratios:
+      type: object
+      properties:
+        calciumPhosphorus: {$ref: '#/components/schemas/CalciumPhosphorusRatio'}
+    CalciumPhosphorusRatio:
+      type: object
+      required: [value, status]
+      properties:
+        value: {type: number}
+        status: {type: string, description: 'LOW, HIGH, ADEQUATE, UNAVAILABLE'}
+    RatioApplicability:
+      type: object
+      required: [calciumPhosphorus]
+      properties:
+        calciumPhosphorus: {type: string, description: 'APPLICABLE, NOT_APPLICABLE(고양이), UNAVAILABLE, UNSUPPORTED, UNVERIFIED_STANDARD'}
+    StandardsVerification:
+      type: object
+      required: [allowUnverified]
+      properties:
+        allowUnverified: {type: boolean}
+    EnergyBasis:
+      type: object
+      required: [lifeStage, kSource, k, exponent, referenceEnergyKcal, blocked, blockedReason, parameterVerification, adultK, catGrowthMultiplier, puppyGrowth]
+      properties:
+        lifeStage: {type: string}
+        kSource: {type: string, description: 'ADULT_K, CAT_GROWTH_MULTIPLIER, PUPPY_GROWTH_CURVE'}
+        k: {type: number, nullable: true}
+        exponent: {type: number, nullable: true}
+        referenceEnergyKcal: {type: number, nullable: true}
+        blocked: {type: boolean}
+        blockedReason: {type: string, nullable: true}
+        parameterVerification: {type: object, additionalProperties: {$ref: '#/components/schemas/VerificationStatus'}}
+        adultK: {type: number, nullable: true}
+        catGrowthMultiplier: {type: number, nullable: true}
+        puppyGrowth: {allOf: [{$ref: '#/components/schemas/PuppyGrowth'}], nullable: true}
+    PuppyGrowth:
+      type: object
+      required: [sizeClass, a, b, ageWeeks, percentOfAdultWeight, expectedAdultWeightRawKg, expectedAdultWeightKg, clipped, sizeRange, puppyIntercept, puppySlope, largeBreedCalcium]
+      properties:
+        sizeClass: {type: string}
+        a: {type: number, nullable: true}
+        b: {type: number, nullable: true}
+        ageWeeks: {type: number, nullable: true}
+        percentOfAdultWeight: {type: number, nullable: true}
+        expectedAdultWeightRawKg: {type: number, nullable: true}
+        expectedAdultWeightKg: {type: number, nullable: true}
+        clipped: {type: boolean, nullable: true}
+        sizeRange: {allOf: [{$ref: '#/components/schemas/SizeRange'}], nullable: true}
+        puppyIntercept: {type: number, nullable: true}
+        puppySlope: {type: number, nullable: true}
+        largeBreedCalcium: {allOf: [{$ref: '#/components/schemas/LargeBreedCalcium'}], nullable: true}
+    SizeRange:
+      type: object
+      required: [lowerKg, upperKg]
+      properties:
+        lowerKg: {type: number, nullable: true}
+        upperKg: {type: number, nullable: true, description: null이면 상한 없음(XXL)}
+    LargeBreedCalcium:
+      type: object
+      required: [applied, thresholdKg, calciumMaximum]
+      properties:
+        applied: {type: boolean}
+        thresholdKg: {type: number}
+        calciumMaximum: {type: number}
+
+    # ---------------------------------------------------------------- 추천 응답
+    RecommendationResponse:
+      type: object
+      required: [traceId, standardVersion, message, items, excluded, usesEstimatedFeed, standardProfile, parameterVersion, parameterVerification, standardsVerification, warnings, checksums]
+      properties:
+        traceId: {type: string}
+        standardVersion: {type: string}
+        message: {type: string}
+        items:
+          type: array
+          description: standardProfile이 FEDIAF_2025면 FediafRecommendationItem, NIAS_V3면 NiasRecommendationItem
+          items:
+            oneOf:
+              - {$ref: '#/components/schemas/FediafRecommendationItem'}
+              - {$ref: '#/components/schemas/NiasRecommendationItem'}
+        excluded: {type: array, items: {$ref: '#/components/schemas/ExcludedProduct'}}
+        usesEstimatedFeed: {type: boolean}
+        standardProfile: {type: string}
+        parameterVersion: {type: string}
+        parameterVerification: {type: object, additionalProperties: {$ref: '#/components/schemas/VerificationStatus'}}
+        standardsVerification: {$ref: '#/components/schemas/StandardsVerification'}
+        warnings: {type: array, items: {type: string}}
+        checksums: {$ref: '#/components/schemas/Checksums'}
+    FediafRecommendationItem:
+      type: object
+      required: [productId, name, dailyAmount, unit, score, fixedNutrients, projectedStatuses]
+      properties:
+        productId: {type: string}
+        name: {type: string}
+        dailyAmount: {type: number}
+        unit: {type: string}
+        score: {type: number}
+        fixedNutrients: {type: integer}
+        projectedStatuses: {type: object, additionalProperties: {type: string}}
+    NiasRecommendationItem:
+      type: object
+      required: [productId, name, dailyAmount, unit, score, fixedNutrients, margin, overlap, scoreBreakdown, projectedStatuses,
+                 fixedNutrientIds, marginNutrientId, overlapNutrientIds, doseBand]
+      properties:
+        productId: {type: string}
+        name: {type: string}
+        dailyAmount: {type: number}
+        unit: {type: string}
+        score: {type: number}
+        fixedNutrients: {type: integer}
+        margin: {type: number}
+        overlap: {type: integer}
+        scoreBreakdown: {$ref: '#/components/schemas/ScoreBreakdown'}
+        projectedStatuses: {type: object, additionalProperties: {type: string}}
+        fixedNutrientIds: {type: array, items: {type: string}}
+        marginNutrientId: {type: string, nullable: true}
+        overlapNutrientIds: {type: array, items: {type: string}}
+        doseBand: {$ref: '#/components/schemas/DoseBand'}
+    ScoreBreakdown:
+      type: object
+      required: [fixedNutrients, margin, overlap, w2, w3, w4, fixedScore, marginScore, overlapPenalty]
+      properties:
+        fixedNutrients: {type: integer}
+        margin: {type: number}
+        overlap: {type: integer}
+        w2: {type: number}
+        w3: {type: number}
+        w4: {type: number}
+        fixedScore: {type: number}
+        marginScore: {type: number}
+        overlapPenalty: {type: number}
+    DoseBand:
+      type: object
+      required: [source, bandIndex, aboveKg, maxKg, dose, beyondLastBand]
+      properties:
+        source: {type: string, description: 'DOSE_BY_WEIGHT, RECOMMENDED_DAILY_AMOUNT'}
+        bandIndex: {type: integer, nullable: true}
+        aboveKg: {type: number, nullable: true}
+        maxKg: {type: number, nullable: true}
+        dose: {type: number}
+        beyondLastBand: {type: boolean}
+    ExcludedProduct:
+      type: object
+      required: [productId, name, reason]
+      properties:
+        productId: {type: string}
+        name: {type: string}
+        reason: {type: string}
+        reasonCode: {type: string, description: 'NIAS_V3에서만 있다. ALREADY_FED, CAUTION, EXCESS, ALREADY_CAUTION_OR_EXCESS, CALCIUM_PHOSPHORUS, UNVERIFIABLE'}
+        reasons: {type: array, items: {$ref: '#/components/schemas/ExclusionReason'}, description: NIAS_V3에서만 있다}
+    ExclusionReason:
+      type: object
+      required: [code, nutrientIds]
+      properties:
+        code: {type: string}
+        nutrientIds: {type: array, items: {type: string}}
+        ratioStatus: {type: string, description: 'code가 CALCIUM_PHOSPHORUS일 때만 있다(LOW, HIGH)'}
+
+    # ---------------------------------------------------------------- 조회 응답
+    NutrientListResponse:
+      type: object
+      required: [items]
+      properties:
+        items: {type: array, items: {$ref: '#/components/schemas/NutrientSummary'}}
+    NutrientSummary:
+      type: object
+      required: [id, name, unit]
+      properties:
+        id: {type: string}
+        name: {type: string}
+        unit: {type: string}
+    NutrientCatalogResponse:
+      type: object
+      required: [standardVersion, standardProfile, parameterVersion, parameterVerification, standardsVerification, items]
+      properties:
+        standardVersion: {type: string}
+        standardProfile: {type: string}
+        parameterVersion: {type: string}
+        parameterVerification: {type: object, additionalProperties: {$ref: '#/components/schemas/VerificationStatus'}}
+        standardsVerification: {$ref: '#/components/schemas/StandardsVerification'}
+        items: {type: array, items: {$ref: '#/components/schemas/NutrientCatalogItem'}}
+    NutrientCatalogItem:
+      type: object
+      required: [id, nutrientNo, name, category, unit, standardUnit, masterBaseUnit, implemented, note, minimum, maximum, caution]
+      properties:
+        id: {type: string}
+        nutrientNo: {type: integer, nullable: true}
+        name: {type: string}
+        category: {type: string, nullable: true}
+        unit: {type: string}
+        standardUnit: {type: string}
+        masterBaseUnit: {type: string, nullable: true}
+        implemented: {type: boolean, description: true인 성분만 분석 응답 nutrients에 나온다}
+        note: {type: string, nullable: true}
+        minimum: {type: object, additionalProperties: {$ref: '#/components/schemas/StandardValue'}, description: 생애주기 열 → 기준값}
+        maximum: {type: object, additionalProperties: {$ref: '#/components/schemas/StandardValue'}}
+        caution: {type: object, additionalProperties: {$ref: '#/components/schemas/StandardValue'}, description: 종(dog, cat) → 예외 주의값}
+    StandardValue:
+      type: object
+      required: [value, unit, basis, sourceDocument, table, sourceYear, verificationStatus, verifiedAt, valueType, note]
+      properties:
+        value: {type: number, nullable: true, description: 빈칸은 null}
+        unit: {type: string}
+        basis: {type: string}
+        sourceDocument: {type: string}
+        table: {type: string}
+        sourceYear: {type: integer, nullable: true}
+        verificationStatus: {$ref: '#/components/schemas/VerificationStatus'}
+        verifiedAt: {type: string, format: date, nullable: true}
+        valueType: {$ref: '#/components/schemas/ValueType'}
+        note: {type: string, nullable: true}
+    ParameterCatalogResponse:
+      type: object
+      required: [standardProfile, standardVersion, parameterVersion, verification, allowUnverified, parameters, checksums]
+      properties:
+        standardProfile: {type: string}
+        standardVersion: {type: string}
+        parameterVersion: {type: string}
+        verification: {type: object, additionalProperties: {$ref: '#/components/schemas/VerificationStatus'}}
+        allowUnverified: {type: boolean}
+        parameters: {type: object, additionalProperties: true, description: 'standards/{profile}/parameters.json 원문(키 순서·값 그대로). 체급 선택지는 growthCurve.sizeClasses(NIAS_V3)'}
+        checksums: {$ref: '#/components/schemas/Checksums'}
+
+    # ---------------------------------------------------------------- 오류 응답
+    ErrorResponse:
+      type: object
+      required: [detail]
+      properties:
+        detail: {$ref: '#/components/schemas/ErrorDetail'}
+    ErrorDetail:
+      type: object
+      description: code·message·HTTP 상태는 Issue #5 이전과 같다. reason만 새로 더했다.
+      required: [code, message]
+      properties:
+        code: {type: string, description: 'CALCULATION_INPUT_ERROR(422), VALIDATION_ERROR(422), BAD_REQUEST(400), JARVIS_PROVIDER_UNAVAILABLE(503), EXTERNAL_SERVICE_UNAVAILABLE(503). 503 본문은 같은 키를 쓰지만 키 순서는 아직 고정되지 않았다'}
+        message: {type: string, description: 사람이 읽는 문구. 화면 분기는 reason으로 한다}
+        reason: {$ref: '#/components/schemas/ErrorReason'}
+    ErrorReason:
+      type: string
+      description: 'CALCULATION_INPUT_ERROR에는 항상 있다(분류되지 않으면 INPUT_ERROR). BAD_REQUEST에는 STANDARD_PROFILE_UNKNOWN일 때만 있다. 그 밖의 오류에는 키가 없다.'
+      enum: [AGE_UNSUPPORTED, SIZE_CLASS_REQUIRED, SIZE_CLASS_INVALID, EXPECTED_ADULT_WEIGHT_REQUIRED, PRODUCT_NOT_FOUND, UNIT_MISMATCH,
+             UNIT_UNSUPPORTED, NUTRIENT_UNSUPPORTED, DUPLICATE_NUTRIENT, NO_ITEMS, TOO_MANY_ITEMS, LABEL_INVALID, INPUT_ERROR, STANDARD_PROFILE_UNKNOWN]
+
+    # ---------------------------------------------------------------- 체크섬·조회 추가분(Issue #5 단계 4)
+    Checksums:
+      type: object
+      description: 이 응답을 만든 데이터 파일의 SHA-256(CRLF를 LF로 바꾼 뒤, 즉 git에 저장된 내용 기준). 같은 값이면 같은 데이터로 계산한 결과다.
+      required: [algorithm, standards, parameters, nutrientMaster, units, products]
+      properties:
+        algorithm: {type: string, example: 'SHA-256 (CRLF→LF)'}
+        standards: {type: string, description: 'standards/{profile}/nutrients.json'}
+        parameters: {type: string, description: 'standards/{profile}/parameters.json'}
+        nutrientMaster: {type: string, description: standards/nutrients-master.json}
+        units: {type: string, nullable: true, description: 'units/conversion-factors.json. 이 표로 환산하는 NIAS_V3만, FEDIAF_2025는 null'}
+        products: {type: string, description: products.json}
+    StandardCatalogResponse:
+      type: object
+      description: GET /api/v2/standards/{profile}. 앞 6개 키는 NutrientCatalogResponse와 같고 labelInput·checksums를 맨 끝에 더했다.
+      required: [standardVersion, standardProfile, parameterVersion, parameterVerification, standardsVerification, items, labelInput, checksums]
+      properties:
+        standardVersion: {type: string}
+        standardProfile: {type: string}
+        parameterVersion: {type: string}
+        parameterVerification: {type: object, additionalProperties: {$ref: '#/components/schemas/VerificationStatus'}}
+        standardsVerification: {$ref: '#/components/schemas/StandardsVerification'}
+        items: {type: array, items: {$ref: '#/components/schemas/NutrientCatalogItem'}}
+        labelInput: {allOf: [{$ref: '#/components/schemas/LabelInput'}], nullable: true, description: FEDIAF_2025는 null}
+        checksums: {$ref: '#/components/schemas/Checksums'}
+    LabelInput:
+      type: object
+      description: 수동 라벨 입력 선택지(units/conversion-factors.json에서 읽은 값 그대로).
+      required: [version, sourceDocument, units, bases, forms, labelOnlyNutrients]
+      properties:
+        version: {type: string}
+        sourceDocument: {type: string}
+        units: {type: array, items: {$ref: '#/components/schemas/UnitOption'}, description: 받는 단위 표기(alias)와 정규화 단위}
+        bases: {type: array, items: {$ref: '#/components/schemas/BasisOption'}}
+        forms: {type: object, additionalProperties: {type: array, items: {$ref: '#/components/schemas/FormOption'}}, description: 성분 ID → 원료 형태 선택지}
+        labelOnlyNutrients: {type: array, items: {type: string}, description: 분석 성분은 아니지만 라벨에서 받는 성분 ID}
+    UnitOption:
+      type: object
+      required: [alias, unit]
+      properties:
+        alias: {type: string}
+        unit: {type: string}
+    BasisOption:
+      type: object
+      required: [basis, perGram, requires]
+      properties:
+        basis: {$ref: '#/components/schemas/LabelBasis'}
+        perGram: {type: boolean}
+        requires: {type: string, nullable: true, description: 'ENERGY면 energyKcalPerKg, MOISTURE면 moisturePercent 필요'}
+    FormOption:
+      type: object
+      required: [form, species, excluded, assumed]
+      properties:
+        form: {$ref: '#/components/schemas/NutrientForm'}
+        species: {allOf: [{$ref: '#/components/schemas/Species'}], nullable: true, description: null이면 모든 종}
+        excluded: {type: boolean, description: 이 종에서는 더하지 않음}
+        assumed: {type: boolean, description: 원료 미표기 시 고르는 간주 값}

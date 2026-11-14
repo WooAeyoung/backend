@@ -1,0 +1,13 @@
+{
+  "algorithm": "SHA-256 (CRLF→LF)",
+  "note": "git index(LF) 내용의 SHA-256. 데이터 파일을 의도적으로 바꾸면 이 값을 함께 갱신하고 PR에 이유를 적는다(DataChecksumTest).",
+  "files": {
+    "standards/nutrients-master.json": "ef6eb11fdec31f4d4dca556264f77797e03888a49ccd9b6ab666aee40c82bb08",
+    "standards/fediaf-2025/nutrients.json": "85666c3521f40659aa7269770742e5fc728b1682e7f7ff7946906ba481990fbf",
+    "standards/fediaf-2025/parameters.json": "0fed9d839ac0436d734ea783723dccfa0c3781dc181dd30a0eaf5dfba8819f7c",
+    "standards/nias-v3/nutrients.json": "04885f37dd563e87ed54bfb057eb85673dedfc83c2058f7553d28dbee1f0509a",
+    "standards/nias-v3/parameters.json": "2ebc7940055db9720a52b194854e5a05b843f633e3ca55fc7fd6f17536304bfb",
+    "units/conversion-factors.json": "fe8f6e18e6e90ba769ef6de89ad92cb7b1ec0c19297fb15587c6256a75b7337d",
+    "products.json": "f4b44a0267f1481dfc7d35244e91d557a0acbe7574c18fefc1dc27ba15f770d0"
+  }
+}

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 @Service
 public class KakaoBotService {
@@ -13,18 +15,21 @@ public class KakaoBotService {
     private final Set<String> allowedUsers;
     private final String publicBaseUrl;
     private final String oauthBaseUrl;
+    private final String skillSecret;
 
     public KakaoBotService(GitHubService github,
             @Value("${app.kakao-allowed-user-ids:}") String allowedUsers,
             @Value("${app.public-base-url:https://wooaeyoung-backend.onrender.com}") String publicBaseUrl,
-            @Value("${app.kakao-oauth-base-url:https://wooaeyoung-backend.onrender.com}") String oauthBaseUrl) {
+            @Value("${app.kakao-oauth-base-url:https://wooaeyoung-backend.onrender.com}") String oauthBaseUrl,
+            @Value("${app.kakao-skill-secret:}") String skillSecret) {
         this.github = github;
         this.allowedUsers = new HashSet<>(Arrays.stream(allowedUsers.split(",")).map(String::strip).filter(value -> !value.isBlank()).toList());
         this.publicBaseUrl = publicBaseUrl.replaceAll("/$", "");
         this.oauthBaseUrl = oauthBaseUrl.replaceAll("/$", "");
+        this.skillSecret = skillSecret == null ? "" : skillSecret.strip();
     }
 
-    public Map<String, Object> respond(Map<String, Object> payload) {
+    public Map<String, Object> respond(Map<String, Object> payload, String suppliedSecret) {
         Map<String, Object> userRequest = objectMap(payload.get("userRequest"));
         String utterance = String.valueOf(userRequest.getOrDefault("utterance", "")).strip();
         String normalized = utterance.toLowerCase(Locale.ROOT).replaceFirst("^/", "").replaceAll("\\s+", " ").strip();
@@ -32,25 +37,26 @@ public class KakaoBotService {
         String userId = String.valueOf(user.getOrDefault("id", "")).strip();
         String command = Map.of("help", "도움말", "헬프", "도움말", "메뉴", "도움말", "backend", "백엔드").getOrDefault(normalized, normalized);
         String message;
-        if (command.startsWith("이슈 ")) message = createIssue(command, userId);
-        else if (command.startsWith("배포 ")) message = deploy(command, userId);
+        boolean mutationAuthorized = mutationAuthorized(userId, suppliedSecret);
+        if (command.startsWith("이슈 ")) message = createIssue(command, mutationAuthorized);
+        else if (command.startsWith("배포 ")) message = deploy(command, mutationAuthorized);
         else message = staticMessage(command, userId);
         return response(message);
     }
 
-    private String createIssue(String command, String userId) {
+    private String createIssue(String command, boolean mutationAuthorized) {
         String[] parts = command.split(" ", 3);
         if (parts.length < 3 || !REPOSITORIES.containsKey(parts[1])) return issueHelp();
-        if (!allowedUsers.contains(userId)) return unauthorized();
+        if (!mutationAuthorized) return unauthorized();
         try { return "이슈를 만들었습니다: " + github.createIssue(REPOSITORIES.get(parts[1]), parts[2]); }
         catch (IntegrationException error) { return "이슈 생성에 실패했습니다. " + error.getMessage(); }
     }
 
-    private String deploy(String command, String userId) {
+    private String deploy(String command, boolean mutationAuthorized) {
         String[] parts = command.split(" ");
         if (parts.length != 2 || !REPOSITORIES.containsKey(parts[1])) return deployHelp();
         if (parts[1].equals("backend")) return "Backend는 Render 서비스라 GitHub Actions 배포 대상이 아닙니다. 현재는 /배포 frontend를 지원합니다.";
-        if (!allowedUsers.contains(userId)) return unauthorized();
+        if (!mutationAuthorized) return unauthorized();
         try { github.dispatchFrontendDeployment(); return "Frontend GitHub Pages 배포를 시작했습니다."; }
         catch (IntegrationException error) { return "배포 실행에 실패했습니다. " + error.getMessage(); }
     }
@@ -71,6 +77,11 @@ public class KakaoBotService {
     private static String issueHelp() { return "이슈 명령 형식: /이슈 backend 제목 또는 /이슈 frontend 제목\n대상: WooAeyoung/backend, WooAeyoung/Frontend\nGitHub 토큰을 연결하면 실제 이슈 생성까지 실행할 수 있습니다."; }
     private static String deployHelp() { return "배포 명령 형식: /배포 backend 또는 /배포 frontend\nfrontend는 WooAeyoung/Frontend의 GitHub Pages 배포를 뜻합니다."; }
     private static String unauthorized() { return "실행 권한이 없습니다. /내아이디를 보내고 표시된 ID를 관리자에게 등록해 주세요."; }
+
+    private boolean mutationAuthorized(String userId, String suppliedSecret) {
+        if (!allowedUsers.contains(userId) || skillSecret.isBlank() || suppliedSecret == null) return false;
+        return MessageDigest.isEqual(skillSecret.getBytes(StandardCharsets.UTF_8), suppliedSecret.getBytes(StandardCharsets.UTF_8));
+    }
 
     private static Map<String, Object> response(String message) {
         List<Map<String, String>> quickReplies = List.of(

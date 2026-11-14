@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Service
 public class GitHubService {
-    private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+    private HttpClient http() { return HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build(); }
     private final ObjectMapper mapper;
     private final String token;
 
@@ -43,7 +43,7 @@ public class GitHubService {
                     .header("X-GitHub-Api-Version", "2022-11-28")
                     .method(method, HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(body)))
                     .build();
-            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = http().send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() < 200 || response.statusCode() >= 300)
                 throw new IntegrationException("GitHub API 오류(" + response.statusCode() + "): " + response.body().substring(0, Math.min(200, response.body().length())));
             if (response.body().isBlank()) return Map.of();

@@ -15,7 +15,7 @@
       "items": [{"productId": "feed-balanced-dog", "dailyAmount": 150, "unit": "G"}],
       "standardProfile": "NIAS_V3"
     },
-    "response": {"standardProfile": "NIAS_V3", "standardVersion": "NIAS-v3", "lifeStage": "ADULT", "referenceEnergyKcal": null, "standardsVerification": {"allowUnverified": false}}
+    "response": {"standardProfile": "NIAS_V3", "standardVersion": "NIAS-v3", "lifeStage": "ADULT", "referenceEnergyKcal": 618.5754577093841, "standardsVerification": {"allowUnverified": true}}
   },
   {
     "id": "nias-cat-stage-two",
@@ -26,7 +26,7 @@
       "items": [{"productId": "feed-balanced-cat", "dailyAmount": 60, "unit": "G"}],
       "standardProfile": "NIAS_V3"
     },
-    "response": {"standardProfile": "NIAS_V3", "lifeStage": "CAT_S2", "referenceEnergyKcal": null}
+    "response": {"standardProfile": "NIAS_V3", "lifeStage": "CAT_S2", "referenceEnergyKcal": 474.658722738855}
   },
   {
     "id": "nias-recommendation-guard",
@@ -37,6 +37,14 @@
       "items": [{"productId": "feed-balanced-dog", "dailyAmount": 150, "unit": "G"}],
       "standardProfile": "NIAS_V3"
     },
-    "response": {"standardProfile": "NIAS_V3", "items": [], "warnings": ["NIAS_V3 추천은 기준 매개변수 원문 대조가 끝난 뒤 제공됩니다."]}
+    "response": {
+      "standardProfile": "NIAS_V3",
+      "items": [
+        {"productId": "supp-omega"},
+        {"productId": "supp-calcium"},
+        {"productId": "supp-zinc"}
+      ],
+      "warnings": ["참고값: NIAS-v3 기준값·추천 매개변수는 원문 대조 전이라 추천 결과는 검증되지 않은 참고 정보입니다."]
+    }
   }
 ]

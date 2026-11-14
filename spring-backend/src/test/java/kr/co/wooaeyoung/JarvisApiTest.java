@@ -26,4 +26,17 @@ class JarvisApiTest {
                 .andExpect(status().isOk()).andExpect(jsonPath("$.intent").value("ANALYSIS_SUMMARY"))
                 .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("칼슘 부족")));
     }
+
+    @Test void doesNotRepeatAnalysisSummaryForVeterinarianQuestion() throws Exception {
+        String body = "{\"message\":\"왜 수의사랑 상담하는 거지?\",\"analysis\":{\"summary\":{\"adequate\":2,\"deficient\":15}}}";
+        mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.intent").value("AI_ASSISTANT"))
+                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("참고 자료")))
+                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.not(org.hamcrest.Matchers.startsWith("오늘 결과는"))));
+    }
+
+    @Test void answersGreetingWithoutAnalysis() throws Exception {
+        mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"hi\"}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("안녕하세요")));
+    }
 }

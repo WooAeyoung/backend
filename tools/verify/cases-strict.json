@@ -1,0 +1,70 @@
+[
+  {
+    "id": "health",
+    "method": "GET",
+    "path": "/health",
+    "status": 200,
+    "response": {"status": "ok"}
+  },
+  {
+    "id": "strict-nias-adult-analysis-blocked",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "request": {
+      "profile": {"name": "golden", "species": "DOG", "weightKg": 10, "age": {"value": 36, "unit": "MONTH"}, "completeFeed": true},
+      "items": [{"productId": "feed-balanced-dog", "dailyAmount": 150, "unit": "G"}],
+      "standardProfile": "NIAS_V3"
+    },
+    "response": {
+      "standardProfile": "NIAS_V3", "standardVersion": "NIAS-v3", "lifeStage": "ADULT", "referenceEnergyKcal": null,
+      "standardsVerification": {"allowUnverified": false},
+      "energyBasis": {"blocked": true, "k": null, "referenceEnergyKcal": null},
+      "ratioApplicability": {"calciumPhosphorus": "UNVERIFIED_STANDARD"},
+      "verificationSummary": {"judgedWithUnverified": 0}
+    }
+  },
+  {
+    "id": "strict-nias-cat-stage-two-blocked",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "request": {
+      "profile": {"name": "golden", "species": "CAT", "weightKg": 4, "age": {"value": 6, "unit": "MONTH"}, "completeFeed": true},
+      "items": [{"productId": "feed-balanced-cat", "dailyAmount": 60, "unit": "G"}],
+      "standardProfile": "NIAS_V3"
+    },
+    "response": {"standardProfile": "NIAS_V3", "lifeStage": "CAT_S2", "referenceEnergyKcal": null, "standardsVerification": {"allowUnverified": false}}
+  },
+  {
+    "id": "strict-nias-recommendation-blocked",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "request": {
+      "profile": {"name": "golden", "species": "DOG", "weightKg": 10, "age": {"value": 36, "unit": "MONTH"}, "completeFeed": true},
+      "items": [{"productId": "feed-balanced-dog", "dailyAmount": 150, "unit": "G"}],
+      "standardProfile": "NIAS_V3"
+    },
+    "response": {
+      "standardProfile": "NIAS_V3",
+      "message": "현재 기준 프로필에서는 추천 후보를 계산하지 않습니다.",
+      "items": [],
+      "excluded": [],
+      "warnings": ["NIAS_V3 추천은 기준 매개변수 원문 대조가 끝난 뒤 제공됩니다."]
+    }
+  },
+  {
+    "id": "strict-fediaf-adult-analysis-unchanged",
+    "method": "POST",
+    "path": "/api/v1/analyses",
+    "request": {
+      "profile": {"name": "golden", "species": "DOG", "weightKg": 10, "age": {"value": 36, "unit": "MONTH"}, "completeFeed": true},
+      "items": [{"productId": "feed-balanced-dog", "dailyAmount": 150, "unit": "G"}]
+    },
+    "response": {"standardProfile": "FEDIAF_2025", "standardVersion": "FEDIAF-2025.09", "lifeStage": "ADULT", "energyBasis": null, "standardsVerification": {"allowUnverified": false}}
+  },
+  {
+    "id": "strict-parameters-show-blocking-setting",
+    "method": "GET",
+    "path": "/api/v2/parameters/NIAS_V3",
+    "response": {"standardProfile": "NIAS_V3", "allowUnverified": false, "verification": {"energy": "PENDING_VERIFICATION"}}
+  }
+]
