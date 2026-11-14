@@ -3,6 +3,8 @@ package kr.co.wooaeyoung.domain;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
@@ -14,6 +16,7 @@ import java.util.*;
 /** Provider-isolated JARVIS completion client. Secrets are read only from the server environment. */
 @Service
 public class JarvisAiService {
+    private static final Logger log = LoggerFactory.getLogger(JarvisAiService.class);
     private static final Set<String> GROK_MODELS = Set.of("grok-4.7", "grok-4-1-fast-reasoning", "grok-4-1-fast-non-reasoning", "grok-3-mini");
     private static final Set<String> OLLAMA_MODELS = Set.of("llama3.2", "qwen2.5:7b", "gemma3:4b");
     private static final Set<String> AIMLAPI_MODELS = Set.of("openai/gpt-5-5");
@@ -39,6 +42,11 @@ public class JarvisAiService {
             // No configured key or empty upstream response: command/data-based answers remain available.
             return Optional.empty();
         } catch (Exception primaryError) {
+            if (primaryError instanceof RestClientResponseException responseError) {
+                log.warn("JARVIS provider {} rejected the request with HTTP {}", provider, responseError.getStatusCode().value());
+            } else {
+                log.warn("JARVIS provider {} failed: {}", provider, primaryError.getClass().getSimpleName());
+            }
             // Let JarvisService answer from the submitted analysis instead of failing the whole request.
             return Optional.empty();
         }
