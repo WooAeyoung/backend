@@ -17,6 +17,7 @@ public class JarvisAiService {
     private static final Set<String> GROK_MODELS = Set.of("grok-4.7", "grok-4-1-fast-reasoning", "grok-4-1-fast-non-reasoning", "grok-3-mini");
     private static final Set<String> OLLAMA_MODELS = Set.of("llama3.2", "qwen2.5:7b", "gemma3:4b");
     private static final Set<String> AIMLAPI_MODELS = Set.of("openai/gpt-5-5");
+    private static final Set<String> GEMINI_MODELS = Set.of("gemini-3.8-flash", "gemini-3.5-flash", "gemini-2.5-flash-lite");
     private final ObjectMapper mapper = new ObjectMapper();
     private final RestClient client;
 
@@ -31,8 +32,7 @@ public class JarvisAiService {
     public Optional<String> complete(String message, Map<String, Object> analysis, String requestedProvider) {
         String provider = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
-        if ("grok".equals(provider) && (System.getenv("XAI_API_KEY") == null || System.getenv("XAI_API_KEY").isBlank())
-                && !fallback.isBlank() && !fallback.equals(provider)) provider = fallback;
+        if (!hasCredentials(provider) && !fallback.isBlank() && !fallback.equals(provider)) provider = fallback;
         try {
             Optional<String> answer = request(provider, message, analysis);
             if (answer.isPresent() && !answer.get().isBlank()) return answer;
@@ -49,8 +49,24 @@ public class JarvisAiService {
             case "grok" -> grok(message, analysis);
             case "ollama" -> ollama(message, analysis);
             case "aimlapi" -> aimlapi(message, analysis);
+            case "gemini" -> gemini(message, analysis);
             default -> throw new IllegalStateException("지원하지 않는 JARVIS 제공자입니다.");
         };
+    }
+
+    private boolean hasCredentials(String provider) {
+        return switch (provider) {
+            case "grok" -> hasValue("XAI_API_KEY");
+            case "aimlapi" -> hasValue("AIMLAPI_API_KEY");
+            case "gemini" -> hasValue("GEMINI_API_KEY");
+            case "ollama" -> true;
+            default -> false;
+        };
+    }
+
+    private boolean hasValue(String name) {
+        String value = System.getenv(name);
+        return value != null && !value.isBlank();
     }
 
     private Optional<String> grok(String message, Map<String, Object> analysis) throws Exception {
@@ -83,6 +99,25 @@ public class JarvisAiService {
                 .contentType(MediaType.APPLICATION_JSON).body(body).retrieve().body(String.class);
         JsonNode text = mapper.readTree(raw).path("choices").path(0).path("message").path("content");
         return text.isTextual() ? Optional.of(text.asText()) : Optional.empty();
+    }
+
+    private Optional<String> gemini(String message, Map<String, Object> analysis) throws Exception {
+        String key = System.getenv("GEMINI_API_KEY");
+        if (key == null || key.isBlank()) return Optional.empty();
+        String model = allowed(System.getenv().getOrDefault("GEMINI_MODEL", "gemini-3.8-flash"), GEMINI_MODELS);
+        Map<String, Object> body = Map.of("contents", List.of(Map.of(
+                "role", "user",
+                "parts", List.of(Map.of("text", prompt(message, analysis))))));
+        String raw = client.post()
+                .uri("https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent")
+                .header("x-goog-api-key", key)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body).retrieve().body(String.class);
+        JsonNode parts = mapper.readTree(raw).path("candidates").path(0).path("content").path("parts");
+        if (!parts.isArray()) return Optional.empty();
+        StringBuilder answer = new StringBuilder();
+        for (JsonNode part : parts) if (part.path("text").isTextual()) answer.append(part.path("text").asText());
+        return answer.isEmpty() ? Optional.empty() : Optional.of(answer.toString());
     }
 
     private String allowed(String model, Set<String> allowlist) { if (!allowlist.contains(model)) throw new IllegalArgumentException("허용되지 않은 JARVIS 모델입니다."); return model; }
