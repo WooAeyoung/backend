@@ -50,7 +50,8 @@ public class JarvisAiService {
                 if (answer.isPresent() && !answer.get().isBlank()) return answer;
             } catch (Exception error) {
                 if (error instanceof RestClientResponseException responseError) {
-                    log.warn("JARVIS provider {} rejected the request with HTTP {}", candidate, responseError.getStatusCode().value());
+                    log.warn("JARVIS provider {} rejected the request with HTTP {}: {}", candidate,
+                            responseError.getStatusCode().value(), safeErrorDetail(responseError));
                 } else {
                     log.warn("JARVIS provider {} failed: {}", candidate, error.getClass().getSimpleName());
                 }
@@ -83,6 +84,12 @@ public class JarvisAiService {
     private boolean hasValue(String name) {
         String value = System.getenv(name);
         return value != null && !value.isBlank();
+    }
+
+    private String safeErrorDetail(RestClientResponseException error) {
+        String detail = error.getResponseBodyAsString().replaceAll("[\\r\\n]+", " ");
+        detail = detail.replaceAll("(?i)(api[_-]?key|authorization|bearer)[^,}]*", "$1=[redacted]");
+        return detail.substring(0, Math.min(detail.length(), 300));
     }
 
     private Optional<String> grok(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
