@@ -2,6 +2,7 @@ package kr.co.wooaeyoung.domain;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.wooaeyoung.api.ApiModels;
 import org.springframework.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +35,14 @@ public class JarvisAiService {
 
     public Optional<String> complete(String message, Map<String, Object> analysis) { return complete(message, analysis, null); }
     public Optional<String> complete(String message, Map<String, Object> analysis, String requestedProvider) {
+        return complete(message, analysis, requestedProvider, null);
+    }
+    public Optional<String> complete(String message, Map<String, Object> analysis, String requestedProvider, List<ApiModels.JarvisMessage> history) {
         String provider = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
         if (!hasCredentials(provider) && !fallback.isBlank() && !fallback.equals(provider)) provider = fallback;
         try {
-            Optional<String> answer = request(provider, message, analysis);
+            Optional<String> answer = request(provider, message, analysis, history);
             if (answer.isPresent() && !answer.get().isBlank()) return answer;
             // No configured key or empty upstream response: command/data-based answers remain available.
             return Optional.empty();
@@ -53,12 +57,12 @@ public class JarvisAiService {
         }
     }
 
-    private Optional<String> request(String provider, String message, Map<String, Object> analysis) throws Exception {
+    private Optional<String> request(String provider, String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         return switch (provider) {
-            case "grok" -> grok(message, analysis);
-            case "ollama" -> ollama(message, analysis);
-            case "aimlapi" -> aimlapi(message, analysis);
-            case "gemini" -> gemini(message, analysis);
+            case "grok" -> grok(message, analysis, history);
+            case "ollama" -> ollama(message, analysis, history);
+            case "aimlapi" -> aimlapi(message, analysis, history);
+            case "gemini" -> gemini(message, analysis, history);
             default -> throw new IllegalStateException("지원하지 않는 JARVIS 제공자입니다.");
         };
     }
@@ -78,31 +82,31 @@ public class JarvisAiService {
         return value != null && !value.isBlank();
     }
 
-    private Optional<String> grok(String message, Map<String, Object> analysis) throws Exception {
+    private Optional<String> grok(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         String key = System.getenv("XAI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
         String model = allowed(System.getenv().getOrDefault("GROK_MODEL", "grok-3-mini"), GROK_MODELS);
-        Map<String, Object> body = Map.of("model", model, "messages", List.of(Map.of("role", "user", "content", prompt(message, analysis))));
+        Map<String, Object> body = Map.of("model", model, "messages", List.of(Map.of("role", "user", "content", prompt(message, analysis, history))));
         String raw = client.post().uri("https://api.x.ai/v1/chat/completions").header(HttpHeaders.AUTHORIZATION, "Bearer " + key).contentType(MediaType.APPLICATION_JSON).body(body).retrieve().body(String.class);
         JsonNode text = mapper.readTree(raw).path("choices").path(0).path("message").path("content");
         return text.isTextual() ? Optional.of(text.asText()) : Optional.empty();
     }
 
-    private Optional<String> ollama(String message, Map<String, Object> analysis) throws Exception {
+    private Optional<String> ollama(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         String model = allowed(System.getenv().getOrDefault("OLLAMA_MODEL", "llama3.2"), OLLAMA_MODELS);
         String base = System.getenv().getOrDefault("OLLAMA_BASE_URL", "http://127.0.0.1:11434");
-        Map<String, Object> body = Map.of("model", model, "stream", false, "messages", List.of(Map.of("role", "user", "content", prompt(message, analysis))));
+        Map<String, Object> body = Map.of("model", model, "stream", false, "messages", List.of(Map.of("role", "user", "content", prompt(message, analysis, history))));
         String raw = client.post().uri(base + "/api/chat").contentType(MediaType.APPLICATION_JSON).body(body).retrieve().body(String.class);
         JsonNode text = mapper.readTree(raw).path("message").path("content");
         return text.isTextual() ? Optional.of(text.asText()) : Optional.empty();
     }
 
-    private Optional<String> aimlapi(String message, Map<String, Object> analysis) throws Exception {
+    private Optional<String> aimlapi(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         String key = System.getenv("AIMLAPI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
         String model = allowed(System.getenv().getOrDefault("AIMLAPI_MODEL", "openai/gpt-5-5"), AIMLAPI_MODELS);
         Map<String, Object> body = Map.of("model", model, "messages", List.of(
-                Map.of("role", "user", "content", prompt(message, analysis))));
+                Map.of("role", "user", "content", prompt(message, analysis, history))));
         String raw = client.post().uri("https://api.aimlapi.com/v1/chat/completions")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + key)
                 .contentType(MediaType.APPLICATION_JSON).body(body).retrieve().body(String.class);
@@ -110,7 +114,7 @@ public class JarvisAiService {
         return text.isTextual() ? Optional.of(text.asText()) : Optional.empty();
     }
 
-    private Optional<String> gemini(String message, Map<String, Object> analysis) throws Exception {
+    private Optional<String> gemini(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         String key = System.getenv("GEMINI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
         String model = allowed(System.getenv().getOrDefault("GEMINI_MODEL", "gemini-3.5-flash"), GEMINI_MODELS);
@@ -119,7 +123,7 @@ public class JarvisAiService {
         candidates.addAll(GEMINI_MODELS);
         Map<String, Object> body = Map.of("contents", List.of(Map.of(
                 "role", "user",
-                "parts", List.of(Map.of("text", prompt(message, analysis))))));
+                "parts", List.of(Map.of("text", prompt(message, analysis, history))))));
         for (String candidate : candidates) {
             try {
                 String raw = client.post()
@@ -141,5 +145,13 @@ public class JarvisAiService {
     }
 
     private String allowed(String model, Collection<String> allowlist) { if (!allowlist.contains(model)) throw new IllegalArgumentException("허용되지 않은 JARVIS 모델입니다."); return model; }
-    private String prompt(String message, Map<String, Object> analysis) { return "우애영 반려동물 영양 도우미. 진단·처방을 단정하지 말고, 제공된 분석 데이터만 사용하세요. 분석 데이터가 없으면 추측하지 마세요. 페이지 이동은 명령 라우터가 처리합니다.\n분석: " + String.valueOf(analysis) + "\n사용자: " + message; }
+    private String prompt(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) {
+        StringBuilder conversation = new StringBuilder();
+        if (history != null) for (ApiModels.JarvisMessage item : history) {
+            if (item == null || item.content() == null) continue;
+            conversation.append("assistant".equalsIgnoreCase(item.role()) ? "자비스: " : "사용자: ")
+                    .append(item.content()).append('\n');
+        }
+        return "우애영 반려동물 영양 도우미입니다. 사용자의 현재 질문에 자연스럽게 답하고, 앞선 대화가 있으면 문맥을 이어가세요. 진단·처방을 단정하지 말고 분석 수치는 제공된 데이터만 사용하세요. 분석 데이터가 없어도 인사와 일반적인 이유 설명에는 답할 수 있습니다. 페이지 이동은 명령 라우터가 처리합니다.\n분석: " + String.valueOf(analysis) + "\n최근 대화:\n" + conversation + "사용자: " + message;
+    }
 }

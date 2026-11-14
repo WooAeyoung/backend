@@ -29,12 +29,17 @@ public class JarvisService {
         if (phrase.matches(".*(지난|이전|반려동물).*(기록|결과).*|.*기록(을|보여|조회).*")) {
             return reply("RECORDS", "records", "반려동물 기록 화면을 열었어요. 저장한 분석 결과와 프로필을 확인할 수 있어요.");
         }
-        if (phrase.matches(".*(분석|영양제).*")) return reply("ANALYSIS", "analysis", "영양제 분석 화면으로 이동할게요. 반려동물 정보와 급여 제품을 입력해 주세요.");
+        if (isAnalysisNavigation(phrase)) return reply("ANALYSIS", "analysis", "영양제 분석 화면으로 이동할게요. 반려동물 정보와 급여 제품을 입력해 주세요.");
         if (phrase.matches(".*(고객센터|문의|도움말).*")) return reply("SUPPORT", "support", "고객센터로 이동할게요.");
         if (phrase.matches(".*(홈|처음|메인).*")) return reply("HOME", "home", "홈 화면으로 이동할게요.");
         String localAnswer = answerFromAnalysis(request.message(), request.analysis());
-        Optional<String> aiAnswer = ai.complete(request.message(), request.analysis());
+        Optional<String> aiAnswer = ai.complete(request.message(), request.analysis(), request.provider(), request.history());
         return reply("AI_ASSISTANT", null, aiAnswer.filter(answer -> !answer.isBlank()).orElse(localAnswer));
+    }
+
+    private boolean isAnalysisNavigation(String phrase) {
+        return phrase.matches("(분석|영양제분석)")
+                || phrase.matches(".*(분석|영양제).*(화면|시작|열어|이동|보여).*");
     }
 
     private Map<String, Object> reply(String intent, String page, String answer) {
@@ -71,11 +76,15 @@ public class JarvisService {
     }
 
     private String answerFromAnalysis(String message, Map<String, Object> analysis) {
-        if (analysis == null) return "아직 불러온 분석 데이터가 없어요. 먼저 영양제 분석을 완료해 주세요.";
         String normalized = message.replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
+        if (normalized.matches(".*(안녕|하이|hi|hello).*")) return "안녕하세요! 궁금한 점을 편하게 물어보세요. 영양 정보나 현재 분석 결과를 함께 살펴드릴게요.";
+        if (normalized.matches(".*(왜|이유).*(수의사|병원).*") || normalized.matches(".*(수의사|병원).*(왜|이유).*")) {
+            return "영양 분석은 입력한 사료와 영양제의 수치를 비교하는 참고 자료라서, 실제 증상·질환·약물·검사 결과까지 판단할 수 없어요. 이상 증상이 있거나 부족·과다 상태가 계속되면 안전을 위해 수의사와 상담하라는 뜻이에요.";
+        }
+        if (analysis == null) return "지금 질문은 이해했지만 AI 답변을 잠시 불러오지 못했어요. 다시 한 번 물어보시면 이어서 답해 드릴게요.";
         if (normalized.contains("부족")) return deficientAnswer(analysis);
         if (normalized.contains("칼슘") || normalized.contains("비율")) return calciumGuidance(analysis);
-        return describeAnalysis(analysis);
+        return "현재 분석 결과는 불러와져 있어요. 궁금한 성분이나 결과의 이유를 조금 더 구체적으로 물어보시면 해당 내용을 설명해 드릴게요.";
     }
 
     private String deficientAnswer(Map<String, Object> analysis) {

@@ -79,8 +79,13 @@ public final class ApiModels {
     }
 
     /** 자비스는 분석 결과를 저장하지 않고, 현재 브라우저에서 전달한 결과만 요약한다. */
+    public record JarvisMessage(
+            @NotBlank @Size(max = 20) String role,
+            @NotBlank @Size(max = 500) String content) {}
+
     public record JarvisRequest(
             @NotBlank @Size(max = 500) String message,
             @Size(max = 50) Map<String, Object> analysis,
-            String provider) {}
+            String provider,
+            @Size(max = 12) List<@Valid JarvisMessage> history) {}
 }
