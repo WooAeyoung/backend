@@ -20,7 +20,8 @@ public class JarvisAiService {
     private static final Set<String> GROK_MODELS = Set.of("grok-4.7", "grok-4-1-fast-reasoning", "grok-4-1-fast-non-reasoning", "grok-3-mini");
     private static final Set<String> OLLAMA_MODELS = Set.of("llama3.2", "qwen2.5:7b", "gemma3:4b");
     private static final Set<String> AIMLAPI_MODELS = Set.of("openai/gpt-5-5");
-    private static final Set<String> GEMINI_MODELS = Set.of("gemini-3.8-flash", "gemini-3.5-flash", "gemini-2.5-flash-lite");
+    private static final List<String> GEMINI_MODELS = List.of(
+            "gemini-3.8-flash", "gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash");
     private final ObjectMapper mapper = new ObjectMapper();
     private final RestClient client;
 
@@ -113,21 +114,32 @@ public class JarvisAiService {
         String key = System.getenv("GEMINI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
         String model = allowed(System.getenv().getOrDefault("GEMINI_MODEL", "gemini-2.5-flash-lite"), GEMINI_MODELS);
+        LinkedHashSet<String> candidates = new LinkedHashSet<>();
+        candidates.add(model);
+        candidates.addAll(GEMINI_MODELS);
         Map<String, Object> body = Map.of("contents", List.of(Map.of(
                 "role", "user",
                 "parts", List.of(Map.of("text", prompt(message, analysis))))));
-        String raw = client.post()
-                .uri("https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent")
-                .header("x-goog-api-key", key)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(body).retrieve().body(String.class);
-        JsonNode parts = mapper.readTree(raw).path("candidates").path(0).path("content").path("parts");
-        if (!parts.isArray()) return Optional.empty();
-        StringBuilder answer = new StringBuilder();
-        for (JsonNode part : parts) if (part.path("text").isTextual()) answer.append(part.path("text").asText());
-        return answer.isEmpty() ? Optional.empty() : Optional.of(answer.toString());
+        for (String candidate : candidates) {
+            try {
+                String raw = client.post()
+                        .uri("https://generativelanguage.googleapis.com/v1beta/models/" + candidate + ":generateContent")
+                        .header("x-goog-api-key", key)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(body).retrieve().body(String.class);
+                JsonNode parts = mapper.readTree(raw).path("candidates").path(0).path("content").path("parts");
+                if (!parts.isArray()) return Optional.empty();
+                StringBuilder answer = new StringBuilder();
+                for (JsonNode part : parts) if (part.path("text").isTextual()) answer.append(part.path("text").asText());
+                return answer.isEmpty() ? Optional.empty() : Optional.of(answer.toString());
+            } catch (RestClientResponseException error) {
+                if (error.getStatusCode().value() != 404) throw error;
+                log.info("Gemini model {} is unavailable; trying the next allowed model", candidate);
+            }
+        }
+        return Optional.empty();
     }
 
-    private String allowed(String model, Set<String> allowlist) { if (!allowlist.contains(model)) throw new IllegalArgumentException("허용되지 않은 JARVIS 모델입니다."); return model; }
+    private String allowed(String model, Collection<String> allowlist) { if (!allowlist.contains(model)) throw new IllegalArgumentException("허용되지 않은 JARVIS 모델입니다."); return model; }
     private String prompt(String message, Map<String, Object> analysis) { return "우애영 반려동물 영양 도우미. 진단·처방을 단정하지 말고, 제공된 분석 데이터만 사용하세요. 분석 데이터가 없으면 추측하지 마세요. 페이지 이동은 명령 라우터가 처리합니다.\n분석: " + String.valueOf(analysis) + "\n사용자: " + message; }
 }
