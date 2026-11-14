@@ -1,19 +1,31 @@
 package kr.co.wooaeyoung;
 
+import kr.co.wooaeyoung.domain.JarvisAiService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class JarvisApiTest {
     @Autowired MockMvc mvc;
+    @MockBean JarvisAiService ai;
+
+    @BeforeEach void useLocalFallback() {
+        when(ai.complete(anyString(), any(), any(), any())).thenReturn(Optional.empty());
+    }
 
     @Test void routesRecordCommand() throws Exception {
         mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"지난 기록 보여줘\"}"))

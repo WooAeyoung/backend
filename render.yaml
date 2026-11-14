@@ -25,9 +25,9 @@ services:
       - key: KAKAO_SKILL_SECRET
         sync: false
       - key: JARVIS_PROVIDER
-        value: gemini
-      - key: JARVIS_FALLBACK_PROVIDER
         value: grok
+      - key: JARVIS_FALLBACK_PROVIDER
+        value: gemini
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL

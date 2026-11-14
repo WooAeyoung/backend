@@ -28,8 +28,8 @@ public class JarvisAiService {
 
     public JarvisAiService() {
         SimpleClientHttpRequestFactory requests = new SimpleClientHttpRequestFactory();
-        requests.setConnectTimeout(Duration.ofSeconds(2));
-        requests.setReadTimeout(Duration.ofSeconds(8));
+        requests.setConnectTimeout(Duration.ofSeconds(5));
+        requests.setReadTimeout(Duration.ofSeconds(30));
         this.client = RestClient.builder().requestFactory(requests).build();
     }
 
@@ -40,21 +40,24 @@ public class JarvisAiService {
     public Optional<String> complete(String message, Map<String, Object> analysis, String requestedProvider, List<ApiModels.JarvisMessage> history) {
         String provider = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
-        if (!hasCredentials(provider) && !fallback.isBlank() && !fallback.equals(provider)) provider = fallback;
-        try {
-            Optional<String> answer = request(provider, message, analysis, history);
-            if (answer.isPresent() && !answer.get().isBlank()) return answer;
-            // No configured key or empty upstream response: command/data-based answers remain available.
-            return Optional.empty();
-        } catch (Exception primaryError) {
-            if (primaryError instanceof RestClientResponseException responseError) {
-                log.warn("JARVIS provider {} rejected the request with HTTP {}", provider, responseError.getStatusCode().value());
-            } else {
-                log.warn("JARVIS provider {} failed: {}", provider, primaryError.getClass().getSimpleName());
+        LinkedHashSet<String> providers = new LinkedHashSet<>();
+        providers.add(provider);
+        if (!fallback.isBlank()) providers.add(fallback);
+        for (String candidate : providers) {
+            if (!hasCredentials(candidate)) continue;
+            try {
+                Optional<String> answer = request(candidate, message, analysis, history);
+                if (answer.isPresent() && !answer.get().isBlank()) return answer;
+            } catch (Exception error) {
+                if (error instanceof RestClientResponseException responseError) {
+                    log.warn("JARVIS provider {} rejected the request with HTTP {}", candidate, responseError.getStatusCode().value());
+                } else {
+                    log.warn("JARVIS provider {} failed: {}", candidate, error.getClass().getSimpleName());
+                }
             }
-            // Let JarvisService answer from the submitted analysis instead of failing the whole request.
-            return Optional.empty();
         }
+        // Let JarvisService answer from the submitted analysis instead of failing the whole request.
+        return Optional.empty();
     }
 
     private Optional<String> request(String provider, String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
