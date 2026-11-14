@@ -24,7 +24,7 @@ public class JarvisAiService {
     public JarvisAiService() {
         SimpleClientHttpRequestFactory requests = new SimpleClientHttpRequestFactory();
         requests.setConnectTimeout(Duration.ofSeconds(2));
-        requests.setReadTimeout(Duration.ofSeconds(5));
+        requests.setReadTimeout(Duration.ofSeconds(8));
         this.client = RestClient.builder().requestFactory(requests).build();
     }
 
@@ -104,7 +104,7 @@ public class JarvisAiService {
     private Optional<String> gemini(String message, Map<String, Object> analysis) throws Exception {
         String key = System.getenv("GEMINI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
-        String model = allowed(System.getenv().getOrDefault("GEMINI_MODEL", "gemini-3.8-flash"), GEMINI_MODELS);
+        String model = allowed(System.getenv().getOrDefault("GEMINI_MODEL", "gemini-2.5-flash-lite"), GEMINI_MODELS);
         Map<String, Object> body = Map.of("contents", List.of(Map.of(
                 "role", "user",
                 "parts", List.of(Map.of("text", prompt(message, analysis))))));
