@@ -51,4 +51,10 @@ class JarvisApiTest {
         mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"hi\"}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("안녕하세요")));
     }
+
+    @Test void acceptsLongHistoryAndTrimsItForTheProvider() throws Exception {
+        String body = "{\"message\":\"hi\",\"history\":[{\"role\":\"assistant\",\"content\":\"" + "가".repeat(700) + "\"}]}";
+        mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("안녕하세요")));
+    }
 }

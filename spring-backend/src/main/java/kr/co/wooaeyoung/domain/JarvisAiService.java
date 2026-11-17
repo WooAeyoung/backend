@@ -162,8 +162,11 @@ public class JarvisAiService {
         StringBuilder conversation = new StringBuilder();
         if (history != null) for (ApiModels.JarvisMessage item : history) {
             if (item == null || item.content() == null) continue;
+            String content = item.content().strip();
+            if (content.isEmpty()) continue;
+            if (content.length() > 500) content = content.substring(content.length() - 500);
             conversation.append("assistant".equalsIgnoreCase(item.role()) ? "자비스: " : "사용자: ")
-                    .append(item.content()).append('\n');
+                    .append(content).append('\n');
         }
         return "우애영 반려동물 영양 도우미입니다. 사용자의 현재 질문에 자연스럽게 답하고, 앞선 대화가 있으면 문맥을 이어가세요. 진단·처방을 단정하지 말고 분석 수치는 제공된 데이터만 사용하세요. 분석 데이터가 없어도 인사와 일반적인 이유 설명에는 답할 수 있습니다. 페이지 이동은 명령 라우터가 처리합니다.\n분석: " + String.valueOf(analysis) + "\n최근 대화:\n" + conversation + "사용자: " + message;
     }
