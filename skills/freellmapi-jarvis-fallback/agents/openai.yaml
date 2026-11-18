@@ -1,0 +1,4 @@
+interface:
+  display_name: "FreeLLMAPI Jarvis Fallback"
+  short_description: "Add a safe FreeLLMAPI fallback for Jarvis"
+  default_prompt: "Use $freellmapi-jarvis-fallback to add or repair a safe FreeLLMAPI fallback for Jarvis."
