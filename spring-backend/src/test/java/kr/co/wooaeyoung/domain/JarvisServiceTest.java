@@ -59,4 +59,12 @@ class JarvisServiceTest {
         assertTrue(result.get("answer").toString().contains("뼈와 치아"));
         assertTrue(result.get("answer").toString().contains("칼슘과의 비율"));
     }
+
+    @Test void routesHistoricalAnalysisQuestionsToSavedRecords() {
+        Map<String, Object> result = service.answer(request("과거에 fg 분석했던거 설명", null));
+
+        assertEquals("RECORDS", result.get("intent"));
+        assertEquals("records", result.get("page"));
+        assertTrue(result.get("answer").toString().contains("저장한 분석 결과"));
+    }
 }

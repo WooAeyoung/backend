@@ -36,7 +36,7 @@ public class JarvisService {
                     : "현재 분석 결과 아래의 ‘추천 영양제’에서 추천 목록을 확인할 수 있어요.";
             return reply("RECOMMENDATION", "analysis", answer);
         }
-        if (phrase.matches(".*(지난|이전|반려동물).*(기록|결과).*|.*기록(을|보여|조회).*")) {
+        if (phrase.matches(".*(과거|지난|이전).*(분석|기록|결과).*(했던|한|설명|요약|보여|찾).*|.*(지난|이전|반려동물).*(기록|결과).*|.*기록(을|보여|조회).*")) {
             return reply("RECORDS", "records", "반려동물 기록 화면을 열었어요. 저장한 분석 결과와 프로필을 확인할 수 있어요.");
         }
         if (isAnalysisNavigation(phrase)) return reply("ANALYSIS", "analysis", "영양제 분석 화면으로 이동할게요. 반려동물 정보와 급여 제품을 입력해 주세요.");
