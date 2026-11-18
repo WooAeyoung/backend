@@ -32,7 +32,7 @@ public class JarvisAiService {
         // Keep the provider deadline below the browser deadline so the local,
         // analysis-based fallback can still be returned instead of a timeout.
         requests.setConnectTimeout(Duration.ofSeconds(2));
-        requests.setReadTimeout(Duration.ofSeconds(6));
+        requests.setReadTimeout(Duration.ofSeconds(12));
         this.client = RestClient.builder().requestFactory(requests).build();
     }
 
@@ -45,14 +45,11 @@ public class JarvisAiService {
         String provider = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
         LinkedHashSet<String> providers = new LinkedHashSet<>();
+        // Prefer the user-controlled router when configured. Its own fallback
+        // chain already selects healthy free providers for this request.
+        if (hasCredentials("freellmapi")) providers.add("freellmapi");
         providers.add(provider);
         if (!fallback.isBlank()) providers.add(fallback);
-        // FreeLLMAPI is an optional OpenAI-compatible router. It is tried only
-        // when both its reachable server URL and unified key are configured.
-        providers.add("freellmapi");
-        // Use the optional third provider when its server-side key is present.
-        // This keeps Jarvis responsive when both the primary and fallback are rate-limited.
-        providers.add("aimlapi");
         for (String candidate : providers) {
             if (!hasCredentials(candidate)) continue;
             try {
