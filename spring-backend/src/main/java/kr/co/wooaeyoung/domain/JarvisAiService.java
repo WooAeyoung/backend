@@ -28,8 +28,10 @@ public class JarvisAiService {
 
     public JarvisAiService() {
         SimpleClientHttpRequestFactory requests = new SimpleClientHttpRequestFactory();
-        requests.setConnectTimeout(Duration.ofSeconds(5));
-        requests.setReadTimeout(Duration.ofSeconds(30));
+        // Keep the provider deadline below the browser deadline so the local,
+        // analysis-based fallback can still be returned instead of a timeout.
+        requests.setConnectTimeout(Duration.ofSeconds(2));
+        requests.setReadTimeout(Duration.ofSeconds(6));
         this.client = RestClient.builder().requestFactory(requests).build();
     }
 
