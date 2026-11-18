@@ -11,11 +11,21 @@ public class JarvisService {
     public JarvisService(JarvisAiService ai) { this.ai = ai; }
     public Map<String, Object> answer(ApiModels.JarvisRequest request) {
         String phrase = request.message().replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
+        if (phrase.matches(".*(감사|고마워|고맙|thanks|thankyou).*")) {
+            return reply("COURTESY", null, "천만에요. 다음 분석에서도 결과만 나열하지 않고, 이유와 확인 순서를 함께 설명해 드릴게요.");
+        }
         if (phrase.contains("부족한성분만보여줘")) {
             return reply("DEFICIENT_NUTRIENTS", "analysis", deficientAnswer(request.analysis()));
         }
         if (phrase.matches(".*(오늘|최근).*(분석|결과).*(요약|설명).*|.*(요약|설명).*(분석|결과).*")) {
             return reply("ANALYSIS_SUMMARY", "analysis", describeAnalysis(request.analysis()));
+        }
+        Map<String, Object> referencedNutrient = referencedNutrient(phrase, request.analysis());
+        if (referencedNutrient != null && phrase.matches(".*(왜|이유|원인).*")) {
+            return reply("NUTRIENT_EXPLANATION", "analysis", nutrientExplanation(referencedNutrient));
+        }
+        if (phrase.matches(".*(앞으로|이제|그래서).*(어떻게|뭐|무엇|해야|할까).*|.*(자세히).*(어떻게|해야).*")) {
+            return reply("ANALYSIS_NEXT_STEPS", "analysis", nextSteps(request.analysis()));
         }
         if (phrase.matches(".*칼슘.*(부족|낮|어떻게|도움).*")) {
             return reply("CALCIUM_GUIDANCE", "analysis", calciumGuidance(request.analysis()));
@@ -85,6 +95,60 @@ public class JarvisService {
         if (normalized.contains("부족")) return deficientAnswer(analysis);
         if (normalized.contains("칼슘") || normalized.contains("비율")) return calciumGuidance(analysis);
         return "현재 분석 결과는 불러와져 있어요. 궁금한 성분이나 결과의 이유를 조금 더 구체적으로 물어보시면 해당 내용을 설명해 드릴게요.";
+    }
+
+    private Map<String, Object> referencedNutrient(String phrase, Map<String, Object> analysis) {
+        if (analysis == null || !(analysis.get("nutrients") instanceof List<?> rows)) return null;
+        for (Object row : rows) {
+            Map<String, Object> nutrient = map(row);
+            String id = String.valueOf(nutrient.get("nutrientId"));
+            String name = String.valueOf(nutrient.get("name")).replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
+            if (name.length() >= 2 && phrase.contains(name)) return nutrient;
+            if ("CALCIUM".equals(id) && phrase.contains("칼슘")) return nutrient;
+            if ("PHOSPHORUS".equals(id) && phrase.matches(".*(^|[^확])인(은|이|을|도|왜|부족|과다).*")) return nutrient;
+            if ("EPA_DHA".equals(id) && (phrase.contains("오메가3") || phrase.contains("epa") || phrase.contains("dha"))) return nutrient;
+        }
+        return null;
+    }
+
+    private String nutrientExplanation(Map<String, Object> nutrient) {
+        String name = String.valueOf(nutrient.getOrDefault("name", "해당 성분"));
+        String status = String.valueOf(nutrient.get("status"));
+        Number total = nutrient.get("total") instanceof Number value ? value : null;
+        Number minimum = nutrient.get("minimum") instanceof Number value ? value : null;
+        String unit = String.valueOf(nutrient.getOrDefault("unit", "")).toLowerCase(Locale.ROOT);
+        boolean unknown = Boolean.TRUE.equals(nutrient.get("unknownContribution"));
+        if ("DEFICIENT".equals(status) && total != null && minimum != null) {
+            String caveat = unknown
+                    ? " 다만 일부 제품 성분표가 비어 있어 현재 값은 확인된 양만 반영했으므로, 실제 부족인지 판단하려면 라벨 값을 보완해야 해요."
+                    : " 즉, 등록한 제품과 하루 급여량을 합쳤을 때 확인되는 양이 기준에 못 미친다는 뜻이며, 몸속 결핍을 진단한 것은 아니에요.";
+            return name + "이 부족으로 나온 이유는 확인된 하루 섭취량 " + amount(total) + unit
+                    + "이 적용 최소 기준 " + amount(minimum) + unit + "보다 낮기 때문이에요." + caveat
+                    + " 먼저 사료·영양제 라벨의 " + name + " 함량과 하루 급여량이 정확한지 확인한 뒤 다시 분석해 주세요.";
+        }
+        return name + "은 현재 ‘" + statusLabel(status) + "’ 상태예요. 입력된 제품 함량과 하루 급여량만으로는 더 구체적인 원인을 확정할 수 없으니, 제품 라벨 값과 급여량을 먼저 확인해 주세요.";
+    }
+
+    private String nextSteps(Map<String, Object> analysis) {
+        if (analysis == null) return "먼저 반려동물 정보와 현재 먹는 사료·영양제를 모두 등록해 분석해 주세요.";
+        List<String> deficient = new ArrayList<>();
+        if (analysis.get("nutrients") instanceof List<?> rows) for (Object row : rows) {
+            Map<String, Object> nutrient = map(row);
+            if ("DEFICIENT".equals(String.valueOf(nutrient.get("status")))) deficient.add(String.valueOf(nutrient.get("name")));
+        }
+        String focus = deficient.isEmpty() ? "부족 판정 성분은 없어요" : "우선 확인할 성분은 " + String.join(", ", deficient.subList(0, Math.min(3, deficient.size()))) + "이에요";
+        return focus + ". ① 주식 사료와 모든 영양제의 제품명·하루 급여량을 확인하고, ② 라벨에 없는 성분이 0으로 입력되지 않았는지 점검한 뒤, ③ 수정한 값으로 다시 분석해 보세요. 여러 성분이 한꺼번에 부족하다면 보충제를 각각 추가하기보다 완전사료 정보가 빠졌는지 먼저 확인하는 편이 안전해요. 확인 후에도 같은 결과가 계속되거나 증상이 있으면 수의사와 상담해 주세요.";
+    }
+
+    private String amount(Number value) {
+        double number = value.doubleValue();
+        return number == Math.rint(number) ? String.valueOf((long) number) : String.format(Locale.ROOT, "%.2f", number).replaceAll("0+$", "").replaceAll("\\.$", "");
+    }
+
+    private String statusLabel(String status) {
+        return switch (status) {
+            case "DEFICIENT" -> "부족"; case "EXCESS" -> "과다"; case "CAUTION" -> "주의"; case "ADEQUATE" -> "적정"; default -> "확인 필요";
+        };
     }
 
     private String deficientAnswer(Map<String, Object> analysis) {

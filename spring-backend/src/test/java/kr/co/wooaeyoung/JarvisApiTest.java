@@ -57,4 +57,27 @@ class JarvisApiTest {
         mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("안녕하세요")));
     }
+
+    @Test void explainsWhyTheReferencedNutrientIsDeficient() throws Exception {
+        String body = "{\"message\":\"그래서 인이 왜 부족하냐니까\",\"analysis\":{\"nutrients\":[{\"nutrientId\":\"PHOSPHORUS\",\"name\":\"인\",\"unit\":\"MG\",\"total\":120,\"minimum\":300,\"status\":\"DEFICIENT\"}]}}";
+        mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.intent").value("NUTRIENT_EXPLANATION"))
+                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("120mg")))
+                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("최소 기준 300mg")))
+                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("EPA+DHA"))));
+    }
+
+    @Test void givesConcreteNextStepsForFollowUp() throws Exception {
+        String body = "{\"message\":\"자세히 앞으로 어떻게 하면 될까\",\"analysis\":{\"nutrients\":[{\"nutrientId\":\"CALCIUM\",\"name\":\"칼슘\",\"status\":\"DEFICIENT\"}]}}";
+        mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.intent").value("ANALYSIS_NEXT_STEPS"))
+                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("하루 급여량")))
+                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("다시 분석")));
+    }
+
+    @Test void answersThanksNaturally() throws Exception {
+        mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"감사\"}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.intent").value("COURTESY"))
+                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("천만에요")));
+    }
 }
