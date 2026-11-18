@@ -47,6 +47,9 @@ public class JarvisAiService {
         LinkedHashSet<String> providers = new LinkedHashSet<>();
         providers.add(provider);
         if (!fallback.isBlank()) providers.add(fallback);
+        // Use the optional third provider when its server-side key is present.
+        // This keeps Jarvis responsive when both the primary and fallback are rate-limited.
+        providers.add("aimlapi");
         for (String candidate : providers) {
             if (!hasCredentials(candidate)) continue;
             try {
