@@ -65,6 +65,14 @@ class JarvisServiceTest {
 
         assertEquals("RECORDS", result.get("intent"));
         assertEquals("records", result.get("page"));
-        assertTrue(result.get("answer").toString().contains("저장한 분석 결과"));
+        assertTrue(result.get("answer").toString().contains("저장 기록 화면"));
+    }
+
+    @Test void routesResultExplanationToRecordsWhenThereIsNoCurrentAnalysis() {
+        Map<String, Object> result = service.answer(request("분석결과 설명", null));
+
+        assertEquals("RECORDS", result.get("intent"));
+        assertEquals("records", result.get("page"));
+        assertTrue(result.get("answer").toString().contains("저장 기록 화면"));
     }
 }

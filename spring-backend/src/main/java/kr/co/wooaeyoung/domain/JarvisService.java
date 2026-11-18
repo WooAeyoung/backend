@@ -17,7 +17,10 @@ public class JarvisService {
         if (phrase.contains("부족한성분만보여줘")) {
             return reply("DEFICIENT_NUTRIENTS", "analysis", deficientAnswer(request.analysis()));
         }
-        if (phrase.matches(".*(오늘|최근).*(분석|결과).*(요약|설명).*|.*(요약|설명).*(분석|결과).*")) {
+        if (phrase.matches(".*(오늘|최근).*(분석|결과).*(요약|설명).*|.*(분석|결과).*(요약|설명).*|.*(요약|설명).*(분석|결과).*")) {
+            if (request.analysis() == null) {
+                return reply("RECORDS", "records", "현재 진행 중인 분석 결과가 없어서 저장 기록 화면을 열었어요. 확인할 반려동물의 최근 분석 기록을 선택해 주세요.");
+            }
             return reply("ANALYSIS_SUMMARY", "analysis", describeAnalysis(request.analysis()));
         }
         Map<String, Object> referencedNutrient = referencedNutrient(phrase, request.analysis());
