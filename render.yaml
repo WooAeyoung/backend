@@ -51,4 +51,4 @@ services:
       - key: FREELLMAPI_API_KEY
         sync: false
       - key: FREELLMAPI_MODEL
-        value: auto:reliable
+        value: dots3-note-preview
