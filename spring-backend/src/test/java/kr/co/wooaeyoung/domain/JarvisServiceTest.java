@@ -13,6 +13,7 @@ class JarvisServiceTest {
         @Override public Optional<String> complete(String message, Map<String, Object> analysis, String provider, List<ApiModels.JarvisMessage> history) {
             return Optional.empty();
         }
+        @Override public boolean hasConfiguredProvider() { return false; }
     };
     private final JarvisService service = new JarvisService(ai);
 
@@ -46,7 +47,15 @@ class JarvisServiceTest {
     @Test void marksUnavailableAiSoTheFrontendCanRetryWithoutRetyping() {
         Map<String, Object> result = service.answer(request("이건 왜 그런 거야?", null));
 
-        assertEquals("AI_UNAVAILABLE", result.get("intent"));
-        assertTrue(result.get("answer").toString().contains("같은 내용을 다시 입력하실 필요는 없어요"));
+        assertEquals("AI_NOT_CONFIGURED", result.get("intent"));
+        assertTrue(result.get("answer").toString().contains("연결 설정이 아직 완료되지 않았어요"));
+    }
+
+    @Test void answersCommonNutrientQuestionsWithoutExternalAi() {
+        Map<String, Object> result = service.answer(request("인 궁금해", null));
+
+        assertEquals("NUTRIENT_INFORMATION", result.get("intent"));
+        assertTrue(result.get("answer").toString().contains("뼈와 치아"));
+        assertTrue(result.get("answer").toString().contains("칼슘과의 비율"));
     }
 }

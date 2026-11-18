@@ -83,6 +83,13 @@ public class JarvisAiService {
         };
     }
 
+    /** Safe configuration check: reports only whether an allowed provider has credentials, never the secret. */
+    public boolean hasConfiguredProvider() {
+        String primary = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
+        String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
+        return hasCredentials(primary) || (!fallback.isBlank() && hasCredentials(fallback));
+    }
+
     private boolean hasValue(String name) {
         String value = System.getenv(name);
         return value != null && !value.isBlank();

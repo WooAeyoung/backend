@@ -42,11 +42,14 @@ public class JarvisService {
         if (isAnalysisNavigation(phrase)) return reply("ANALYSIS", "analysis", "영양제 분석 화면으로 이동할게요. 반려동물 정보와 급여 제품을 입력해 주세요.");
         if (phrase.matches(".*(고객센터|문의|도움말).*")) return reply("SUPPORT", "support", "고객센터로 이동할게요.");
         if (phrase.matches(".*(홈|처음|메인).*")) return reply("HOME", "home", "홈 화면으로 이동할게요.");
+        String generalNutrientAnswer = generalNutrientAnswer(phrase);
+        if (generalNutrientAnswer != null) return reply("NUTRIENT_INFORMATION", null, generalNutrientAnswer);
         String localAnswer = answerFromAnalysis(request.message(), request.analysis());
         Optional<String> aiAnswer = ai.complete(request.message(), request.analysis(), request.provider(), request.history());
         return aiAnswer.filter(answer -> !answer.isBlank())
                 .map(answer -> reply("AI_ASSISTANT", null, answer))
-                .orElseGet(() -> reply("AI_UNAVAILABLE", null, localAnswer));
+                .orElseGet(() -> reply(ai.hasConfiguredProvider() ? "AI_UNAVAILABLE" : "AI_NOT_CONFIGURED", null,
+                        ai.hasConfiguredProvider() ? localAnswer : "일반 질문에 답하는 AI 연결 설정이 아직 완료되지 않았어요. 같은 질문을 반복해도 지금은 결과가 달라지지 않아요. 분석 결과 요약과 저장 기록 조회는 정상적으로 사용할 수 있고, 자주 묻는 영양성분은 제가 기본 안내를 드릴게요."));
     }
 
     private boolean isAnalysisNavigation(String phrase) {
@@ -151,6 +154,21 @@ public class JarvisService {
         return switch (status) {
             case "DEFICIENT" -> "부족"; case "EXCESS" -> "과다"; case "CAUTION" -> "주의"; case "ADEQUATE" -> "적정"; default -> "확인 필요";
         };
+    }
+
+    private String generalNutrientAnswer(String phrase) {
+        boolean asking = phrase.matches(".*(궁금|알려|뭐|무엇|설명|역할).*" );
+        if (!asking) return null;
+        if (phrase.matches(".*(^|[^확])인(이|은|에|궁금|알려|뭐|무엇|설명|역할).*")) {
+            return "인이 궁금하셨군요. 인은 칼슘과 함께 뼈와 치아를 구성하고, 세포의 에너지 사용에도 필요한 영양소예요. 중요한 것은 양뿐 아니라 칼슘과의 비율이에요. 현재 급여 상태를 확인하려면 사료·영양제의 인 함량과 하루 급여량을 등록해 분석해 주세요.";
+        }
+        if (phrase.contains("칼슘")) {
+            return "칼슘은 뼈와 치아, 근육과 신경 기능에 필요한 영양소예요. 너무 적거나 많은 경우 모두 문제가 될 수 있고 인과의 비율도 중요해요. 임의로 보충하기보다 현재 사료와 영양제의 함량을 함께 분석해 주세요.";
+        }
+        if (phrase.contains("오메가3") || phrase.contains("epa") || phrase.contains("dha")) {
+            return "EPA와 DHA는 오메가-3 지방산으로 피부·피모와 염증 반응 관리에 관여해요. 제품마다 함량 차이가 크므로 제품명만 보지 말고 EPA·DHA 실제 함량과 하루 급여량을 확인하는 것이 좋아요.";
+        }
+        return null;
     }
 
     private String deficientAnswer(Map<String, Object> analysis) {
