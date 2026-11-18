@@ -12,7 +12,7 @@ public class JarvisService {
     public Map<String, Object> answer(ApiModels.JarvisRequest request) {
         String phrase = request.message().replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
         if (phrase.matches(".*(감사|고마워|고맙|thanks|thankyou).*")) {
-            return reply("COURTESY", null, "천만에요. 다음 분석에서도 결과만 나열하지 않고, 이유와 확인 순서를 함께 설명해 드릴게요.");
+            return reply("COURTESY", null, "별말씀을요. 궁금한 점이 생기면 언제든 편하게 말씀해 주세요. 다음에도 결과의 이유와 확인 순서를 차근차근 함께 살펴드릴게요.");
         }
         if (phrase.contains("부족한성분만보여줘")) {
             return reply("DEFICIENT_NUTRIENTS", "analysis", deficientAnswer(request.analysis()));
@@ -70,7 +70,7 @@ public class JarvisService {
             if (Set.of("DEFICIENT", "CAUTION", "EXCESS").contains(status)) concerns.add(nutrient.get("name") + " " + ("DEFICIENT".equals(status) ? "부족" : "EXCESS".equals(status) ? "과다" : "주의"));
         }
         String issue = concerns.isEmpty() ? "현재 확인된 주의 항목은 없어요." : "확인할 항목은 " + String.join(", ", concerns.subList(0, Math.min(3, concerns.size()))) + "입니다.";
-        return "오늘 결과는 적정 " + adequate + "개, 부족 " + deficient + "개, 주의 " + caution + "개, 과다 " + excess + "개예요. " + issue + " 이 결과는 진단이나 처방이 아니며, 증상이 있으면 수의사와 상담해 주세요.";
+        return "확인해 봤어요. 오늘 결과는 적정 " + adequate + "개, 부족 " + deficient + "개, 주의 " + caution + "개, 과다 " + excess + "개예요. " + issue + " 걱정되실 수 있지만, 이 결과만으로 건강 문제를 단정하는 것은 아니에요. 먼저 입력한 제품과 급여량을 함께 확인해 볼게요.";
     }
 
     private String calciumGuidance(Map<String, Object> analysis) {
@@ -79,7 +79,7 @@ public class JarvisService {
             if ("CALCIUM".equals(nutrient.get("nutrientId"))) {
                 String status = String.valueOf(nutrient.get("status"));
                 String label = "DEFICIENT".equals(status) ? "부족" : "EXCESS".equals(status) ? "과다" : "CAUTION".equals(status) ? "주의" : "적정";
-                return "최근 분석에서 칼슘은 " + label + "으로 표시됐어요. 임의로 칼슘제를 더하기보다 현재 사료·영양제와 급여량을 확인해 다시 분석해 주세요. 증상이 있으면 수의사와 상담해 주세요.";
+                return "칼슘 결과가 걱정되셨겠어요. 최근 분석에서는 칼슘이 " + label + "으로 표시됐어요. 바로 칼슘제를 추가하기보다는 현재 사료·영양제의 함량과 하루 급여량이 정확한지 먼저 확인해 주세요. 값을 보완해 다시 분석해 보고, 불편한 증상이 있다면 수의사와 상담하시는 것이 안전해요.";
             }
         }
         return "칼슘 부족 여부는 사료와 영양제를 합친 하루 섭취량, 나이·체중, 칼슘:인 비율을 함께 봐야 해요. 임의로 칼슘제를 추가하지 말고 급여 제품을 등록해 분석한 뒤 결과를 확인해 주세요. 증상이 있으면 수의사와 상담해 주세요.";
@@ -122,7 +122,7 @@ public class JarvisService {
             String caveat = unknown
                     ? " 다만 일부 제품 성분표가 비어 있어 현재 값은 확인된 양만 반영했으므로, 실제 부족인지 판단하려면 라벨 값을 보완해야 해요."
                     : " 즉, 등록한 제품과 하루 급여량을 합쳤을 때 확인되는 양이 기준에 못 미친다는 뜻이며, 몸속 결핍을 진단한 것은 아니에요.";
-            return name + "이 부족으로 나온 이유는 확인된 하루 섭취량 " + amount(total) + unit
+            return "궁금하실 만해요. " + name + "이 부족으로 나온 이유는 확인된 하루 섭취량 " + amount(total) + unit
                     + "이 적용 최소 기준 " + amount(minimum) + unit + "보다 낮기 때문이에요." + caveat
                     + " 먼저 사료·영양제 라벨의 " + name + " 함량과 하루 급여량이 정확한지 확인한 뒤 다시 분석해 주세요.";
         }
@@ -137,7 +137,7 @@ public class JarvisService {
             if ("DEFICIENT".equals(String.valueOf(nutrient.get("status")))) deficient.add(String.valueOf(nutrient.get("name")));
         }
         String focus = deficient.isEmpty() ? "부족 판정 성분은 없어요" : "우선 확인할 성분은 " + String.join(", ", deficient.subList(0, Math.min(3, deficient.size()))) + "이에요";
-        return focus + ". ① 주식 사료와 모든 영양제의 제품명·하루 급여량을 확인하고, ② 라벨에 없는 성분이 0으로 입력되지 않았는지 점검한 뒤, ③ 수정한 값으로 다시 분석해 보세요. 여러 성분이 한꺼번에 부족하다면 보충제를 각각 추가하기보다 완전사료 정보가 빠졌는지 먼저 확인하는 편이 안전해요. 확인 후에도 같은 결과가 계속되거나 증상이 있으면 수의사와 상담해 주세요.";
+        return "차근차근 확인하면 괜찮아요. " + focus + ". ① 주식 사료와 모든 영양제의 제품명·하루 급여량을 확인하고, ② 라벨에 없는 성분이 0으로 입력되지 않았는지 살펴본 뒤, ③ 수정한 값으로 다시 분석해 보세요. 여러 성분이 한꺼번에 부족하다면 보충제를 각각 추가하기보다 완전사료 정보가 빠졌는지 먼저 확인하는 편이 안전해요. 원하시면 어떤 항목부터 확인할지 제가 하나씩 안내해 드릴게요.";
     }
 
     private String amount(Number value) {
@@ -162,8 +162,8 @@ public class JarvisService {
             }
         }
         return deficient.isEmpty()
-                ? "현재 분석 결과에서 부족으로 표시된 성분은 없어요."
-                : "현재 분석 결과에서 부족한 성분은 " + String.join(", ", deficient) + "이에요.";
+                ? "확인해 봤어요. 현재 분석 결과에서 부족으로 표시된 성분은 없어요."
+                : "확인해 봤어요. 현재 부족으로 표시된 성분은 " + String.join(", ", deficient) + "이에요. 걱정되실 수 있지만, 먼저 제품 라벨과 하루 급여량이 정확한지 함께 확인해 보면 좋아요.";
     }
 
     @SuppressWarnings("unchecked") private Map<String, Object> map(Object value) { return value instanceof Map<?, ?> raw ? (Map<String, Object>) raw : Map.of(); }

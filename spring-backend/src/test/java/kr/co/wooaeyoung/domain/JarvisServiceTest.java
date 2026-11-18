@@ -30,7 +30,7 @@ class JarvisServiceTest {
         assertEquals("ANALYSIS_NEXT_STEPS", next.get("intent"));
         assertTrue(next.get("answer").toString().contains("하루 급여량"));
         assertEquals("COURTESY", thanks.get("intent"));
-        assertTrue(thanks.get("answer").toString().contains("천만에요"));
+        assertTrue(thanks.get("answer").toString().contains("별말씀을요"));
     }
 
     private ApiModels.JarvisRequest request(String message, Map<String, Object> analysis) {

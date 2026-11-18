@@ -78,6 +78,6 @@ class JarvisApiTest {
     @Test void answersThanksNaturally() throws Exception {
         mvc.perform(post("/api/v1/jarvis").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"감사\"}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.intent").value("COURTESY"))
-                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("천만에요")));
+                .andExpect(jsonPath("$.answer").value(org.hamcrest.Matchers.containsString("별말씀을요")));
     }
 }
