@@ -174,8 +174,9 @@ public class JarvisAiService {
                 for (JsonNode part : parts) if (part.path("text").isTextual()) answer.append(part.path("text").asText());
                 return answer.isEmpty() ? Optional.empty() : Optional.of(answer.toString());
             } catch (RestClientResponseException error) {
-                if (error.getStatusCode().value() != 404) throw error;
-                log.info("Gemini model {} is unavailable; trying the next allowed model", candidate);
+                int status = error.getStatusCode().value();
+                if (status != 404 && status != 429) throw error;
+                log.info("Gemini model {} returned HTTP {}; trying the next allowed model", candidate, status);
             }
         }
         return Optional.empty();
