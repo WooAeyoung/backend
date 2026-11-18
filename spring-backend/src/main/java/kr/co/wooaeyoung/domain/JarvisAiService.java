@@ -47,6 +47,9 @@ public class JarvisAiService {
         LinkedHashSet<String> providers = new LinkedHashSet<>();
         providers.add(provider);
         if (!fallback.isBlank()) providers.add(fallback);
+        // FreeLLMAPI is an optional OpenAI-compatible router. It is tried only
+        // when both its reachable server URL and unified key are configured.
+        providers.add("freellmapi");
         // Use the optional third provider when its server-side key is present.
         // This keeps Jarvis responsive when both the primary and fallback are rate-limited.
         providers.add("aimlapi");
@@ -80,6 +83,7 @@ public class JarvisAiService {
         return switch (provider) {
             case "grok" -> grok(message, analysis, history);
             case "ollama" -> ollama(message, analysis, history);
+            case "freellmapi" -> freeLlmApi(message, analysis, history);
             case "aimlapi" -> aimlapi(message, analysis, history);
             case "gemini" -> gemini(message, analysis, history);
             default -> throw new IllegalStateException("지원하지 않는 JARVIS 제공자입니다.");
@@ -89,6 +93,7 @@ public class JarvisAiService {
     private boolean hasCredentials(String provider) {
         return switch (provider) {
             case "grok" -> hasValue("XAI_API_KEY");
+            case "freellmapi" -> hasValue("FREELLMAPI_BASE_URL") && hasValue("FREELLMAPI_API_KEY");
             case "aimlapi" -> hasValue("AIMLAPI_API_KEY");
             case "gemini" -> hasValue("GEMINI_API_KEY");
             case "ollama" -> true;
@@ -100,7 +105,8 @@ public class JarvisAiService {
     public boolean hasConfiguredProvider() {
         String primary = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
-        return hasCredentials(primary) || (!fallback.isBlank() && hasCredentials(fallback));
+        return hasCredentials(primary) || (!fallback.isBlank() && hasCredentials(fallback))
+                || hasCredentials("freellmapi") || hasCredentials("aimlapi");
     }
 
     public String lastFailureCategory() { return lastFailureCategory; }
@@ -149,6 +155,35 @@ public class JarvisAiService {
                 .contentType(MediaType.APPLICATION_JSON).body(body).retrieve().body(String.class);
         JsonNode text = mapper.readTree(raw).path("choices").path(0).path("message").path("content");
         return text.isTextual() ? Optional.of(text.asText()) : Optional.empty();
+    }
+
+    private Optional<String> freeLlmApi(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
+        String key = System.getenv("FREELLMAPI_API_KEY");
+        String base = System.getenv("FREELLMAPI_BASE_URL");
+        if (key == null || key.isBlank() || base == null || base.isBlank()) return Optional.empty();
+        String model = safeRouterModel(System.getenv().getOrDefault("FREELLMAPI_MODEL", "auto:reliable"));
+        Map<String, Object> body = Map.of("model", model, "messages", List.of(
+                Map.of("role", "user", "content", prompt(message, analysis, history))));
+        String raw = client.post().uri(freeLlmApiChatUrl(base))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + key)
+                .header("X-FreeLLM-Task-Type", "chat")
+                .contentType(MediaType.APPLICATION_JSON).body(body).retrieve().body(String.class);
+        JsonNode text = mapper.readTree(raw).path("choices").path(0).path("message").path("content");
+        return text.isTextual() ? Optional.of(text.asText()) : Optional.empty();
+    }
+
+    static String freeLlmApiChatUrl(String configuredBase) {
+        String base = configuredBase.strip().replaceAll("/+$", "");
+        if (!base.matches("https?://[^\\s]+")) throw new IllegalArgumentException("FreeLLMAPI 주소가 올바르지 않습니다.");
+        return base.endsWith("/v1") ? base + "/chat/completions" : base + "/v1/chat/completions";
+    }
+
+    static String safeRouterModel(String configuredModel) {
+        String model = configuredModel == null ? "auto:reliable" : configuredModel.strip();
+        if (model.isEmpty() || model.length() > 100 || !model.matches("[A-Za-z0-9._:/-]+")) {
+            throw new IllegalArgumentException("FreeLLMAPI 모델 이름이 올바르지 않습니다.");
+        }
+        return model;
     }
 
     private Optional<String> gemini(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {

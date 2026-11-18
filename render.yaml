@@ -46,3 +46,9 @@ services:
         sync: false
       - key: AIMLAPI_MODEL
         value: openai/gpt-5-5
+      - key: FREELLMAPI_BASE_URL
+        sync: false
+      - key: FREELLMAPI_API_KEY
+        sync: false
+      - key: FREELLMAPI_MODEL
+        value: auto:reliable
