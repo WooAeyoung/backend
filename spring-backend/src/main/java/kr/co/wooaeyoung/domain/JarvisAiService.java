@@ -25,6 +25,7 @@ public class JarvisAiService {
             "gemini-3.5-flash", "gemini-2.5-flash", "gemini-3.8-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash");
     private final ObjectMapper mapper = new ObjectMapper();
     private final RestClient client;
+    private volatile String lastFailureCategory = "NONE";
 
     public JarvisAiService() {
         SimpleClientHttpRequestFactory requests = new SimpleClientHttpRequestFactory();
@@ -40,6 +41,7 @@ public class JarvisAiService {
         return complete(message, analysis, requestedProvider, null);
     }
     public Optional<String> complete(String message, Map<String, Object> analysis, String requestedProvider, List<ApiModels.JarvisMessage> history) {
+        lastFailureCategory = "MISSING_CREDENTIALS";
         String provider = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
         LinkedHashSet<String> providers = new LinkedHashSet<>();
@@ -49,12 +51,19 @@ public class JarvisAiService {
             if (!hasCredentials(candidate)) continue;
             try {
                 Optional<String> answer = request(candidate, message, analysis, history);
-                if (answer.isPresent() && !answer.get().isBlank()) return answer;
+                if (answer.isPresent() && !answer.get().isBlank()) { lastFailureCategory = "NONE"; return answer; }
+                lastFailureCategory = "EMPTY_RESPONSE";
             } catch (Exception error) {
                 if (error instanceof RestClientResponseException responseError) {
+                    int status = responseError.getStatusCode().value();
+                    lastFailureCategory = status == 401 || status == 403 ? "AUTHENTICATION"
+                            : status == 404 ? "MODEL_NOT_FOUND"
+                            : status == 429 ? "RATE_LIMIT"
+                            : status >= 500 ? "PROVIDER_ERROR" : "REQUEST_REJECTED";
                     log.warn("JARVIS provider {} rejected the request with HTTP {}: {}", candidate,
-                            responseError.getStatusCode().value(), safeErrorDetail(responseError));
+                            status, safeErrorDetail(responseError));
                 } else {
+                    lastFailureCategory = error.getClass().getSimpleName().contains("ResourceAccess") ? "TIMEOUT_OR_NETWORK" : "CLIENT_ERROR";
                     log.warn("JARVIS provider {} failed: {}", candidate, error.getClass().getSimpleName());
                 }
             }
@@ -89,6 +98,8 @@ public class JarvisAiService {
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
         return hasCredentials(primary) || (!fallback.isBlank() && hasCredentials(fallback));
     }
+
+    public String lastFailureCategory() { return lastFailureCategory; }
 
     private boolean hasValue(String name) {
         String value = System.getenv(name);

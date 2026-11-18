@@ -14,6 +14,7 @@ class JarvisServiceTest {
             return Optional.empty();
         }
         @Override public boolean hasConfiguredProvider() { return false; }
+        @Override public String lastFailureCategory() { return "MISSING_CREDENTIALS"; }
     };
     private final JarvisService service = new JarvisService(ai);
 

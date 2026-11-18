@@ -48,8 +48,9 @@ public class JarvisService {
         Optional<String> aiAnswer = ai.complete(request.message(), request.analysis(), request.provider(), request.history());
         return aiAnswer.filter(answer -> !answer.isBlank())
                 .map(answer -> reply("AI_ASSISTANT", null, answer))
-                .orElseGet(() -> reply(ai.hasConfiguredProvider() ? "AI_UNAVAILABLE" : "AI_NOT_CONFIGURED", null,
-                        ai.hasConfiguredProvider() ? localAnswer : "일반 질문에 답하는 AI 연결 설정이 아직 완료되지 않았어요. 같은 질문을 반복해도 지금은 결과가 달라지지 않아요. 분석 결과 요약과 저장 기록 조회는 정상적으로 사용할 수 있고, 자주 묻는 영양성분은 제가 기본 안내를 드릴게요."));
+                .orElseGet(() -> ai.hasConfiguredProvider()
+                        ? reply("AI_" + ai.lastFailureCategory(), null, providerFailureAnswer(ai.lastFailureCategory(), localAnswer))
+                        : reply("AI_NOT_CONFIGURED", null, "일반 질문에 답하는 AI 연결 설정이 아직 완료되지 않았어요. 같은 질문을 반복해도 지금은 결과가 달라지지 않아요. 분석 결과 요약과 저장 기록 조회는 정상적으로 사용할 수 있고, 자주 묻는 영양성분은 제가 기본 안내를 드릴게요."));
     }
 
     private boolean isAnalysisNavigation(String phrase) {
@@ -169,6 +170,17 @@ public class JarvisService {
             return "EPA와 DHA는 오메가-3 지방산으로 피부·피모와 염증 반응 관리에 관여해요. 제품마다 함량 차이가 크므로 제품명만 보지 말고 EPA·DHA 실제 함량과 하루 급여량을 확인하는 것이 좋아요.";
         }
         return null;
+    }
+
+    private String providerFailureAnswer(String category, String fallback) {
+        return switch (category) {
+            case "AUTHENTICATION" -> "외부 AI 인증이 거부되어 맞춤 답변을 만들지 못했어요. 운영 설정의 API 키를 다시 확인해야 해요. 기본 분석과 기록 기능은 정상적으로 사용할 수 있어요.";
+            case "MODEL_NOT_FOUND" -> "현재 설정된 AI 모델을 제공자가 찾지 못했어요. 사용할 수 있는 모델 이름으로 운영 설정을 바꿔야 해요. 기본 분석과 기록 기능은 정상이에요.";
+            case "RATE_LIMIT" -> "외부 AI의 사용량 제한에 도달했어요. 잠시 후 다시 시도해 주세요. 기본 분석과 기록 기능은 계속 사용할 수 있어요.";
+            case "TIMEOUT_OR_NETWORK", "PROVIDER_ERROR" -> "외부 AI 응답이 지연되거나 제공자에 일시적인 문제가 있어요. 잠시 후 ‘다시 시도’를 눌러 주세요.";
+            case "EMPTY_RESPONSE" -> "외부 AI가 답변 없이 종료됐어요. 잠시 후 ‘다시 시도’를 눌러 주세요.";
+            default -> fallback;
+        };
     }
 
     private String deficientAnswer(Map<String, Object> analysis) {
