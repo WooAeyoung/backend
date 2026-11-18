@@ -68,6 +68,7 @@ public class JarvisAiService {
                 }
             }
         }
+        log.warn("JARVIS could not obtain an answer from any configured provider; category={}", lastFailureCategory);
         // Let JarvisService answer from the submitted analysis instead of failing the whole request.
         return Optional.empty();
     }
