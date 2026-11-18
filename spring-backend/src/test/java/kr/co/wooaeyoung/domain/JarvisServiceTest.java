@@ -5,10 +5,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 class JarvisServiceTest {
-    private final JarvisService service = new JarvisService(null);
+    private final JarvisAiService ai = new JarvisAiService() {
+        @Override public Optional<String> complete(String message, Map<String, Object> analysis, String provider, List<ApiModels.JarvisMessage> history) {
+            return Optional.empty();
+        }
+    };
+    private final JarvisService service = new JarvisService(ai);
 
     @Test void explainsTheReferencedNutrientInsteadOfListingEveryDeficiency() {
         Map<String, Object> phosphorus = Map.of(
@@ -35,5 +41,12 @@ class JarvisServiceTest {
 
     private ApiModels.JarvisRequest request(String message, Map<String, Object> analysis) {
         return new ApiModels.JarvisRequest(message, analysis, null, List.of());
+    }
+
+    @Test void marksUnavailableAiSoTheFrontendCanRetryWithoutRetyping() {
+        Map<String, Object> result = service.answer(request("이건 왜 그런 거야?", null));
+
+        assertEquals("AI_UNAVAILABLE", result.get("intent"));
+        assertTrue(result.get("answer").toString().contains("같은 내용을 다시 입력하실 필요는 없어요"));
     }
 }

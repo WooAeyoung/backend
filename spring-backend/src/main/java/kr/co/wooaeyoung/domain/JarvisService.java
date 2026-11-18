@@ -44,7 +44,9 @@ public class JarvisService {
         if (phrase.matches(".*(홈|처음|메인).*")) return reply("HOME", "home", "홈 화면으로 이동할게요.");
         String localAnswer = answerFromAnalysis(request.message(), request.analysis());
         Optional<String> aiAnswer = ai.complete(request.message(), request.analysis(), request.provider(), request.history());
-        return reply("AI_ASSISTANT", null, aiAnswer.filter(answer -> !answer.isBlank()).orElse(localAnswer));
+        return aiAnswer.filter(answer -> !answer.isBlank())
+                .map(answer -> reply("AI_ASSISTANT", null, answer))
+                .orElseGet(() -> reply("AI_UNAVAILABLE", null, localAnswer));
     }
 
     private boolean isAnalysisNavigation(String phrase) {
@@ -91,7 +93,7 @@ public class JarvisService {
         if (normalized.matches(".*(왜|이유).*(수의사|병원).*") || normalized.matches(".*(수의사|병원).*(왜|이유).*")) {
             return "영양 분석은 입력한 사료와 영양제의 수치를 비교하는 참고 자료라서, 실제 증상·질환·약물·검사 결과까지 판단할 수 없어요. 이상 증상이 있거나 부족·과다 상태가 계속되면 안전을 위해 수의사와 상담하라는 뜻이에요.";
         }
-        if (analysis == null) return "지금 질문은 이해했지만 AI 답변을 잠시 불러오지 못했어요. 다시 한 번 물어보시면 이어서 답해 드릴게요.";
+        if (analysis == null) return "질문은 잘 도착했어요. 다만 지금은 맞춤 답변 연결이 잠시 원활하지 않아요. 같은 내용을 다시 입력하실 필요는 없어요. 아래 ‘다시 시도’를 누르면 이 질문 그대로 다시 확인할게요. 분석 결과 요약이나 저장 기록 조회는 지금도 바로 도와드릴 수 있어요.";
         if (normalized.contains("부족")) return deficientAnswer(analysis);
         if (normalized.contains("칼슘") || normalized.contains("비율")) return calciumGuidance(analysis);
         return "현재 분석 결과는 불러와져 있어요. 궁금한 성분이나 결과의 이유를 조금 더 구체적으로 물어보시면 해당 내용을 설명해 드릴게요.";
