@@ -57,8 +57,7 @@ public class JarvisService {
     }
 
     private boolean isAnalysisNavigation(String phrase) {
-        return phrase.matches("(분석|영양제분석)")
-                || phrase.matches(".*(분석|영양제).*(화면|시작|열어|이동|보여).*");
+        return phrase.matches("(?:영양제)?분석(?:화면|페이지)?(?:으로)?(?:이동|열어|열기|가줘|가자|시작)(?:해줘|줘)?");
     }
 
     private Map<String, Object> reply(String intent, String page, String answer) {

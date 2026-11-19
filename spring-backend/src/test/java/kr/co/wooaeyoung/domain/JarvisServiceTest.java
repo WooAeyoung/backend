@@ -75,4 +75,21 @@ class JarvisServiceTest {
         assertEquals("records", result.get("page"));
         assertTrue(result.get("answer").toString().contains("저장 기록 화면"));
     }
+
+    @Test void usesExternalAiForAnalysisConversationUnlessNavigationIsExplicit() {
+        JarvisAiService answeringAi = new JarvisAiService() {
+            @Override public Optional<String> complete(String message, Map<String, Object> analysis, String provider, List<ApiModels.JarvisMessage> history) {
+                return Optional.of("외부 AI 답변");
+            }
+        };
+        JarvisService externalService = new JarvisService(answeringAi);
+
+        Map<String, Object> conversation = externalService.answer(request("영양 분석이 궁금해", null));
+        Map<String, Object> navigation = externalService.answer(request("분석 화면 열어줘", null));
+
+        assertEquals("AI_ASSISTANT", conversation.get("intent"));
+        assertNull(conversation.get("page"));
+        assertEquals("ANALYSIS", navigation.get("intent"));
+        assertEquals("analysis", navigation.get("page"));
+    }
 }

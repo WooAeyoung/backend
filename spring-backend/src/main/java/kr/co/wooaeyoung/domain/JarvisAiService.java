@@ -42,18 +42,15 @@ public class JarvisAiService {
     }
     public Optional<String> complete(String message, Map<String, Object> analysis, String requestedProvider, List<ApiModels.JarvisMessage> history) {
         lastFailureCategory = "MISSING_CREDENTIALS";
-        String provider = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
+        String provider = System.getenv().getOrDefault("JARVIS_PROVIDER", "gemini").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
         LinkedHashSet<String> providers = new LinkedHashSet<>();
-        // Prefer the user-controlled router when configured. Its own fallback
-        // chain already selects healthy free providers for this request.
-        if (hasCredentials("freellmapi") && (requestedProvider == null || requestedProvider.isBlank())) {
-            providers.add("freellmapi");
-        } else {
-            providers.add(requestedProvider == null || requestedProvider.isBlank()
-                    ? provider : requestedProvider.toLowerCase(Locale.ROOT));
-            if (!fallback.isBlank()) providers.add(fallback);
-        }
+        providers.add(requestedProvider == null || requestedProvider.isBlank()
+                ? provider : requestedProvider.toLowerCase(Locale.ROOT));
+        if (!fallback.isBlank()) providers.add(fallback);
+        // Keep the user-controlled free router as the final fallback after the
+        // explicitly configured primary and secondary providers.
+        if (hasCredentials("freellmapi")) providers.add("freellmapi");
         for (String candidate : providers) {
             if (!hasCredentials(candidate)) continue;
             try {
@@ -104,7 +101,7 @@ public class JarvisAiService {
 
     /** Safe configuration check: reports only whether an allowed provider has credentials, never the secret. */
     public boolean hasConfiguredProvider() {
-        String primary = System.getenv().getOrDefault("JARVIS_PROVIDER", "grok").toLowerCase(Locale.ROOT);
+        String primary = System.getenv().getOrDefault("JARVIS_PROVIDER", "gemini").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
         return hasCredentials(primary) || (!fallback.isBlank() && hasCredentials(fallback))
                 || hasCredentials("freellmapi") || hasCredentials("aimlapi");
