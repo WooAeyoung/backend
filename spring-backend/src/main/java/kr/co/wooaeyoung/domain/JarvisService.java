@@ -53,7 +53,9 @@ public class JarvisService {
                 .map(answer -> reply("AI_ASSISTANT", null, answer))
                 .orElseGet(() -> ai.hasConfiguredProvider()
                         ? reply("AI_" + ai.lastFailureCategory(), null, providerFailureAnswer(ai.lastFailureCategory(), localAnswer))
-                        : reply("AI_NOT_CONFIGURED", null, "일반 질문에 답하는 AI 연결 설정이 아직 완료되지 않았어요. 같은 질문을 반복해도 지금은 결과가 달라지지 않아요. 분석 결과 요약과 저장 기록 조회는 정상적으로 사용할 수 있고, 자주 묻는 영양성분은 제가 기본 안내를 드릴게요."));
+                        : localAnswer != null
+                                ? reply("AI_ASSISTANT", null, localAnswer)
+                                : reply("AI_NOT_CONFIGURED", null, "일반 질문에 답하는 AI 연결 설정이 아직 완료되지 않았어요. 같은 질문을 반복해도 지금은 결과가 달라지지 않아요. 분석 결과 요약과 저장 기록 조회는 정상적으로 사용할 수 있고, 자주 묻는 영양성분은 제가 기본 안내를 드릴게요."));
     }
 
     private boolean isAnalysisNavigation(String phrase) {
@@ -99,7 +101,7 @@ public class JarvisService {
         if (normalized.matches(".*(왜|이유).*(수의사|병원).*") || normalized.matches(".*(수의사|병원).*(왜|이유).*")) {
             return "영양 분석은 입력한 사료와 영양제의 수치를 비교하는 참고 자료라서, 실제 증상·질환·약물·검사 결과까지 판단할 수 없어요. 이상 증상이 있거나 부족·과다 상태가 계속되면 안전을 위해 수의사와 상담하라는 뜻이에요.";
         }
-        if (analysis == null) return "질문은 잘 도착했어요. 다만 지금은 맞춤 답변 연결이 잠시 원활하지 않아요. 같은 내용을 다시 입력하실 필요는 없어요. 아래 ‘다시 시도’를 누르면 이 질문 그대로 다시 확인할게요. 분석 결과 요약이나 저장 기록 조회는 지금도 바로 도와드릴 수 있어요.";
+        if (analysis == null) return null;
         if (normalized.contains("부족")) return deficientAnswer(analysis);
         if (normalized.contains("칼슘") || normalized.contains("비율")) return calciumGuidance(analysis);
         return "현재 분석 결과는 불러와져 있어요. 궁금한 성분이나 결과의 이유를 조금 더 구체적으로 물어보시면 해당 내용을 설명해 드릴게요.";
@@ -181,7 +183,7 @@ public class JarvisService {
             case "RATE_LIMIT" -> "외부 AI의 사용량 제한에 도달했어요. 잠시 후 다시 시도해 주세요. 기본 분석과 기록 기능은 계속 사용할 수 있어요.";
             case "TIMEOUT_OR_NETWORK", "PROVIDER_ERROR" -> "외부 AI 응답이 지연되거나 제공자에 일시적인 문제가 있어요. 잠시 후 ‘다시 시도’를 눌러 주세요.";
             case "EMPTY_RESPONSE" -> "외부 AI가 답변 없이 종료됐어요. 잠시 후 ‘다시 시도’를 눌러 주세요.";
-            default -> fallback;
+            default -> fallback != null ? fallback : "외부 AI 연결이 잠시 원활하지 않아요. 잠시 후 다시 시도해 주세요.";
         };
     }
 
