@@ -32,7 +32,7 @@ public class JarvisAiService {
         // Keep the provider deadline below the browser deadline so the local,
         // analysis-based fallback can still be returned instead of a timeout.
         requests.setConnectTimeout(Duration.ofSeconds(2));
-        requests.setReadTimeout(Duration.ofSeconds(22));
+        requests.setReadTimeout(Duration.ofSeconds(28));
         this.client = RestClient.builder().requestFactory(requests).build();
     }
 
@@ -47,9 +47,13 @@ public class JarvisAiService {
         LinkedHashSet<String> providers = new LinkedHashSet<>();
         // Prefer the user-controlled router when configured. Its own fallback
         // chain already selects healthy free providers for this request.
-        if (hasCredentials("freellmapi")) providers.add("freellmapi");
-        providers.add(provider);
-        if (!fallback.isBlank()) providers.add(fallback);
+        if (hasCredentials("freellmapi") && (requestedProvider == null || requestedProvider.isBlank())) {
+            providers.add("freellmapi");
+        } else {
+            providers.add(requestedProvider == null || requestedProvider.isBlank()
+                    ? provider : requestedProvider.toLowerCase(Locale.ROOT));
+            if (!fallback.isBlank()) providers.add(fallback);
+        }
         for (String candidate : providers) {
             if (!hasCredentials(candidate)) continue;
             try {
