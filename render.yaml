@@ -31,7 +31,7 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
-        value: gemini-2.5-flash
+        value: gemini-flash-latest
       - key: XAI_API_KEY
         sync: false
       - key: GROK_MODEL

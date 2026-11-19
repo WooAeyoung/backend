@@ -22,7 +22,7 @@ public class JarvisAiService {
     private static final Set<String> OLLAMA_MODELS = Set.of("llama3.2", "qwen2.5:7b", "gemma3:4b");
     private static final Set<String> AIMLAPI_MODELS = Set.of("openai/gpt-5-5");
     private static final List<String> GEMINI_MODELS = List.of(
-            "gemini-3.5-flash", "gemini-2.5-flash", "gemini-3.8-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash");
+            "gemini-flash-latest", "gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.5-flash");
     private final ObjectMapper mapper = new ObjectMapper();
     private final RestClient client;
     private volatile String lastFailureCategory = "NONE";
@@ -184,7 +184,7 @@ public class JarvisAiService {
     private Optional<String> gemini(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         String key = System.getenv("GEMINI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
-        String model = allowed(System.getenv().getOrDefault("GEMINI_MODEL", "gemini-2.5-flash"), GEMINI_MODELS);
+        String model = allowed(System.getenv().getOrDefault("GEMINI_MODEL", "gemini-flash-latest"), GEMINI_MODELS);
         LinkedHashSet<String> candidates = new LinkedHashSet<>();
         candidates.add(model);
         candidates.addAll(GEMINI_MODELS);
