@@ -32,7 +32,7 @@ public class JarvisAiService {
         // Keep the provider deadline below the browser deadline so the local,
         // analysis-based fallback can still be returned instead of a timeout.
         requests.setConnectTimeout(Duration.ofSeconds(2));
-        requests.setReadTimeout(Duration.ofSeconds(28));
+        requests.setReadTimeout(Duration.ofSeconds(14));
         this.client = RestClient.builder().requestFactory(requests).build();
     }
 
@@ -48,9 +48,6 @@ public class JarvisAiService {
         providers.add(requestedProvider == null || requestedProvider.isBlank()
                 ? provider : requestedProvider.toLowerCase(Locale.ROOT));
         if (!fallback.isBlank()) providers.add(fallback);
-        // Keep the user-controlled free router as the final fallback after the
-        // explicitly configured primary and secondary providers.
-        if (hasCredentials("freellmapi")) providers.add("freellmapi");
         for (String candidate : providers) {
             if (!hasCredentials(candidate)) continue;
             try {
@@ -187,7 +184,7 @@ public class JarvisAiService {
     private Optional<String> gemini(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         String key = System.getenv("GEMINI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
-        String model = allowed(System.getenv().getOrDefault("GEMINI_MODEL", "gemini-3.5-flash"), GEMINI_MODELS);
+        String model = allowed(System.getenv().getOrDefault("GEMINI_MODEL", "gemini-2.5-flash"), GEMINI_MODELS);
         LinkedHashSet<String> candidates = new LinkedHashSet<>();
         candidates.add(model);
         candidates.addAll(GEMINI_MODELS);
