@@ -18,6 +18,12 @@ class JarvisServiceTest {
     };
     private final JarvisService service = new JarvisService(ai);
 
+    @Test void buildsOpenJarvisCompatibleChatEndpoint() {
+        assertEquals("http://localhost:8000/v1/chat/completions", JarvisAiService.openJarvisChatUrl("http://localhost:8000"));
+        assertEquals("https://jarvis.example/v1/chat/completions", JarvisAiService.openJarvisChatUrl("https://jarvis.example/v1/"));
+        assertThrows(IllegalArgumentException.class, () -> JarvisAiService.openJarvisChatUrl("file:///tmp/jarvis"));
+    }
+
     @Test void explainsTheReferencedNutrientInsteadOfListingEveryDeficiency() {
         Map<String, Object> phosphorus = Map.of(
                 "nutrientId", "PHOSPHORUS", "name", "인", "unit", "MG",

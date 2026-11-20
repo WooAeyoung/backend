@@ -25,11 +25,17 @@ services:
       - key: KAKAO_SKILL_SECRET
         sync: false
       - key: JARVIS_PROVIDER
-        value: gemini
+        value: openjarvis
       - key: JARVIS_FALLBACK_PROVIDER
-        value: grok
+        value: gemini
       - key: JARVIS_TERTIARY_PROVIDER
         value: freellmapi
+      - key: OPENJARVIS_BASE_URL
+        sync: false
+      - key: OPENJARVIS_API_KEY
+        sync: false
+      - key: OPENJARVIS_MODEL
+        value: auto
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL

@@ -78,6 +78,7 @@ public class JarvisAiService {
 
     private Optional<String> request(String provider, String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         return switch (provider) {
+            case "openjarvis" -> openJarvis(message, analysis, history);
             case "grok" -> grok(message, analysis, history);
             case "ollama" -> ollama(message, analysis, history);
             case "freellmapi" -> freeLlmApi(message, analysis, history);
@@ -89,6 +90,7 @@ public class JarvisAiService {
 
     private boolean hasCredentials(String provider) {
         return switch (provider) {
+            case "openjarvis" -> hasValue("OPENJARVIS_BASE_URL");
             case "grok" -> hasValue("XAI_API_KEY");
             case "freellmapi" -> hasValue("FREELLMAPI_BASE_URL") && hasValue("FREELLMAPI_API_KEY");
             case "aimlapi" -> hasValue("AIMLAPI_API_KEY");
@@ -131,6 +133,29 @@ public class JarvisAiService {
         String raw = client.post().uri("https://api.x.ai/v1/chat/completions").header(HttpHeaders.AUTHORIZATION, "Bearer " + key).contentType(MediaType.APPLICATION_JSON).body(body).retrieve().body(String.class);
         JsonNode text = mapper.readTree(raw).path("choices").path(0).path("message").path("content");
         return text.isTextual() ? Optional.of(text.asText()) : Optional.empty();
+    }
+
+    /** OpenJarvis exposes an OpenAI-compatible chat-completions endpoint. */
+    private Optional<String> openJarvis(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
+        String base = System.getenv("OPENJARVIS_BASE_URL");
+        if (base == null || base.isBlank()) return Optional.empty();
+        String model = safeRouterModel(System.getenv().getOrDefault("OPENJARVIS_MODEL", "auto"));
+        Map<String, Object> body = Map.of("model", model, "messages", List.of(
+                Map.of("role", "user", "content", prompt(message, analysis, history))));
+        RestClient.RequestBodySpec request = client.post().uri(openJarvisChatUrl(base))
+                .contentType(MediaType.APPLICATION_JSON);
+        String key = System.getenv("OPENJARVIS_API_KEY");
+        if (key != null && !key.isBlank()) request.header(HttpHeaders.AUTHORIZATION, "Bearer " + key);
+        String raw = request.body(body).retrieve().body(String.class);
+        JsonNode text = mapper.readTree(raw).path("choices").path(0).path("message").path("content");
+        return text.isTextual() ? Optional.of(text.asText()) : Optional.empty();
+    }
+
+    static String openJarvisChatUrl(String configuredBase) {
+        String base = configuredBase == null ? "" : configuredBase.strip().replaceAll("/+$", "");
+        if (!base.matches("https?://[^\\s]+")) throw new IllegalArgumentException("OpenJarvis 주소가 올바르지 않습니다.");
+        if (base.endsWith("/v1/chat/completions")) return base;
+        return base.endsWith("/v1") ? base + "/chat/completions" : base + "/v1/chat/completions";
     }
 
     private Optional<String> ollama(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
