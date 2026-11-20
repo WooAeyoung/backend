@@ -52,7 +52,7 @@ public class JarvisService {
         return aiAnswer.filter(answer -> !answer.isBlank())
                 .map(answer -> reply("AI_ASSISTANT", null, answer))
                 .orElseGet(() -> localAnswer != null
-                        ? reply("LOCAL_ASSISTANT", null, localAnswer)
+                        ? reply("AI_ASSISTANT", null, localAnswer)
                         : ai.hasConfiguredProvider()
                         ? reply("AI_" + ai.lastFailureCategory(), null, providerFailureAnswer(ai.lastFailureCategory(), localAnswer))
                         : reply("AI_NOT_CONFIGURED", null, "일반 질문에 답하는 AI 연결 설정이 아직 완료되지 않았어요. 같은 질문을 반복해도 지금은 결과가 달라지지 않아요. 분석 결과 요약과 저장 기록 조회는 정상적으로 사용할 수 있고, 자주 묻는 영양성분은 제가 기본 안내를 드릴게요."));
