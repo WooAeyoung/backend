@@ -205,7 +205,7 @@ public class JarvisAiService {
                 return answer.isEmpty() ? Optional.empty() : Optional.of(answer.toString());
             } catch (RestClientResponseException error) {
                 int status = error.getStatusCode().value();
-                if (status != 404 && status != 429) throw error;
+                if (status != 404 && status != 429 && status != 503) throw error;
                 log.info("Gemini model {} returned HTTP {}; trying the next allowed model", candidate, status);
             }
         }
