@@ -92,4 +92,20 @@ class JarvisServiceTest {
         assertEquals("ANALYSIS", navigation.get("intent"));
         assertEquals("analysis", navigation.get("page"));
     }
+
+    @Test void fallsBackToAUsefulLocalAnswerWhenProvidersAreUnavailable() {
+        JarvisAiService unavailableAi = new JarvisAiService() {
+            @Override public Optional<String> complete(String message, Map<String, Object> analysis, String provider, List<ApiModels.JarvisMessage> history) {
+                return Optional.empty();
+            }
+            @Override public boolean hasConfiguredProvider() { return true; }
+            @Override public String lastFailureCategory() { return "PROVIDER_ERROR"; }
+        };
+
+        Map<String, Object> result = new JarvisService(unavailableAi).answer(request("영양 분석에서 주의할 점", null));
+
+        assertEquals("LOCAL_ASSISTANT", result.get("intent"));
+        assertNull(result.get("page"));
+        assertTrue(result.get("answer").toString().contains("사료·영양제"));
+    }
 }

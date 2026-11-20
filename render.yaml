@@ -27,6 +27,8 @@ services:
       - key: JARVIS_PROVIDER
         value: gemini
       - key: JARVIS_FALLBACK_PROVIDER
+        value: grok
+      - key: JARVIS_TERTIARY_PROVIDER
         value: freellmapi
       - key: GEMINI_API_KEY
         sync: false

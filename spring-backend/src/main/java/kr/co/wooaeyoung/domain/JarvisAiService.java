@@ -32,7 +32,7 @@ public class JarvisAiService {
         // Keep the provider deadline below the browser deadline so the local,
         // analysis-based fallback can still be returned instead of a timeout.
         requests.setConnectTimeout(Duration.ofSeconds(2));
-        requests.setReadTimeout(Duration.ofSeconds(14));
+        requests.setReadTimeout(Duration.ofSeconds(8));
         this.client = RestClient.builder().requestFactory(requests).build();
     }
 
@@ -44,10 +44,12 @@ public class JarvisAiService {
         lastFailureCategory = "MISSING_CREDENTIALS";
         String provider = System.getenv().getOrDefault("JARVIS_PROVIDER", "gemini").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
+        String tertiary = System.getenv().getOrDefault("JARVIS_TERTIARY_PROVIDER", "").toLowerCase(Locale.ROOT);
         LinkedHashSet<String> providers = new LinkedHashSet<>();
         providers.add(requestedProvider == null || requestedProvider.isBlank()
                 ? provider : requestedProvider.toLowerCase(Locale.ROOT));
         if (!fallback.isBlank()) providers.add(fallback);
+        if (!tertiary.isBlank()) providers.add(tertiary);
         for (String candidate : providers) {
             if (!hasCredentials(candidate)) continue;
             try {
@@ -100,8 +102,9 @@ public class JarvisAiService {
     public boolean hasConfiguredProvider() {
         String primary = System.getenv().getOrDefault("JARVIS_PROVIDER", "gemini").toLowerCase(Locale.ROOT);
         String fallback = System.getenv().getOrDefault("JARVIS_FALLBACK_PROVIDER", "").toLowerCase(Locale.ROOT);
+        String tertiary = System.getenv().getOrDefault("JARVIS_TERTIARY_PROVIDER", "").toLowerCase(Locale.ROOT);
         return hasCredentials(primary) || (!fallback.isBlank() && hasCredentials(fallback))
-                || hasCredentials("freellmapi") || hasCredentials("aimlapi");
+                || (!tertiary.isBlank() && hasCredentials(tertiary)) || hasCredentials("aimlapi");
     }
 
     public String lastFailureCategory() { return lastFailureCategory; }
