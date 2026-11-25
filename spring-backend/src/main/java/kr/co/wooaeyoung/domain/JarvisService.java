@@ -10,6 +10,9 @@ public class JarvisService {
     private final JarvisAiService ai;
     public JarvisService(JarvisAiService ai) { this.ai = ai; }
     public Map<String, Object> answer(ApiModels.JarvisRequest request) {
+        if ("PDF_NUTRITION_SUMMARY".equals(request.message())) {
+            return reply("PDF_NUTRITION_SUMMARY", null, ai.summarizeReport(request.analysis()).orElse(""));
+        }
         String phrase = request.message().replaceAll("\\s+", "").toLowerCase(Locale.ROOT);
         if (phrase.matches(".*(감사|고마워|고맙|thanks|thankyou).*")) {
             return reply("COURTESY", null, "별말씀을요. 궁금한 점이 생기면 언제든 편하게 말씀해 주세요. 다음에도 결과의 이유와 확인 순서를 차근차근 함께 살펴드릴게요.");

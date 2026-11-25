@@ -209,6 +209,18 @@ public class JarvisAiService {
         return model;
     }
 
+    Optional<String> summarizeReport(Map<String, Object> analysis) {
+        if (analysis == null || !hasCredentials("gemini")) return Optional.empty();
+        try {
+            return gemini("제공된 영양 판정 개수만 근거로 PDF에 들어갈 친절한 한국어 한 문장을 써주세요. 100자 이내로 쓰고, 컨디션이나 질환을 추정하거나 처방하지 마세요.", analysis, null)
+                    .map(answer -> answer.strip().lines().findFirst().orElse(""))
+                    .filter(answer -> !answer.isBlank() && answer.length() <= 120);
+        } catch (Exception error) {
+            log.warn("Gemini PDF summary failed: {}", error.getClass().getSimpleName());
+            return Optional.empty();
+        }
+    }
+
     private Optional<String> gemini(String message, Map<String, Object> analysis, List<ApiModels.JarvisMessage> history) throws Exception {
         String key = System.getenv("GEMINI_API_KEY");
         if (key == null || key.isBlank()) return Optional.empty();
